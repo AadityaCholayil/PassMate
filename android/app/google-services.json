@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "389893666974",
+    "project_id": "passmate-a5cdd",
+    "storage_bucket": "passmate-a5cdd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:389893666974:android:3954af99ef2f009923638f",
+        "android_client_info": {
+          "package_name": "com.mates.passmate"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "389893666974-85i2eeq8eo4fb501oq52s2qhuq2m4mf4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mates.passmate",
+            "certificate_hash": "fa0585efe2995d3314c49360bb553f762c74e293"
+          }
+        },
+        {
+          "client_id": "389893666974-upcavjn6qlpcpkuk6ckjelfr30ij06cn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA0eMkP80WrurkWlp5BllqvDONXGz4Ac04"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "389893666974-upcavjn6qlpcpkuk6ckjelfr30ij06cn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
