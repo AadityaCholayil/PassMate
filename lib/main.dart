@@ -18,16 +18,13 @@ class _MyAppState extends State<MyApp> {
   bool _initialized = false;
   bool _error = false;
 
-  // Define an async function to initialize FlutterFire
   void initializeFlutterFire() async {
     try {
-      // Wait for Firebase to initialize and set `_initialized` state to true
       await Firebase.initializeApp();
       setState(() {
         _initialized = true;
       });
     } catch(e) {
-      // Set `_error` state to true if Firebase initialization fails
       setState(() {
         _error = true;
       });
@@ -42,12 +39,10 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    // Show error message if initialization failed
     if(_error) {
       return Container();
     }
 
-    // Show a loader until FlutterFire is initialized
     if (!_initialized) {
       return Container();
     }
