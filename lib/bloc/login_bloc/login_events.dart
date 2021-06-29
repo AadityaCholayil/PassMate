@@ -1,28 +1,36 @@
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
+import 'package:passmate/model/credentials.dart';
 
 @immutable
-abstract class LoginEvents extends Equatable {
-  LoginEvents([List props = const []]) : super();
+abstract class LoginEvent extends Equatable {
+  LoginEvent([List props = const []]) : super();
 }
 
-class AppStarted extends LoginEvents{
+class LoginUsingCredentials extends LoginEvent {
+  final Credentials credentials;
+
+  LoginUsingCredentials({required this.credentials});
 
   @override
-  String toString() => 'Uninitialized';
+  String toString() => 'LogInUsingCredentials';
 
   @override
   List<Object?> get props => [this.toString()];
-
 }
 
-
-class LogIn extends LoginEvents{
-
+class LoginUsingGoogle extends LoginEvent {
   @override
-  String toString() => 'Unauthenticated';
+  String toString() => 'LogInUsingGoogle';
 
   @override
   List<Object?> get props => [this.toString()];
+}
 
+class ForgotPassword extends LoginEvent {
+  @override
+  String toString() => 'ForgotPassword';
+
+  @override
+  List<Object?> get props => [this.toString()];
 }

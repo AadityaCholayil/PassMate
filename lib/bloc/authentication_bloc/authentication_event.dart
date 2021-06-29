@@ -7,33 +7,25 @@ abstract class AuthenticationEvent extends Equatable {
 }
 
 class AppStarted extends AuthenticationEvent{
-
   @override
-  String toString() => 'Uninitialized';
-
-  @override
-  List<Object?> get props => [this.toString()];
-
-}
-
-
-class LogIn extends AuthenticationEvent{
-
-  @override
-  String toString() => 'Unauthenticated';
+  String toString() => 'AppStarted';
 
   @override
   List<Object?> get props => [this.toString()];
-
 }
 
+class AuthenticateUser extends AuthenticationEvent{
+  @override
+  String toString() => 'AuthenticateUser';
+
+  @override
+  List<Object?> get props => [this.toString()];
+}
 
 class LoggedOut extends AuthenticationEvent{
-
   @override
-  String toString() => 'Authenticated';
+  String toString() => 'LoggedOut';
 
   @override
   List<Object?> get props => [this.toString()];
-
 }

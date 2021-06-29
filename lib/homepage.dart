@@ -30,6 +30,7 @@ class _HomePageState extends State<HomePage> {
                 child: Text('Logout'),
                 onPressed: (){
                   BlocProvider.of<AuthenticationBloc>(context).add(LoggedOut());
+                  // Navigator.pushReplacementNamed(context, RoutesName.WRAPPER);
                 },
               ),
             ],

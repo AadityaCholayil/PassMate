@@ -1,22 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:passmate/auth_screens/login.dart';
-import 'package:passmate/auth_screens/signup_page.dart';
-import 'package:passmate/bloc/authentication_bloc/auth_bloc_files.dart';
+import 'package:passmate/routes/routes_name.dart';
 
-class WelcomeScreen extends StatefulWidget {
+class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({Key? key}) : super(key: key);
 
   @override
-  _WelcomeScreenState createState() => _WelcomeScreenState();
-}
-
-class _WelcomeScreenState extends State<WelcomeScreen> {
-  @override
   Widget build(BuildContext context) {
-    bool isEmpty = BlocProvider.of<AuthenticationBloc>(context).state.userData.isEmpty;
-    print(isEmpty);
     return Scaffold(
       body: Center(
         child: Container(
@@ -26,20 +16,14 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               Text('Welcome Screen'),
               ElevatedButton(
                 child: Text('login'),
-                onPressed: (){
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => LoginPage())
-                  );
+                onPressed: () {
+                  Navigator.pushNamed(context, RoutesName.LOGIN_PAGE);
                 },
               ),
               ElevatedButton(
                 child: Text('signup'),
-                onPressed: (){
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => SignUpPage())
-                  );
+                onPressed: () {
+                  Navigator.pushNamed(context, RoutesName.SIGNUP_PAGE);
                 },
               ),
             ],
@@ -49,3 +33,4 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     );
   }
 }
+

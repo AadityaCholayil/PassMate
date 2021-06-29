@@ -1,16 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:passmate/model/custom_exceptions.dart';
 import 'package:passmate/model/user.dart';
-
-class SignUpFailure implements Exception {}
-
-class SignInWithEmailAndPasswordFailure implements Exception {}
-
-class SignUpWithEmailAndPasswordFailure implements Exception {}
-
-class SignInWithGoogleFailure implements Exception {}
-
-class SignOutFailure implements Exception {}
 
 class AuthenticationRepository{
 
@@ -45,8 +36,17 @@ class AuthenticationRepository{
       );
       User? user = userCredential.user;
       return user==null?UserData.empty:UserData.fromUser(user);
-    } on Exception catch (_) {
-      throw SignInWithEmailAndPasswordFailure();
+    } on FirebaseAuthException catch (e) {
+      switch (e.code) {
+        case 'user-not-found':
+          throw UserNotFoundException();
+        case 'wrong-password':
+          throw WrongPasswordException();
+        default:
+          throw SomethingWentWrongException();
+      }
+    } catch (_) {
+      throw SomethingWentWrongException();
     }
   }
 
@@ -82,8 +82,11 @@ class AuthenticationRepository{
     return user==null?UserData.empty:UserData.fromUser(user);
   }
 
-  Stream<User?> get user {
-    return _firebaseAuth.authStateChanges();
+  Stream<UserData> get user {
+    return _firebaseAuth.authStateChanges().map((user) {
+      return user==null?UserData.empty:UserData.fromUser(user);
+    });
   }
 
 }
+

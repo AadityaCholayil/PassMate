@@ -24,7 +24,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 child: Text('submit'),
                 onPressed: (){
                   AuthenticationRepository().signUp('aadi1@xyz.com', 'aadi123');
-                  BlocProvider.of<AuthenticationBloc>(context).add(LogIn());
+                  BlocProvider.of<AuthenticationBloc>(context).add(AuthenticateUser());
                 },
               ),
             ],

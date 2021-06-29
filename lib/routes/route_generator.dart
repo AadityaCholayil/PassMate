@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:passmate/auth_screens/login.dart';
-import 'package:passmate/auth_screens/welcome_screen.dart';
-import 'package:passmate/bloc/authentication_bloc/auth_bloc_files.dart';
+import 'package:passmate/auth_screens/signup_page.dart';
 import 'package:passmate/routes/routes_name.dart';
+import 'package:passmate/wrapper.dart';
 
 class RouteGenerator{
 
@@ -10,31 +10,19 @@ class RouteGenerator{
     switch(settings.name){
       case '/':
         return _GeneratePageRoute(
-            widget: WelcomeScreen(), routeName: settings.name
-        );
-      case RoutesName.WELCOME_SCREEN:
-        return _GeneratePageRoute(
-            widget: WelcomeScreen(), routeName: settings.name
+            widget: Wrapper(), routeName: settings.name
         );
       case RoutesName.LOGIN_PAGE:
         return _GeneratePageRoute(
             widget: LoginPage(), routeName: settings.name
         );
-      case RoutesName.WELCOME_SCREEN:
+      case RoutesName.SIGNUP_PAGE:
         return _GeneratePageRoute(
-            widget: WelcomeScreen(), routeName: settings.name
-        );
-      case RoutesName.WELCOME_SCREEN:
-        return _GeneratePageRoute(
-            widget: WelcomeScreen(), routeName: settings.name
-        );
-      case RoutesName.WELCOME_SCREEN:
-        return _GeneratePageRoute(
-            widget: WelcomeScreen(), routeName: settings.name
+            widget: SignUpPage(), routeName: settings.name
         );
       default:
         return _GeneratePageRoute(
-            widget: WelcomeScreen(), routeName: settings.name
+            widget: Wrapper(), routeName: '/'
         );
     }
   }
@@ -59,7 +47,7 @@ class _GeneratePageRoute extends PageRouteBuilder {
         return SlideTransition(
           textDirection: TextDirection.rtl,
           position: Tween<Offset>(
-            begin: Offset(1.0, 0.0),
+            begin: Offset(0, 1),
             end: Offset.zero,
           ).animate(animation),
           child: child,

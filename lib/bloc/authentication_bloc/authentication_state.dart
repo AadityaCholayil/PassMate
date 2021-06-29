@@ -10,7 +10,6 @@ abstract class AuthenticationState extends Equatable {
 }
 
 class Uninitialized extends AuthenticationState{
-
   final UserData userData;
 
   Uninitialized({required this.userData}) : super(userData);
@@ -23,7 +22,6 @@ class Uninitialized extends AuthenticationState{
 }
 
 class Unauthenticated extends AuthenticationState{
-
   final UserData userData;
 
   Unauthenticated({required this.userData}) : super(userData);
@@ -33,11 +31,9 @@ class Unauthenticated extends AuthenticationState{
 
   @override
   List<Object?> get props => [this.toString()];
-
 }
 
 class Authenticated extends AuthenticationState{
-
   final UserData userData;
 
   Authenticated({required this.userData}) : super(userData);
@@ -47,5 +43,4 @@ class Authenticated extends AuthenticationState{
 
   @override
   List<Object?> get props => [this.toString()];
-
 }
