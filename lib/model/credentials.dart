@@ -17,59 +17,52 @@ class Password {
   Password(this.password);
 
   PasswordStrength get passwordStrength {
-    return PasswordStrength.fromCredentials(password);
+    return PasswordStrength.fromPassword(password);
   }
 
 }
 
 class PasswordStrength{
 
-  bool containsUpper = false;
-  bool containsLower = false;
-  bool containsNumber = false;
-  bool containsSpecialChar = false;
-  bool isLong = false;
-  bool isVeryLong = false;
+  List<String> list = [
+    'Minimum 8 characters',
+    'Must contain one uppercase character',
+    'Must contain one lowercase character',
+    'Must contain one number',
+    'Must contain one special character (!@#\$&*~)'
+  ];
+  int strength = 0;
 
-  PasswordStrength(){
-    this.containsUpper = false;
-    this.containsLower = false;
-    this.containsNumber = false;
-    this.containsSpecialChar = false;
-    this.isLong = false;
-  }
-
-  PasswordStrength.fromCredentials(String password){
-    this.containsUpper = RegExp(r'(?=.*[A-Z])').hasMatch(password);
-    this.containsLower = RegExp(r'(?=.*[a-z])').hasMatch(password);
-    this.containsNumber = RegExp(r'(?=.*[0-9])').hasMatch(password);
-    this.containsSpecialChar = RegExp(r'(?=.*[!@#\$&*~])').hasMatch(password);
-    this.isLong = password.length>=8;
-    this.isVeryLong = password.length>=14;
-  }
-
-  int get strength {
-    int strength = 0;
+  PasswordStrength.fromPassword(String password){
+    bool containsUpper = RegExp(r'(?=.*[A-Z])').hasMatch(password);
+    bool containsLower = RegExp(r'(?=.*[a-z])').hasMatch(password);
+    bool containsNumber = RegExp(r'(?=.*[0-9])').hasMatch(password);
+    bool containsSpecialChar = RegExp(r'(?=.*[!@#\$&*~])').hasMatch(password);
+    bool isLong = password.length>=8;
+    bool isVeryLong = password.length>=14;
     if (containsUpper) {
       strength++;
+      list.remove('Must contain one uppercase character');
     }
     if (containsLower) {
       strength++;
+      list.remove('Must contain one lowercase character');
     }
     if (containsNumber) {
       strength++;
+      list.remove('Must contain one number');
     }
     if (containsSpecialChar) {
       strength++;
+      list.remove('Must contain one special character (!@#\$&*~)');
     }
     if (isLong) {
       strength++;
+      list.remove('Minimum 8 characters');
     }
     if (isVeryLong) {
       strength++;
     }
-    return strength;
   }
-
 }
 

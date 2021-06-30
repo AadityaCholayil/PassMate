@@ -15,10 +15,31 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
-  String email = '';
-  String password = '';
+  Email email = Email('');
+  Password password = Password('');
+  PasswordStrength passwordStrength = PasswordStrength.fromPassword('');
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  Widget _buildPasswordStrength(){
+    return Container(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ListView.builder(
+            shrinkWrap: true,
+            itemCount: passwordStrength.list.length,
+            itemBuilder: (context, index){
+              String text = passwordStrength.list[index];
+              return Text(text);
+            },
+          ),
+          Text('strength = ${passwordStrength.strength}')
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +74,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       CustomTextFormField(
                         labelText: 'Email',
                         onSaved: (value) {
-                          email = value ?? '';
+                          email.email = value ?? '';
                         },
                       ),
                       SizedBox(
@@ -61,20 +82,24 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                       CustomTextFormField(
                         labelText: 'Password',
-                        onSaved: (value) {
-                          password = value ?? '';
+                        onChanged: (value) {
+                          setState(() {
+                            password.password = value ?? '';
+                            passwordStrength = password.passwordStrength;
+                          });
                         },
                       ),
+                      _buildPasswordStrength(),
                       ElevatedButton(
                         child: Text('submit'),
-                        onPressed: () async {
+                        onPressed: passwordStrength.strength<5?null:() async {
                           _formKey.currentState?.save();
                           ScaffoldMessenger.of(context).showSnackBar(
                               showCustomSnackBar(context, state.message));
                           BlocProvider.of<SignupBloc>(context).add(
                               SignupUsingCredentials(
-                                  email: Email(email),
-                                  password: Password(password)));
+                                  email: email,
+                                  password: password));
                         },
                       ),
                     ],
