@@ -1,30 +1,22 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 
-@immutable
-abstract class SignUpState extends Equatable {
+class SignupState extends Equatable {
   final String message;
 
-  SignUpState(this.message, [List props = const []]) : super();
-}
+  SignupState({required this.message});
 
-class SignUpSuccessful extends SignUpState{
-  SignUpSuccessful({String message = 'Sign up successful'}) : super(message);
+  static SignupState loading = SignupState(message: 'Loading');
 
-  @override
-  List<Object?> get props => [message];
-}
+  static SignupState success = SignupState(message: 'Successful');
 
-class SignUpError extends SignUpState{
-  SignUpError(String message) : super(message);
+  static SignupState invalidEmailFormat =
+      SignupState(message: 'Invalid email format');
 
-  @override
-  List<Object?> get props => [message];
-}
+  static SignupState userAlreadyExists =
+      SignupState(message: 'Email is already in use');
 
-class SignUpLoading extends SignUpState{
-
-  SignUpLoading({String message = 'Loading'}) : super(message);
+  static SignupState somethingWentWrong =
+      SignupState(message: 'Something went wrong, Please try again');
 
   @override
   List<Object?> get props => [message];

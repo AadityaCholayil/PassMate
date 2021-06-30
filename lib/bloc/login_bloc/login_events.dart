@@ -8,9 +8,10 @@ abstract class LoginEvent extends Equatable {
 }
 
 class LoginUsingCredentials extends LoginEvent {
-  final Credentials credentials;
+  final Email email;
+  final Password password;
 
-  LoginUsingCredentials({required this.credentials});
+  LoginUsingCredentials({required this.email, required this.password});
 
   @override
   String toString() => 'LogInUsingCredentials';

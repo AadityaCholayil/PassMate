@@ -1,17 +1,15 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:passmate/authentication_repository/authentication_repository.dart';
-import 'package:passmate/model/credentials.dart';
 import 'package:passmate/model/custom_exceptions.dart';
 import 'login_barrel.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState>{
   final AuthenticationRepository _authenticationRepository;
 
-  LoginBloc({required authenticationRepository})
-      : _authenticationRepository = authenticationRepository,
-        super(LoginState.loading(Credentials(email: '', password: '')));
+  LoginBloc({required authenticationRepository}):
+        _authenticationRepository=authenticationRepository, super(LoginState.loading);
 
-  LoginState get initialState => LoginState.loading(state.credentials);
+  LoginState get initialState => LoginState.loading;
 
   @override
   Stream<LoginState> mapEventToState(LoginEvent event) async* {
@@ -25,33 +23,33 @@ class LoginBloc extends Bloc<LoginEvent, LoginState>{
   }
 
   Stream<LoginState> _mapLoginUsingCredentialsToState(LoginUsingCredentials event) async* {
-    yield LoginState.loading(state.credentials);
-    if(event.credentials.emailIsValid){
+    yield LoginState.loading;
+    if(event.email.isValid){
       try {
         await _authenticationRepository.logInWithCredentials(
-            event.credentials.email, event.credentials.password);
+            event.email.email, event.password.password);
         //TODO on login
-        yield LoginState.success(state.credentials);
+        yield LoginState.success;
 
 
       } on Exception catch (e) {
         if (e is UserNotFoundException) {
-          yield LoginState.noUserFound(state.credentials);
+          yield LoginState.noUserFound;
         } else if (e is WrongPasswordException) {
-          yield LoginState.wrongPassword(state.credentials);
+          yield LoginState.wrongPassword;
         } else {
-          yield LoginState.somethingWentWrong(state.credentials);
+          yield LoginState.somethingWentWrong;
         }
       }
     } else {
-      yield LoginState.invalidEmailFormat(state.credentials);
+      yield LoginState.invalidEmailFormat;
     }
   }
   Stream<LoginState> _mapLoginUsingGoogleToState() async* {
-    yield LoginState.loading(state.credentials);
+    yield LoginState.loading;
   }
   Stream<LoginState> _mapForgotPasswordToState() async* {
-    yield LoginState.loading(state.credentials);
+    yield LoginState.loading;
   }
 
 }

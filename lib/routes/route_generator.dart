@@ -39,7 +39,7 @@ class _GeneratePageRoute extends PageRouteBuilder {
           Animation<double> secondaryAnimation) {
         return widget;
       },
-      transitionDuration: Duration(milliseconds: 500),
+      transitionDuration: Duration(milliseconds: 400),
       transitionsBuilder: (BuildContext context,
           Animation<double> animation,
           Animation<double> secondaryAnimation,

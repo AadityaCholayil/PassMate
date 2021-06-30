@@ -50,7 +50,7 @@ class AuthenticationRepository{
     }
   }
 
-  Future<UserData> signUp(String email, String password) async {
+  Future<UserData> signUpUsingCredentials(String email, String password) async {
     try {
       UserCredential userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
         email: email,
@@ -58,8 +58,16 @@ class AuthenticationRepository{
       );
       User? user = userCredential.user;
       return user==null?UserData.empty:UserData.fromUser(user);
-    } on Exception catch (_) {
-      throw SignUpWithEmailAndPasswordFailure();
+    } on FirebaseAuthException catch (e) {
+      print(e);
+      switch (e.code) {
+        case 'email-already-in-use':
+          throw EmailAlreadyInUseException();
+        default:
+          throw SomethingWentWrongException();
+      }
+    } catch (_) {
+      throw SomethingWentWrongException();
     }
   }
 

@@ -31,6 +31,10 @@ class MyApp extends StatelessWidget {
         },
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
+          theme: ThemeData.from(colorScheme: ColorScheme.fromSwatch(
+            brightness: Brightness.light,
+            primarySwatch: Colors.purple,
+          )),
           onGenerateRoute: RouteGenerator.generateRoute,
           initialRoute: RoutesName.WRAPPER,
         ),
