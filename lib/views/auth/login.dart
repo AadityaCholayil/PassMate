@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:passmate/authentication_repository/authentication_repository.dart';
+import 'package:passmate/repositories/authentication_repository.dart';
 import 'package:passmate/bloc/login_bloc/login_barrel.dart';
-import 'package:passmate/model/credentials.dart';
+import 'package:passmate/model/auth_credentials.dart';
 import 'package:passmate/routes/routes_name.dart';
 import 'package:passmate/shared/custom_snackbar.dart';
 import 'package:passmate/shared/custom_widgets.dart';
@@ -66,7 +66,7 @@ class _LoginPageState extends State<LoginPage> {
                         ScaffoldMessenger.of(context)
                             .showSnackBar(showCustomSnackBar(context, state.message));
                         BlocProvider.of<LoginBloc>(context).add(
-                            LoginUsingCredentials(email: Email(email), password: Password(password)));
+                            LoginUsingCredentials(email: AuthEmail(email), password: AuthPassword(password)));
                       },
                     ),
                   ],

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:passmate/authentication_repository/authentication_repository.dart';
+import 'package:passmate/repositories/authentication_repository.dart';
 import 'package:passmate/bloc/signup_bloc/signup_barrel.dart';
-import 'package:passmate/model/credentials.dart';
+import 'package:passmate/model/auth_credentials.dart';
 import 'package:passmate/routes/routes_name.dart';
 import 'package:passmate/shared/custom_snackbar.dart';
 import 'package:passmate/shared/custom_widgets.dart';
@@ -15,8 +15,8 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
-  Email email = Email('');
-  Password password = Password('');
+  AuthEmail email = AuthEmail('');
+  AuthPassword password = AuthPassword('');
   PasswordStrength passwordStrength = PasswordStrength.fromPassword('');
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();

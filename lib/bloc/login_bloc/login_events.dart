@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
-import 'package:passmate/model/credentials.dart';
+import 'package:passmate/model/auth_credentials.dart';
 
 @immutable
 abstract class LoginEvent extends Equatable {
@@ -8,8 +8,8 @@ abstract class LoginEvent extends Equatable {
 }
 
 class LoginUsingCredentials extends LoginEvent {
-  final Email email;
-  final Password password;
+  final AuthEmail email;
+  final AuthPassword password;
 
   LoginUsingCredentials({required this.email, required this.password});
 

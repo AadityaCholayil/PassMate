@@ -1,7 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:passmate/authentication_repository/authentication_repository.dart';
+import 'package:passmate/repositories/authentication_repository.dart';
 import 'package:passmate/bloc/authentication_bloc/auth_bloc_files.dart';
 import 'package:passmate/bloc/app_bloc_observer.dart';
 import 'package:passmate/routes/route_generator.dart';

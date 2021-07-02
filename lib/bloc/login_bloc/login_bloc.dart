@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:passmate/authentication_repository/authentication_repository.dart';
+import 'package:passmate/repositories/authentication_repository.dart';
 import 'package:passmate/model/custom_exceptions.dart';
 import 'login_barrel.dart';
 

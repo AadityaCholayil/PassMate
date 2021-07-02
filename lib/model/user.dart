@@ -1,4 +1,3 @@
-
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -18,6 +17,25 @@ class UserData extends Equatable{
   }
 
   static UserData empty = UserData(uid: '');
+
+  UserData.fromJson(Map<String, Object?> json)
+      : this(
+    uid: json['uid']! as String,
+    email: json['uid']! as String,
+    firstName: json['uid']! as String,
+    lastName: json['uid']! as String,
+    photoUrl: json['uid']! as String,
+  );
+
+  Map<String, Object?> toJson(){
+    return {
+      'uid': uid,
+      'email': email,
+      'firstName': firstName,
+      'lastName': lastName,
+      'photoUrl': photoUrl,
+    };
+  }
 
   bool get isEmpty => this == UserData.empty;
 

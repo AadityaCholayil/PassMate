@@ -1,7 +1,7 @@
-class Email {
+class AuthEmail {
   String email = '';
 
-  Email(this.email);
+  AuthEmail(this.email);
 
   bool get isValid {
     String pattern =
@@ -11,15 +11,14 @@ class Email {
   }
 }
 
-class Password {
+class AuthPassword {
   String password = '';
 
-  Password(this.password);
+  AuthPassword(this.password);
 
   PasswordStrength get passwordStrength {
     return PasswordStrength.fromPassword(password);
   }
-
 }
 
 class PasswordStrength{
@@ -32,6 +31,8 @@ class PasswordStrength{
     'Must contain one special character (!@#\$&*~)'
   ];
   int strength = 0;
+
+  PasswordStrength();
 
   PasswordStrength.fromPassword(String password){
     bool containsUpper = RegExp(r'(?=.*[A-Z])').hasMatch(password);

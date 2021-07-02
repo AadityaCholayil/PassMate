@@ -1,8 +1,6 @@
 import 'dart:async';
-
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:passmate/authentication_repository/authentication_repository.dart';
+import 'package:passmate/repositories/authentication_repository.dart';
 import 'package:passmate/model/user.dart';
 import 'auth_bloc_files.dart';
 

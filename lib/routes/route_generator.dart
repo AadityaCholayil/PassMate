@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:passmate/auth_screens/login.dart';
-import 'package:passmate/auth_screens/signup_page.dart';
+import 'package:passmate/views/auth/login.dart';
+import 'package:passmate/views/auth/signup_page.dart';
 import 'package:passmate/routes/routes_name.dart';
-import 'package:passmate/wrapper.dart';
+import 'package:passmate/views/wrapper.dart';
 
 class RouteGenerator{
 
