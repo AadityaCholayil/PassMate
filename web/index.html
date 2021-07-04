@@ -32,6 +32,7 @@
   <script src="/__/firebase/8.6.8/firebase-analytics.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-storage.js"></script>
   <script>
       var firebaseConfig = {
         apiKey: "AIzaSyA0eMkP80WrurkWlp5BllqvDONXGz4Ac04",
@@ -46,6 +47,12 @@
 
       // Initialize Firebase
       firebase.initializeApp(firebaseConfig);
+
+  <!-- if (!firebase.apps.length) {
+          firebase.initializeApp({});
+       }else {
+          firebase.app(); // if already initialized, use that one
+       } -->
     </script>
   <script src="/__/firebase/init.js"></script>
   <!-- This script installs service_worker.js to provide PWA functionality to

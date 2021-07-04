@@ -8,9 +8,10 @@ class UserData extends Equatable{
   final String? firstName;
   final String? lastName;
   final String? photoUrl;
+  final bool? pinSet;
 
   UserData({required this.uid, this.email, this.firstName, this.lastName,
-    this.photoUrl});
+    this.photoUrl, this.pinSet});
 
   static UserData fromUser(User user){
     return UserData(uid: user.uid, email: user.email);
@@ -21,10 +22,11 @@ class UserData extends Equatable{
   UserData.fromJson(Map<String, Object?> json)
       : this(
     uid: json['uid']! as String,
-    email: json['uid']! as String,
-    firstName: json['uid']! as String,
-    lastName: json['uid']! as String,
-    photoUrl: json['uid']! as String,
+    email: json['email']! as String,
+    firstName: json['firstName']! as String,
+    lastName: json['lastName']! as String,
+    photoUrl: json['photoUrl']! as String,
+    pinSet: json['pinSet']! as bool
   );
 
   Map<String, Object?> toJson(){
@@ -34,6 +36,7 @@ class UserData extends Equatable{
       'firstName': firstName,
       'lastName': lastName,
       'photoUrl': photoUrl,
+      'pinSet': pinSet
     };
   }
 
@@ -42,6 +45,10 @@ class UserData extends Equatable{
   bool get isNotEmpty => this != UserData.empty;
 
   @override
-  List<Object?> get props => [uid, email, firstName, lastName, photoUrl];
+  String toString(){
+    return 'uid: $uid, email: $email, name: $firstName $lastName, photoUrl: $photoUrl';
+  }
 
+  @override
+  List<Object?> get props => [uid, email, firstName, lastName, photoUrl, pinSet];
 }

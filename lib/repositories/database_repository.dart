@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:passmate/model/user.dart';
 
 class DatabaseRepository {
@@ -14,30 +17,45 @@ class DatabaseRepository {
             toFirestore: (movie, _) => movie.toJson(),
           );
 
+  // Future<List<UserData>> getUsers() async {
+  //   final list = await usersRef.get().then((snapshot) => snapshot.docs);
+  //   return list.map((e) => e.data()).toList();
+  // }
 
-
-  Future<List<UserData>> getUsers() async {
-    final list = await usersRef.get().then((snapshot) => snapshot.docs);
-    return list.map((e) => e.data()).toList();
-  }
-
-  Future<UserData> getCompleteUserData(UserData userData) async {
+  Future<UserData> get completeUserData async {
     UserData userDataNew = await usersRef
-            .doc(userData.uid).get()
-            .then((value) => value.data()!);
+        .doc(uid).get()
+        .then((value) => value.data()??UserData.empty);
     return userDataNew;
   }
 
-  Future<void> addUser(UserData userData) async {
-    await usersRef.add(userData);
+  Future<void> updateUserData(UserData userData) async {
+    await usersRef.doc(uid).set(userData);
   }
 
-  Future<void> updateUser(UserData userData) async {
-    await usersRef.doc(userData.uid).set(userData);
+  Future<void> deleteUser() async {
+    await usersRef.doc(uid).delete();
   }
 
-  Future<void> deleteUser(UserData userData) async {
-    await usersRef.doc(userData.uid).delete();
+  Future<String?> uploadFile(File _image) async {
+    try {
+      await firebase_storage.FirebaseStorage.instance
+          .ref('UserProfiles/$uid/profile_pic.png')
+          .putFile(_image);
+    } on Exception catch (e) {
+      print('Failed - $e');
+      return null;
+    }
+    try {
+      var result = await firebase_storage.FirebaseStorage.instance
+          .ref('UserProfiles/$uid/profile_pic.png')
+          .getDownloadURL();
+      print('profileUrl: $result');
+      return result;
+    } on Exception catch (e) {
+      print('Failed - $e');
+      return null;
+    }
   }
 
 

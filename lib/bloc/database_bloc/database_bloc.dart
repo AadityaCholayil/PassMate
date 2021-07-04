@@ -8,7 +8,7 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState>{
   final UserData userData;
   final DatabaseRepository databaseRepository;
 
-  DatabaseBloc(this.userData, this.databaseRepository) : super(Fetching());
+  DatabaseBloc({required this.userData, required this.databaseRepository}) : super(Fetching());
 
   @override
   Stream<DatabaseState> mapEventToState(DatabaseEvents event) async* {

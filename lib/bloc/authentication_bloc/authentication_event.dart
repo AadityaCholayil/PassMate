@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
+import 'package:passmate/model/user.dart';
 
 @immutable
 abstract class AuthenticationEvent extends Equatable {
@@ -15,8 +18,27 @@ class AppStarted extends AuthenticationEvent{
 }
 
 class AuthenticateUser extends AuthenticationEvent{
+
+  final UserData userData;
+
+  AuthenticateUser({required this.userData});
+
   @override
   String toString() => 'AuthenticateUser';
+
+  @override
+  List<Object?> get props => [this.toString()];
+}
+
+class UpdateUserData extends AuthenticationEvent{
+  final String firstName;
+  final String lastName;
+  final String photoUrl;
+
+  UpdateUserData(this.firstName, this.lastName, this.photoUrl);
+
+  @override
+  String toString() => 'UpdateUserData';
 
   @override
   List<Object?> get props => [this.toString()];

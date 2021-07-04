@@ -33,13 +33,25 @@ class Unauthenticated extends AuthenticationState{
   List<Object?> get props => [this.toString()];
 }
 
-class Authenticated extends AuthenticationState{
+class PartiallyAuthenticated extends AuthenticationState{
   final UserData userData;
 
-  Authenticated({required this.userData}) : super(userData);
+  PartiallyAuthenticated({required this.userData}) : super(userData);
 
   @override
-  String toString() => 'Authenticated';
+  String toString() => 'PartiallyAuthenticated';
+
+  @override
+  List<Object?> get props => [this.toString()];
+}
+
+class FullyAuthenticated extends AuthenticationState{
+  final UserData userData;
+
+  FullyAuthenticated({required this.userData}) : super(userData);
+
+  @override
+  String toString() => 'FullyAuthenticated';
 
   @override
   List<Object?> get props => [this.toString()];

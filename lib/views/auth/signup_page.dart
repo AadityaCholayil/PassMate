@@ -6,6 +6,7 @@ import 'package:passmate/model/auth_credentials.dart';
 import 'package:passmate/routes/routes_name.dart';
 import 'package:passmate/shared/custom_snackbar.dart';
 import 'package:passmate/shared/custom_widgets.dart';
+import 'package:passmate/views/auth/additional_details.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({Key? key}) : super(key: key);
@@ -32,7 +33,12 @@ class _SignUpPageState extends State<SignUpPage> {
             itemCount: passwordStrength.list.length,
             itemBuilder: (context, index){
               String text = passwordStrength.list[index];
-              return Text(text);
+              return Text(
+                text,
+                style: TextStyle(
+                  fontSize: 20
+                ),
+              );
             },
           ),
           Text('strength = ${passwordStrength.strength}')
@@ -50,7 +56,10 @@ class _SignUpPageState extends State<SignUpPage> {
         listener: (context, state) {
           if (state == SignupState.success) {
             ScaffoldMessenger.of(context).hideCurrentSnackBar();
-            Navigator.pushReplacementNamed(context, RoutesName.WRAPPER);
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => AdditionalDetailsPage())
+            );
           } else {
             ScaffoldMessenger.of(context).hideCurrentSnackBar();
             ScaffoldMessenger.of(context)
@@ -92,7 +101,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       _buildPasswordStrength(),
                       ElevatedButton(
                         child: Text('submit'),
-                        onPressed: passwordStrength.strength<5?null:() async {
+                        onPressed: (passwordStrength.strength<5 || email.email=='')?null:() async {
                           _formKey.currentState?.save();
                           ScaffoldMessenger.of(context).showSnackBar(
                               showCustomSnackBar(context, state.message));

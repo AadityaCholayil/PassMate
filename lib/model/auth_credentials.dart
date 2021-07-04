@@ -16,6 +16,10 @@ class AuthPassword {
 
   AuthPassword(this.password);
 
+  // void updatePassword(String newVal){
+  //   password=newVal;
+  // }
+
   PasswordStrength get passwordStrength {
     return PasswordStrength.fromPassword(password);
   }
