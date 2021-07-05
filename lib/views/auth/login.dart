@@ -1,8 +1,13 @@
+import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:passmate/bloc/authentication_bloc/auth_bloc_files.dart';
 import 'package:passmate/repositories/authentication_repository.dart';
 import 'package:passmate/bloc/login_bloc/login_barrel.dart';
 import 'package:passmate/model/auth_credentials.dart';
+import 'package:passmate/repositories/encryption_repository.dart';
 import 'package:passmate/routes/routes_name.dart';
 import 'package:passmate/shared/custom_snackbar.dart';
 import 'package:passmate/shared/custom_widgets.dart';
@@ -26,10 +31,19 @@ class _LoginPageState extends State<LoginPage> {
       create: (context) => LoginBloc(
           authenticationRepository: context.read<AuthenticationRepository>()),
       child: BlocConsumer<LoginBloc, LoginState>(
-        listener: (context, state) {
+        listener: (context, state) async {
           if (state == LoginState.success) {
-            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-            Navigator.pushReplacementNamed(context, RoutesName.WRAPPER);
+            await compute(EncryptionRepository.scryptHash, password).then((value) {
+              context.read<EncryptionRepository>().updateKey(value);
+              if (Platform.isAndroid) {
+                final storage = FlutterSecureStorage();
+                storage.write(key: 'key', value: value);
+              }
+              print('Navigating..');
+              context.read<AuthenticationBloc>().add(AuthenticateUser());
+              ScaffoldMessenger.of(context).hideCurrentSnackBar();
+              Navigator.pushReplacementNamed(context, RoutesName.WRAPPER);
+            });
           } else {
             ScaffoldMessenger.of(context).hideCurrentSnackBar();
             ScaffoldMessenger.of(context)

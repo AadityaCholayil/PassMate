@@ -1,14 +1,22 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:passmate/model/auth_credentials.dart';
 import 'package:passmate/repositories/authentication_repository.dart';
 import 'package:passmate/bloc/authentication_bloc/auth_bloc_files.dart';
 import 'package:passmate/bloc/app_bloc_observer.dart';
 import 'package:passmate/repositories/database_repository.dart';
+import 'package:passmate/repositories/encryption_repository.dart';
 import 'package:passmate/routes/route_generator.dart';
 import 'package:passmate/routes/routes_name.dart';
+import 'package:provider/provider.dart';
+// import 'dart:html' as html;
 
 void main() async {
+  // html.window.onBeforeUnload.listen((event) async{
+  //   print('u sure bruv?');
+  // });
   Bloc.observer = AppBlocObserver();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -25,8 +33,8 @@ class MyApp extends StatelessWidget {
         RepositoryProvider<AuthenticationRepository>(
           create: (context) => AuthenticationRepository(),
         ),
-        RepositoryProvider<DatabaseRepository>(
-          create: (context) => DatabaseRepository(uid: ''),
+        RepositoryProvider<EncryptionRepository>(
+          create: (context) => EncryptionRepository(),
         ),
       ],
       child: BlocProvider<AuthenticationBloc>(

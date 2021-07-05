@@ -1,28 +1,22 @@
 import 'dart:async';
-import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:passmate/repositories/authentication_repository.dart';
 import 'package:passmate/model/user.dart';
 import 'package:passmate/repositories/database_repository.dart';
+import 'package:passmate/repositories/encryption_repository.dart';
 import 'auth_bloc_files.dart';
 
 class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState>{
 
   final AuthenticationRepository _authenticationRepository;
   late final StreamSubscription<UserData> _userSubscription;
-  late final DatabaseRepository databaseRepository;
+  late DatabaseRepository databaseRepository;
+  late EncryptionRepository encryptionRepository;
 
   AuthenticationBloc({required authenticationRepository}):
-    _authenticationRepository=authenticationRepository, super(Uninitialized(userData: UserData.empty)){
-    _userSubscription = _authenticationRepository.user.listen(_onUserChanged);
-  }
-
-  void _onUserChanged(UserData userData) {
-    if(userData!=UserData.empty) {
-      add(AuthenticateUser(userData: userData));
-      databaseRepository = DatabaseRepository(uid: userData.uid);
-    }
-  }
+    _authenticationRepository=authenticationRepository, super(Uninitialized(userData: UserData.empty));
 
   AuthenticationState get initialState => Uninitialized(userData: UserData.empty);
 
@@ -40,26 +34,46 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState>{
   }
 
   Stream<AuthenticationState> _mapAppStartedToState() async* {
-    try {
+    if(kIsWeb){
       final isSignedIn = _authenticationRepository.isSignedIn();
       if(isSignedIn){
-        UserData userData = await databaseRepository.completeUserData;
-        if(userData==UserData.empty){
-          yield PartiallyAuthenticated(userData: _authenticationRepository.getUserData());
+        await _authenticationRepository.signOut();
+      }
+      yield Unauthenticated(userData: UserData.empty);
+    } else {
+      try {
+        final isSignedIn = _authenticationRepository.isSignedIn();
+        if(isSignedIn){
+          String uid = _authenticationRepository.getUserData().uid;
+          databaseRepository = DatabaseRepository(uid: uid);
+          UserData userData = await databaseRepository.completeUserData;
+          final storage = FlutterSecureStorage();
+          String key = await storage.read(key: 'key')??'KeyNotFound';
+          encryptionRepository = EncryptionRepository();
+          encryptionRepository.updateKey(key);
+          if(userData==UserData.empty){
+            yield PartiallyAuthenticated(userData: _authenticationRepository.getUserData());
+          } else {
+            yield FullyAuthenticated(userData: _authenticationRepository.getUserData());
+          }
         } else {
-          yield FullyAuthenticated(userData: _authenticationRepository.getUserData());
+          yield Unauthenticated(userData: UserData.empty);
         }
-      } else {
+      } on Exception catch (_) {
+        print('error');
         yield Unauthenticated(userData: UserData.empty);
       }
-    } on Exception catch (_) {
-      print('error');
-      yield Unauthenticated(userData: UserData.empty);
     }
   }
 
   Stream<AuthenticationState> _mapAuthenticateUserToState() async* {
+    String uid = _authenticationRepository.getUserData().uid;
+    databaseRepository = DatabaseRepository(uid: uid);
     UserData userData = await databaseRepository.completeUserData;
+    final storage = FlutterSecureStorage();
+    String key = await storage.read(key: 'key')??'KeyNotFound';
+    encryptionRepository = EncryptionRepository();
+    encryptionRepository.updateKey(key);
     if(userData==UserData.empty){
       yield PartiallyAuthenticated(userData: _authenticationRepository.getUserData());
     } else {
@@ -80,10 +94,10 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState>{
     );
     try{
       databaseRepository.updateUserData(newUserData);
-    } on Exception catch (e){
+    } on Exception catch (_){
       print('Something Went Wrong');
     }
-    add(AuthenticateUser(userData: userData));
+    add(AuthenticateUser());
   }
 
   Stream<AuthenticationState> _mapLoggedOutToState() async* {

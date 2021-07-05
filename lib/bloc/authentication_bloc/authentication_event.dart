@@ -19,9 +19,9 @@ class AppStarted extends AuthenticationEvent{
 
 class AuthenticateUser extends AuthenticationEvent{
 
-  final UserData userData;
-
-  AuthenticateUser({required this.userData});
+  // final UserData userData;
+  //
+  // AuthenticateUser({required this.userData});
 
   @override
   String toString() => 'AuthenticateUser';
