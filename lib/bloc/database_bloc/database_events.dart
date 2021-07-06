@@ -5,7 +5,7 @@ import 'package:passmate/model/secure_note.dart';
 
 class DatabaseEvents extends Equatable {
   @override
-  List<Object?> get props => [this.toString()];
+  List<Object?> get props => [];
 }
 
 class GetPasswords extends DatabaseEvents{

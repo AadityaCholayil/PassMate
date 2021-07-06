@@ -13,7 +13,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState>{
   final AuthenticationRepository _authenticationRepository;
   late final StreamSubscription<UserData> _userSubscription;
   late DatabaseRepository databaseRepository;
-  late EncryptionRepository encryptionRepository;
+  EncryptionRepository encryptionRepository = EncryptionRepository();
 
   AuthenticationBloc({required authenticationRepository}):
     _authenticationRepository=authenticationRepository, super(Uninitialized(userData: UserData.empty));
@@ -49,7 +49,6 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState>{
           UserData userData = await databaseRepository.completeUserData;
           final storage = FlutterSecureStorage();
           String key = await storage.read(key: 'key')??'KeyNotFound';
-          encryptionRepository = EncryptionRepository();
           encryptionRepository.updateKey(key);
           if(userData==UserData.empty){
             yield PartiallyAuthenticated(userData: _authenticationRepository.getUserData());
@@ -72,7 +71,6 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState>{
     UserData userData = await databaseRepository.completeUserData;
     final storage = FlutterSecureStorage();
     String key = await storage.read(key: 'key')??'KeyNotFound';
-    encryptionRepository = EncryptionRepository();
     encryptionRepository.updateKey(key);
     if(userData==UserData.empty){
       yield PartiallyAuthenticated(userData: _authenticationRepository.getUserData());

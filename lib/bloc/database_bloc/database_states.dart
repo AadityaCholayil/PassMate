@@ -29,3 +29,39 @@ class SecureNotesList extends DatabaseState{
 
   SecureNotesList(this.list);
 }
+
+class PasswordFormState extends DatabaseState{
+  final String message;
+
+  PasswordFormState(this.message);
+
+  static PasswordFormState loading = PasswordFormState('Loading');
+
+  static PasswordFormState errorOccurred = PasswordFormState('Something went wrong');
+
+  static PasswordFormState success = PasswordFormState('Success');
+}
+
+class PaymentCardFormState extends DatabaseState{
+  final String message;
+
+  PaymentCardFormState(this.message);
+
+  static PaymentCardFormState loading = PaymentCardFormState('Loading');
+
+  static PaymentCardFormState errorOccurred = PaymentCardFormState('Something went wrong');
+
+  static PaymentCardFormState success = PaymentCardFormState('Success');
+}
+
+class SecureNoteFormState extends DatabaseState{
+  final String message;
+
+  SecureNoteFormState(this.message);
+
+  static SecureNoteFormState loading = SecureNoteFormState('Loading');
+
+  static SecureNoteFormState errorOccurred = SecureNoteFormState('Something went wrong');
+
+  static SecureNoteFormState success = SecureNoteFormState('Success');
+}

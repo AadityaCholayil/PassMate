@@ -1,8 +1,5 @@
-import 'dart:io';
-
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
-import 'package:passmate/model/user.dart';
 
 @immutable
 abstract class AuthenticationEvent extends Equatable {

@@ -1,7 +1,7 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:passmate/model/password.dart';
 import 'package:passmate/model/user.dart';
 
 class DatabaseRepository {
@@ -14,18 +14,14 @@ class DatabaseRepository {
   final usersRef =
       FirebaseFirestore.instance.collection('users').withConverter<UserData>(
             fromFirestore: (snapshot, _) => UserData.fromJson(snapshot.data()!),
-            toFirestore: (movie, _) => movie.toJson(),
+            toFirestore: (user, _) => user.toJson(),
           );
-
-  // Future<List<UserData>> getUsers() async {
-  //   final list = await usersRef.get().then((snapshot) => snapshot.docs);
-  //   return list.map((e) => e.data()).toList();
-  // }
 
   Future<UserData> get completeUserData async {
     UserData userDataNew = await usersRef
-        .doc(uid).get()
-        .then((value) => value.data()??UserData.empty);
+        .doc(uid)
+        .get()
+        .then((value) => value.data() ?? UserData.empty);
     return userDataNew;
   }
 
@@ -58,6 +54,65 @@ class DatabaseRepository {
     }
   }
 
+  Query<Password> get passwordsRef => FirebaseFirestore.instance
+      .collectionGroup('passwords')
+      .withConverter<Password>(
+        fromFirestore: (snapshot, _) =>
+            Password.fromJson(snapshot.data()!, snapshot.id),
+        toFirestore: (password, _) => password.toJson(uid),
+      );
 
+  Future<List<Password>> getPasswords(PasswordCategory passwordCategory) async {
+    print('uid: $uid');
+    final list = await passwordsRef
+        .where('uid', isEqualTo: uid)
+        .where('category', isEqualTo: passwordCategory.index)
+        .get()
+        .then((snapshot) => snapshot.docs);
+    print(list);
+    return list.map((e) => e.data()).toList();
+  }
 
+  Future<String> addPassword(Password password) async {
+    try {
+      await db
+          .collection('users')
+          .doc(uid)
+          .collection('folders')
+          .doc(password.path)
+          .collection('passwords')
+          .add(password.toJson(uid));
+      return 'Success';
+    } on Exception catch (e) {
+      print(e);
+      return 'Failed';
+    }
+  }
+
+  Future<String> updatePassword(Password password) async {
+    try {
+      await db
+          .collection('users')
+          .doc(uid)
+          .collection('folders')
+          .doc(password.path)
+          .collection('passwords')
+          .doc(password.id)
+          .set(password.toJson(uid));
+      return 'Success';
+    } on Exception catch (_) {
+      return 'Failed';
+    }
+  }
+
+  Future<void> deletePassword(Password password) async {
+    await db
+        .collection('users')
+        .doc(uid)
+        .collection('folders')
+        .doc(password.path)
+        .collection('passwords')
+        .doc(password.id)
+        .delete();
+  }
 }

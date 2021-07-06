@@ -1,6 +1,8 @@
 import 'package:passmate/model/auth_credentials.dart';
 
 class Password {
+  String? id;
+  String path = '';
   String siteName = '';
   String siteUrl = '';
   String email = '';
@@ -11,7 +13,9 @@ class Password {
   int usage = 0;
 
   Password(
-      {this.siteName = '',
+      {this.id = '',
+      this.path = '',
+      this.siteName = '',
       this.siteUrl = '',
       this.email = '',
       this.password = '',
@@ -20,20 +24,24 @@ class Password {
       this.favourite = false,
       this.usage = 0});
 
-  Password.fromJson(Map<String, Object?> json)
+  Password.fromJson(Map<String, Object?> json, String id)
       : this(
-    siteName: json['siteName']! as String,
-    siteUrl: json['siteUrl']! as String,
-    email: json['email']! as String,
-    password: json['password']! as String,
-    note: json['note']! as String,
-    category: PasswordCategory.values[json['category']! as int] ,
-    favourite: json['favourite']! as bool,
-    usage: json['usage']! as int,
-  );
+          id: id,
+          path: json['path']! as String,
+          siteName: json['siteName']! as String,
+          siteUrl: json['siteUrl']! as String,
+          email: json['email']! as String,
+          password: json['password']! as String,
+          note: json['note']! as String,
+          category: PasswordCategory.values[json['category']! as int],
+          favourite: json['favourite']! as bool,
+          usage: json['usage']! as int,
+        );
 
-  Map<String, Object?> toJson(){
+  Map<String, Object?> toJson(String uid) {
     return {
+      'uid': uid,
+      'path': path,
       'siteName': siteName,
       'siteUrl': siteUrl,
       'email': email,
@@ -47,17 +55,6 @@ class Password {
 
   PasswordStrength get passwordStrength =>
       PasswordStrength.fromPassword(password);
-
-  // Password password1 = Password(
-  //   siteName: 'Google',
-  //   siteUrl: 'www.google.com',
-  //   email: 'aaditya@xyz.com',
-  //   password: 'aadi123',
-  //   note: 'Bruh',
-  //   category: PasswordCategory.Entertainment,
-  //   favourite: false,
-  //   usage: 3
-  // );
 }
 
 enum PasswordCategory {

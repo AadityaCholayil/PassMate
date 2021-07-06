@@ -2,12 +2,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:passmate/model/auth_credentials.dart';
 import 'package:passmate/repositories/authentication_repository.dart';
 import 'package:passmate/bloc/authentication_bloc/auth_bloc_files.dart';
 import 'package:passmate/bloc/app_bloc_observer.dart';
-import 'package:passmate/repositories/database_repository.dart';
-import 'package:passmate/repositories/encryption_repository.dart';
 import 'package:passmate/routes/route_generator.dart';
 import 'package:passmate/routes/routes_name.dart';
 import 'package:provider/provider.dart';
@@ -28,15 +25,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiRepositoryProvider(
-      providers: [
-        RepositoryProvider<AuthenticationRepository>(
-          create: (context) => AuthenticationRepository(),
-        ),
-        RepositoryProvider<EncryptionRepository>(
-          create: (context) => EncryptionRepository(),
-        ),
-      ],
+    return RepositoryProvider<AuthenticationRepository>(
+      create: (context) => AuthenticationRepository(),
       child: BlocProvider<AuthenticationBloc>(
         create: (context) {
           AuthenticationBloc authenticationBloc = AuthenticationBloc(
