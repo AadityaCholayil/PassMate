@@ -16,12 +16,16 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
+  PasswordCategory passwordCategory = PasswordCategory.All;
+
+
   @override
   void initState() {
     super.initState();
     context
         .read<DatabaseBloc>()
-        .add(GetPasswords(PasswordCategory.Entertainment));
+        .add(GetPasswords(passwordCategory));
   }
 
   @override
@@ -68,7 +72,9 @@ class _HomePageState extends State<HomePage> {
         child: FloatingActionButton(
           onPressed: () {
             Navigator.push(context,
-                MaterialPageRoute(builder: (context) => PasswordFormPage()));
+                MaterialPageRoute(builder: (context) => PasswordFormPage()))
+                    .then((value) => context.read<DatabaseBloc>()
+                    .add(GetPasswords(passwordCategory)));
           },
           child: Icon(
             Icons.add,

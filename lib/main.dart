@@ -5,9 +5,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:passmate/repositories/authentication_repository.dart';
 import 'package:passmate/bloc/authentication_bloc/auth_bloc_files.dart';
 import 'package:passmate/bloc/app_bloc_observer.dart';
+import 'package:passmate/repositories/database_repository.dart';
+import 'package:passmate/repositories/encryption_repository.dart';
 import 'package:passmate/routes/route_generator.dart';
 import 'package:passmate/routes/routes_name.dart';
 import 'package:provider/provider.dart';
+
+import 'bloc/database_bloc/database_barrel.dart';
 // import 'dart:html' as html;
 
 void main() async {
@@ -35,14 +39,34 @@ class MyApp extends StatelessWidget {
           authenticationBloc.add(AppStarted());
           return authenticationBloc;
         },
-        child: MaterialApp(
-          debugShowCheckedModeBanner: false,
-          theme: ThemeData.from(colorScheme: ColorScheme.fromSwatch(
-            brightness: Brightness.light,
-            primarySwatch: Colors.purple,
-          )),
-          onGenerateRoute: RouteGenerator.generateRoute,
-          initialRoute: RoutesName.WRAPPER,
+        child: Builder(
+          builder: (context) {
+            return MultiRepositoryProvider(
+              providers: [
+                RepositoryProvider<EncryptionRepository>.value(
+                  value: context.read<AuthenticationBloc>().encryptionRepository,
+                ),
+                RepositoryProvider<DatabaseRepository>.value(
+                  value: context.read<AuthenticationBloc>().databaseRepository,
+                ),
+              ],
+              child: BlocProvider<DatabaseBloc>(
+                create: (context) => DatabaseBloc(
+                    userData: context.read<AuthenticationBloc>().userData,
+                    databaseRepository: context.read<DatabaseRepository>(),
+                    encryptionRepository: context.read<EncryptionRepository>()),
+                child: MaterialApp(
+                  debugShowCheckedModeBanner: false,
+                  theme: ThemeData.from(colorScheme: ColorScheme.fromSwatch(
+                    brightness: Brightness.light,
+                    primarySwatch: Colors.purple,
+                  )),
+                  onGenerateRoute: RouteGenerator.generateRoute,
+                  initialRoute: RoutesName.WRAPPER,
+                ),
+              ),
+            );
+          }
         ),
       ),
     );

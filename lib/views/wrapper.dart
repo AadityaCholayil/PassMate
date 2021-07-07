@@ -24,23 +24,7 @@ class Wrapper extends StatelessWidget {
         } else if (state is PartiallyAuthenticated) {
           return AdditionalDetailsPage();
         } else if (state is FullyAuthenticated) {
-          return MultiRepositoryProvider(
-            providers: [
-              RepositoryProvider<EncryptionRepository>.value(
-                value: context.read<AuthenticationBloc>().encryptionRepository,
-              ),
-              RepositoryProvider<DatabaseRepository>.value(
-                value: context.read<AuthenticationBloc>().databaseRepository,
-              ),
-            ],
-            child: BlocProvider<DatabaseBloc>(
-              create: (context) => DatabaseBloc(
-                  userData: state.userData,
-                  databaseRepository: context.read<DatabaseRepository>(),
-                  encryptionRepository: context.read<EncryptionRepository>()),
-              child: HomePage(),
-            ),
-          );
+          return HomePage();
         } else {
           return Loading();
         }

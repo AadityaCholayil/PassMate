@@ -22,9 +22,6 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
       child: Scaffold(
         body: BlocConsumer<DatabaseBloc, DatabaseState>(
           listener: (context, state){
-
-          },
-          builder: (context, state){
             if(state is PasswordFormState){
               if (state == PasswordFormState.success) {
                 ScaffoldMessenger.of(context).hideCurrentSnackBar();
@@ -34,7 +31,9 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
                 ScaffoldMessenger.of(context)
                     .showSnackBar(showCustomSnackBar(context, state.message));
               }
-          }
+            }
+          },
+          builder: (context, state){
             return Container(
               child: Column(
                 children: [

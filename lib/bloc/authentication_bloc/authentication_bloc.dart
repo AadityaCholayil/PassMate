@@ -11,9 +11,9 @@ import 'auth_bloc_files.dart';
 class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState>{
 
   final AuthenticationRepository _authenticationRepository;
-  late final StreamSubscription<UserData> _userSubscription;
-  late DatabaseRepository databaseRepository;
+  DatabaseRepository databaseRepository = DatabaseRepository(uid: '');
   EncryptionRepository encryptionRepository = EncryptionRepository();
+  UserData userData = UserData.empty;
 
   AuthenticationBloc({required authenticationRepository}):
     _authenticationRepository=authenticationRepository, super(Uninitialized(userData: UserData.empty));
@@ -35,28 +35,28 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState>{
 
   Stream<AuthenticationState> _mapAppStartedToState() async* {
     if(kIsWeb){
+      userData = _authenticationRepository.getUserData();
       final isSignedIn = _authenticationRepository.isSignedIn();
       if(isSignedIn){
         await _authenticationRepository.signOut();
       }
-      yield Unauthenticated(userData: UserData.empty);
+      yield Unauthenticated(userData: userData);
     } else {
       try {
-        final isSignedIn = _authenticationRepository.isSignedIn();
-        if(isSignedIn){
-          String uid = _authenticationRepository.getUserData().uid;
-          databaseRepository = DatabaseRepository(uid: uid);
-          UserData userData = await databaseRepository.completeUserData;
+        userData = _authenticationRepository.getUserData();
+        if(userData!=UserData.empty){
+          databaseRepository = DatabaseRepository(uid: userData.uid);
+          userData = await databaseRepository.completeUserData;
           final storage = FlutterSecureStorage();
           String key = await storage.read(key: 'key')??'KeyNotFound';
           encryptionRepository.updateKey(key);
           if(userData==UserData.empty){
-            yield PartiallyAuthenticated(userData: _authenticationRepository.getUserData());
+            yield PartiallyAuthenticated(userData: userData);
           } else {
-            yield FullyAuthenticated(userData: _authenticationRepository.getUserData());
+            yield FullyAuthenticated(userData: userData);
           }
         } else {
-          yield Unauthenticated(userData: UserData.empty);
+          yield Unauthenticated(userData: userData);
         }
       } on Exception catch (_) {
         print('error');
@@ -66,22 +66,22 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState>{
   }
 
   Stream<AuthenticationState> _mapAuthenticateUserToState() async* {
-    String uid = _authenticationRepository.getUserData().uid;
-    databaseRepository = DatabaseRepository(uid: uid);
-    UserData userData = await databaseRepository.completeUserData;
+    userData = _authenticationRepository.getUserData();
+    databaseRepository = DatabaseRepository(uid: userData.uid);
+    userData = await databaseRepository.completeUserData;
     final storage = FlutterSecureStorage();
     String key = await storage.read(key: 'key')??'KeyNotFound';
     encryptionRepository.updateKey(key);
     if(userData==UserData.empty){
-      yield PartiallyAuthenticated(userData: _authenticationRepository.getUserData());
+      yield PartiallyAuthenticated(userData: userData);
     } else {
-      yield FullyAuthenticated(userData: _authenticationRepository.getUserData());
+      yield FullyAuthenticated(userData: userData);
     }
   }
 
   Stream<AuthenticationState> _mapUpdateUserDataToState(UpdateUserData event) async* {
     yield Uninitialized(userData: UserData.empty);
-    UserData userData = _authenticationRepository.getUserData();
+    userData = _authenticationRepository.getUserData();
     UserData newUserData = UserData(
       uid: userData.uid,
       email: userData.email,
@@ -100,12 +100,12 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState>{
 
   Stream<AuthenticationState> _mapLoggedOutToState() async* {
     await _authenticationRepository.signOut();
-    yield Unauthenticated(userData: UserData.empty);
+    userData = _authenticationRepository.getUserData();
+    yield Unauthenticated(userData: userData);
   }
 
   @override
   Future<void> close() {
-    _userSubscription.cancel();
     return super.close();
   }
 }

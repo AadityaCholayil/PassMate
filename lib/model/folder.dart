@@ -24,9 +24,9 @@ class FolderData{
   FolderData();
 
   FolderData.fromDB(Map<String, Object?> json){
-    passwordList = (json['passwordList']??[]) as List<String>;
-    paymentCardList = (json['paymentCardList']??[]) as List<String>;
-    secureNotesList = (json['secureNotesList']??[]) as List<String>;
+    passwordList = List<String>.from(json['passwordList'] as List);
+    paymentCardList = List<String>.from(json['paymentCardList'] as List);
+    secureNotesList = List<String>.from(json['secureNotesList'] as List);
   }
 
   Map<String, Object?> toJson(){
