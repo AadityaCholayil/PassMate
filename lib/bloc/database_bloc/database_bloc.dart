@@ -18,11 +18,11 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState>{
     if(event is GetPasswords){
       yield* _mapGetPasswordsToState(event);
     } else if(event is AddPassword){
-
+      yield* _mapAddPasswordToState(event);
     } else if(event is UpdatePassword){
-
+      yield* _mapUpdatePasswordToState(event);
     } else if(event is DeletePassword){
-
+      yield* _mapDeletePasswordToState(event);
     } else if(event is GetPaymentCards){
 
     } else if(event is AddPaymentCard){
@@ -47,5 +47,35 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState>{
     List<Password> list = await databaseRepository.getPasswords(event.passwordCategory);
     yield PasswordList(list);
   }
+
+  Stream<DatabaseState> _mapAddPasswordToState(AddPassword event) async* {
+    yield PasswordFormState.loading;
+    String res = await databaseRepository.addPassword(event.password);
+    if(res=='Success'){
+      yield PasswordFormState.success;
+    } else {
+      yield PasswordFormState.errorOccurred;
+    }
+  }
+
+  Stream<DatabaseState> _mapUpdatePasswordToState(UpdatePassword event) async* {
+    yield PasswordFormState.loading;
+    String res =
+        await databaseRepository.updatePassword(event.password, event.oldPath);
+    if (res == 'Success') {
+      yield PasswordFormState.success;
+    } else {
+      yield PasswordFormState.errorOccurred;
+    }
+  }
+
+  Stream<DatabaseState> _mapDeletePasswordToState(DeletePassword event) async* {
+    yield Fetching();
+    await databaseRepository.deletePassword(event.password);
+    List<Password> list = await databaseRepository.getPasswords(event.passwordCategory);
+    yield PasswordList(list);
+  }
+
+
 
 }

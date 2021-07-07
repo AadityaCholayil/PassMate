@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:passmate/model/auth_credentials.dart';
 
 class Password {
@@ -11,6 +12,8 @@ class Password {
   PasswordCategory category = PasswordCategory.Others;
   bool favourite = false;
   int usage = 0;
+  Timestamp? lastUsed;
+  Timestamp? timeAdded;
 
   Password(
       {this.id = '',
@@ -38,9 +41,8 @@ class Password {
           usage: json['usage']! as int,
         );
 
-  Map<String, Object?> toJson(String uid) {
+  Map<String, Object?> toJson() {
     return {
-      'uid': uid,
       'path': path,
       'siteName': siteName,
       'siteUrl': siteUrl,
@@ -55,6 +57,11 @@ class Password {
 
   PasswordStrength get passwordStrength =>
       PasswordStrength.fromPassword(password);
+
+  @override
+  String toString(){
+    return '$path - $siteName: $email, $password Category: $category, isFav: $favourite';
+  }
 }
 
 enum PasswordCategory {

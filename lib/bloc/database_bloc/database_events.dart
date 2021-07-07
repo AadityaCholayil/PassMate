@@ -22,14 +22,16 @@ class AddPassword extends DatabaseEvents {
 
 class UpdatePassword extends DatabaseEvents {
   final Password password;
+  final String oldPath;
 
-  UpdatePassword(this.password);
+  UpdatePassword(this.password, this.oldPath);
 }
 
 class DeletePassword extends DatabaseEvents {
   final Password password;
+  final PasswordCategory passwordCategory;
 
-  DeletePassword(this.password);
+  DeletePassword(this.password, this.passwordCategory);
 }
 
 class GetPaymentCards extends DatabaseEvents{

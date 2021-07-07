@@ -33,7 +33,7 @@ class _HomePageState extends State<HomePage> {
         listener: (context, state) {
           if (state is PasswordList) {
             state.list.forEach((element) {
-              print(element.path);
+              print(element);
             });
           }
         },

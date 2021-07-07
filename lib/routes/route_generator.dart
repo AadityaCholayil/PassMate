@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:passmate/views/auth/login.dart';
+import 'package:passmate/views/auth/login_page.dart';
 import 'package:passmate/views/auth/signup_page.dart';
 import 'package:passmate/routes/routes_name.dart';
 import 'package:passmate/views/wrapper.dart';

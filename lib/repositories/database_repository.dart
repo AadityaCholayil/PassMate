@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:passmate/model/folder.dart';
 import 'package:passmate/model/password.dart';
 import 'package:passmate/model/user.dart';
 
@@ -11,8 +12,8 @@ class DatabaseRepository {
 
   final FirebaseFirestore db = FirebaseFirestore.instance;
 
-  final usersRef =
-      FirebaseFirestore.instance.collection('users').withConverter<UserData>(
+  CollectionReference<UserData> get usersRef =>
+      db.collection('users').withConverter<UserData>(
             fromFirestore: (snapshot, _) => UserData.fromJson(snapshot.data()!),
             toFirestore: (user, _) => user.toJson(),
           );
@@ -54,34 +55,47 @@ class DatabaseRepository {
     }
   }
 
-  Query<Password> get passwordsRef => FirebaseFirestore.instance
-      .collectionGroup('passwords')
+  CollectionReference<FolderData> get foldersRef => db
+      .collection('users')
+      .doc(uid)
+      .collection('folders')
+      .withConverter<FolderData>(
+        fromFirestore: (snapshot, _) => FolderData.fromDB(snapshot.data()!),
+        toFirestore: (folderData, _) => folderData.toJson(),
+      );
+
+  CollectionReference<Password> get passwordsRef => db
+      .collection('users')
+      .doc(uid)
+      .collection('passwords')
       .withConverter<Password>(
         fromFirestore: (snapshot, _) =>
             Password.fromJson(snapshot.data()!, snapshot.id),
-        toFirestore: (password, _) => password.toJson(uid),
+        toFirestore: (password, _) => password.toJson(),
       );
 
   Future<List<Password>> getPasswords(PasswordCategory passwordCategory) async {
-    print('uid: $uid');
-    final list = await passwordsRef
-        .where('uid', isEqualTo: uid)
-        .where('category', isEqualTo: passwordCategory.index)
-        .get()
-        .then((snapshot) => snapshot.docs);
-    print(list);
+    List<QueryDocumentSnapshot<Password>> list = [];
+    if (passwordCategory == PasswordCategory.All) {
+      list = await passwordsRef.get().then((snapshot) => snapshot.docs);
+    } else {
+      list = await passwordsRef
+          .where('category', isEqualTo: passwordCategory.index)
+          .get()
+          .then((snapshot) => snapshot.docs);
+    }
     return list.map((e) => e.data()).toList();
   }
 
   Future<String> addPassword(Password password) async {
     try {
-      await db
-          .collection('users')
-          .doc(uid)
-          .collection('folders')
+      final res = await passwordsRef.add(password);
+      FolderData data = await foldersRef
           .doc(password.path)
-          .collection('passwords')
-          .add(password.toJson(uid));
+          .get()
+          .then((value) => value.data() ?? FolderData());
+      data.passwordList.add(res.id);
+      await foldersRef.doc(password.path).set(data);
       return 'Success';
     } on Exception catch (e) {
       print(e);
@@ -89,30 +103,119 @@ class DatabaseRepository {
     }
   }
 
-  Future<String> updatePassword(Password password) async {
+  Future<String> updatePassword(Password password, String oldPath) async {
     try {
-      await db
-          .collection('users')
-          .doc(uid)
-          .collection('folders')
-          .doc(password.path)
-          .collection('passwords')
-          .doc(password.id)
-          .set(password.toJson(uid));
+      await passwordsRef.doc(password.id).set(password);
+      if (password.path != oldPath) {
+        FolderData data = await foldersRef
+            .doc(oldPath)
+            .get()
+            .then((value) => value.data() ?? FolderData());
+        data.passwordList.remove(password.id!);
+        await foldersRef.doc(oldPath).set(data);
+        FolderData data2 = await foldersRef
+            .doc(password.path)
+            .get()
+            .then((value) => value.data() ?? FolderData());
+        data2.passwordList.add(password.id!);
+        await foldersRef.doc(password.path).set(data2);
+      }
       return 'Success';
     } on Exception catch (_) {
       return 'Failed';
     }
   }
 
-  Future<void> deletePassword(Password password) async {
-    await db
-        .collection('users')
-        .doc(uid)
-        .collection('folders')
-        .doc(password.path)
-        .collection('passwords')
-        .doc(password.id)
-        .delete();
+  Future<String> deletePassword(Password password) async {
+    try {
+      await passwordsRef.doc(password.id).delete();
+      FolderData data = await foldersRef
+          .doc(password.path)
+          .get()
+          .then((value) => value.data() ?? FolderData());
+      data.passwordList.remove(password.id);
+      await foldersRef.doc(password.path).set(data);
+      return 'Success';
+    } on Exception catch (_) {
+      return 'Failed';
+    }
+  }
+
+  CollectionReference<Password> get paymentCardsRef => db
+      .collection('users')
+      .doc(uid)
+      .collection('paymentCards')
+      .withConverter<Password>(
+        fromFirestore: (snapshot, _) =>
+            Password.fromJson(snapshot.data()!, snapshot.id),
+        toFirestore: (password, _) => password.toJson(),
+      );
+
+  Future<List<Password>> getPaymentCards(
+      PasswordCategory passwordCategory) async {
+    List<QueryDocumentSnapshot<Password>> list = [];
+    if (passwordCategory == PasswordCategory.All) {
+      list = await passwordsRef.get().then((snapshot) => snapshot.docs);
+    } else {
+      list = await passwordsRef
+          .where('category', isEqualTo: passwordCategory.index)
+          .get()
+          .then((snapshot) => snapshot.docs);
+    }
+    return list.map((e) => e.data()).toList();
+  }
+
+  Future<String> addPaymentCard(Password password) async {
+    try {
+      final res = await passwordsRef.add(password);
+      FolderData data = await foldersRef
+          .doc(password.path)
+          .get()
+          .then((value) => value.data() ?? FolderData());
+      data.passwordList.add(res.id);
+      await foldersRef.doc(password.path).set(data);
+      return 'Success';
+    } on Exception catch (e) {
+      print(e);
+      return 'Failed';
+    }
+  }
+
+  Future<String> updatePaymentCard(Password password, String oldPath) async {
+    try {
+      await passwordsRef.doc(password.id).set(password);
+      if (password.path != oldPath) {
+        FolderData data = await foldersRef
+            .doc(oldPath)
+            .get()
+            .then((value) => value.data() ?? FolderData());
+        data.passwordList.remove(password.id!);
+        await foldersRef.doc(oldPath).set(data);
+        FolderData data2 = await foldersRef
+            .doc(password.path)
+            .get()
+            .then((value) => value.data() ?? FolderData());
+        data2.passwordList.add(password.id!);
+        await foldersRef.doc(password.path).set(data2);
+      }
+      return 'Success';
+    } on Exception catch (_) {
+      return 'Failed';
+    }
+  }
+
+  Future<String> deletePaymentCard(Password password) async {
+    try {
+      await passwordsRef.doc(password.id).delete();
+      FolderData data = await foldersRef
+          .doc(password.path)
+          .get()
+          .then((value) => value.data() ?? FolderData());
+      data.passwordList.remove(password.id);
+      await foldersRef.doc(password.path).set(data);
+      return 'Success';
+    } on Exception catch (_) {
+      return 'Failed';
+    }
   }
 }

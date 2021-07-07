@@ -5,6 +5,8 @@ import 'package:passmate/bloc/database_bloc/database_barrel.dart';
 import 'package:passmate/model/password.dart';
 import 'package:passmate/repositories/authentication_repository.dart';
 import 'package:passmate/repositories/database_repository.dart';
+import 'package:passmate/shared/custom_snackbar.dart';
+import 'package:passmate/shared/loading.dart';
 
 class PasswordFormPage extends StatefulWidget {
   const PasswordFormPage({Key? key}) : super(key: key);
@@ -18,30 +20,56 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: Container(
-          child: ElevatedButton(
-            child: Text(
-              'Add Password',
-              style: TextStyle(
-                  fontSize: 20
-              ),
-            ),
-            onPressed: (){
-              Password password = Password(
-                  path: 'work',
-                  siteName: 'Google',
-                  siteUrl: 'www.google.com',
-                  email: 'aaditya@xyz.com',
-                  password: 'aadi123',
-                  note: 'Bruh',
-                  category: PasswordCategory.Entertainment,
-                  favourite: false,
-                  usage: 3
-              );
+        body: BlocConsumer<DatabaseBloc, DatabaseState>(
+          listener: (context, state){
 
-              context.read<AuthenticationBloc>().databaseRepository.addPassword(password);
-            },
-          ),
+          },
+          builder: (context, state){
+            if(state is PasswordFormState){
+              if (state == PasswordFormState.success) {
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                Navigator.pop(context);
+              } else {
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(showCustomSnackBar(context, state.message));
+              }
+          }
+            return Container(
+              child: Column(
+                children: [
+                  Text(
+                    'Add Password',
+                    style: TextStyle(
+                        fontSize: 30
+                    ),
+                  ),
+                  ElevatedButton(
+                    child: Text(
+                      'Submit',
+                      style: TextStyle(
+                          fontSize: 20
+                      ),
+                    ),
+                    onPressed: (){
+                      Password password = Password(
+                          path: '/default',
+                          siteName: 'Google',
+                          siteUrl: 'www.google.com',
+                          email: 'aaditya@xyz.com',
+                          password: 'aadi123',
+                          note: 'Bruh',
+                          category: PasswordCategory.Entertainment,
+                          favourite: false,
+                          usage: 3
+                      );
+                      context.read<DatabaseBloc>().add(AddPassword(password));
+                    },
+                  ),
+                ],
+              ),
+            );
+          },
         ),
       ),
     );
