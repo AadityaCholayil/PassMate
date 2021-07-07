@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:passmate/bloc/database_bloc/database_barrel.dart';
-import 'package:passmate/repositories/database_repository.dart';
-import 'package:passmate/repositories/encryption_repository.dart';
 import 'package:passmate/views/auth/additional_details.dart';
 import 'package:passmate/views/auth/welcome_screen.dart';
 import 'package:passmate/bloc/authentication_bloc/auth_bloc_files.dart';
-import 'package:passmate/views/homepage.dart';
+import 'package:passmate/views/homescreen.dart';
 import 'package:passmate/shared/loading.dart';
 
 class Wrapper extends StatelessWidget {
@@ -24,7 +21,7 @@ class Wrapper extends StatelessWidget {
         } else if (state is PartiallyAuthenticated) {
           return AdditionalDetailsPage();
         } else if (state is FullyAuthenticated) {
-          return HomePage();
+          return HomeScreen();
         } else {
           return Loading();
         }

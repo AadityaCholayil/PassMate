@@ -1,8 +1,6 @@
-
 import 'package:flutter/material.dart';
-import 'package:passmate/repositories/encryption_repository.dart';
 import 'package:passmate/routes/routes_name.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({Key? key}) : super(key: key);

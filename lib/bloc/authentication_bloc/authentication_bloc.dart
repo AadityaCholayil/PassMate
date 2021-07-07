@@ -11,12 +11,15 @@ import 'auth_bloc_files.dart';
 class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState>{
 
   final AuthenticationRepository _authenticationRepository;
-  DatabaseRepository databaseRepository = DatabaseRepository(uid: '');
+  late DatabaseRepository databaseRepository;
   EncryptionRepository encryptionRepository = EncryptionRepository();
   UserData userData = UserData.empty;
 
   AuthenticationBloc({required authenticationRepository}):
-    _authenticationRepository=authenticationRepository, super(Uninitialized(userData: UserData.empty));
+    _authenticationRepository=authenticationRepository, super(Uninitialized(userData: UserData.empty)){
+    userData = _authenticationRepository.getUserData();
+    databaseRepository = DatabaseRepository(uid: userData.uid);
+  }
 
   AuthenticationState get initialState => Uninitialized(userData: UserData.empty);
 
@@ -35,7 +38,6 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState>{
 
   Stream<AuthenticationState> _mapAppStartedToState() async* {
     if(kIsWeb){
-      userData = _authenticationRepository.getUserData();
       final isSignedIn = _authenticationRepository.isSignedIn();
       if(isSignedIn){
         await _authenticationRepository.signOut();
@@ -43,9 +45,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState>{
       yield Unauthenticated(userData: userData);
     } else {
       try {
-        userData = _authenticationRepository.getUserData();
         if(userData!=UserData.empty){
-          databaseRepository = DatabaseRepository(uid: userData.uid);
           userData = await databaseRepository.completeUserData;
           final storage = FlutterSecureStorage();
           String key = await storage.read(key: 'key')??'KeyNotFound';
@@ -81,7 +81,6 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState>{
 
   Stream<AuthenticationState> _mapUpdateUserDataToState(UpdateUserData event) async* {
     yield Uninitialized(userData: UserData.empty);
-    userData = _authenticationRepository.getUserData();
     UserData newUserData = UserData(
       uid: userData.uid,
       email: userData.email,
@@ -100,7 +99,6 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState>{
 
   Stream<AuthenticationState> _mapLoggedOutToState() async* {
     await _authenticationRepository.signOut();
-    userData = _authenticationRepository.getUserData();
     yield Unauthenticated(userData: userData);
   }
 
