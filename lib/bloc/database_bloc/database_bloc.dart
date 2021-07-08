@@ -59,13 +59,17 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState>{
   }
 
   Stream<DatabaseState> _mapUpdatePasswordToState(UpdatePassword event) async* {
-    yield PasswordFormState.loading;
-    String res =
-        await databaseRepository.updatePassword(event.password, event.oldPath);
-    if (res == 'Success') {
-      yield PasswordFormState.success;
+    if (event.form) {
+      yield PasswordFormState.loading;
+      String res =
+          await databaseRepository.updatePassword(event.password, event.oldPath);
+      if (res == 'Success') {
+        yield PasswordFormState.success;
+      } else {
+        yield PasswordFormState.errorOccurred;
+      }
     } else {
-      yield PasswordFormState.errorOccurred;
+      await databaseRepository.updatePassword(event.password, event.oldPath);
     }
   }
 

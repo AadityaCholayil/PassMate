@@ -46,19 +46,6 @@ class _PaymentCardPageState extends State<PaymentCardPage> {
                   'Payment Cards\n${context.read<MenuProvider>().currentPage}',
                   style: TextStyle(fontSize: 25),
                 ),
-                ElevatedButton(
-                  child: Text('Logout'),
-                  onPressed: () {
-                    BlocProvider.of<AuthenticationBloc>(context)
-                        .add(LoggedOut());
-                  },
-                ),
-                ElevatedButton(
-                  child: Text('Bruh'),
-                  onPressed: () {
-
-                  },
-                ),
               ],
             ),
           );

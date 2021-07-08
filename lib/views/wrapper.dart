@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:passmate/views/auth/additional_details.dart';
 import 'package:passmate/views/auth/welcome_screen.dart';
 import 'package:passmate/bloc/authentication_bloc/auth_bloc_files.dart';
-import 'package:passmate/views/homescreen.dart';
+import 'package:passmate/views/home_screen.dart';
 import 'package:passmate/shared/loading.dart';
 
 class Wrapper extends StatelessWidget {

@@ -21,10 +21,11 @@ class AddPassword extends DatabaseEvents {
 }
 
 class UpdatePassword extends DatabaseEvents {
+  final bool form;
   final Password password;
   final String oldPath;
 
-  UpdatePassword(this.password, this.oldPath);
+  UpdatePassword(this.form, this.password, this.oldPath);
 }
 
 class DeletePassword extends DatabaseEvents {

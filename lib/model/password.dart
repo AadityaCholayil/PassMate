@@ -8,6 +8,7 @@ class Password {
   String siteUrl = '';
   String email = '';
   String password = '';
+  String imageUrl = '';
   String note = '';
   PasswordCategory category = PasswordCategory.Others;
   bool favourite = false;
@@ -22,10 +23,14 @@ class Password {
       this.siteUrl = '',
       this.email = '',
       this.password = '',
+      this.imageUrl = '',
       this.note = '',
       this.category = PasswordCategory.Others,
       this.favourite = false,
-      this.usage = 0});
+      this.usage = 0,
+      this.lastUsed,
+      this.timeAdded,
+      });
 
   Password.fromJson(Map<String, Object?> json, String id)
       : this(
@@ -35,10 +40,13 @@ class Password {
           siteUrl: json['siteUrl']! as String,
           email: json['email']! as String,
           password: json['password']! as String,
+          imageUrl: json['imageUrl']! as String,
           note: json['note']! as String,
           category: PasswordCategory.values[json['category']! as int],
           favourite: json['favourite']! as bool,
           usage: json['usage']! as int,
+          lastUsed: json['lastUsed'] as Timestamp,
+          timeAdded: json['timeAdded'] as Timestamp,
         );
 
   Map<String, Object?> toJson() {
@@ -48,10 +56,13 @@ class Password {
       'siteUrl': siteUrl,
       'email': email,
       'password': password,
+      'imageUrl': imageUrl,
       'note': note,
       'category': category.index,
       'favourite': favourite,
       'usage': usage,
+      'lastUsed': lastUsed,
+      'timeAdded': timeAdded
     };
   }
 
