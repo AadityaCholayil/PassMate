@@ -105,19 +105,21 @@ class DatabaseRepository {
 
   Future<String> updatePassword(Password password, String oldPath) async {
     try {
+      print(passwordsRef.path);
+      print(password.id);
       await passwordsRef.doc(password.id).set(password);
       if (password.path != oldPath) {
         FolderData data = await foldersRef
             .doc(oldPath)
             .get()
             .then((value) => value.data() ?? FolderData());
-        data.passwordList.remove(password.id!);
+        data.passwordList.remove(password.id);
         await foldersRef.doc(oldPath).set(data);
         FolderData data2 = await foldersRef
             .doc(password.path)
             .get()
             .then((value) => value.data() ?? FolderData());
-        data2.passwordList.add(password.id!);
+        data2.passwordList.add(password.id);
         await foldersRef.doc(password.path).set(data2);
       }
       return 'Success';
@@ -189,13 +191,13 @@ class DatabaseRepository {
             .doc(oldPath)
             .get()
             .then((value) => value.data() ?? FolderData());
-        data.passwordList.remove(password.id!);
+        data.passwordList.remove(password.id);
         await foldersRef.doc(oldPath).set(data);
         FolderData data2 = await foldersRef
             .doc(password.path)
             .get()
             .then((value) => value.data() ?? FolderData());
-        data2.passwordList.add(password.id!);
+        data2.passwordList.add(password.id);
         await foldersRef.doc(password.path).set(data2);
       }
       return 'Success';

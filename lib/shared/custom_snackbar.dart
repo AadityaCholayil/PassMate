@@ -5,7 +5,7 @@ SnackBar showCustomSnackBar(BuildContext context, String message) {
   return SnackBar(
     margin: EdgeInsets.all(15),
     behavior: SnackBarBehavior.floating,
-    backgroundColor: Colors.grey[200],
+    backgroundColor: Colors.white,
     content: Container(
       child: Row(
         children: [

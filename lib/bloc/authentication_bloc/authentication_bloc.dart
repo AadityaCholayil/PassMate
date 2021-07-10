@@ -18,6 +18,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState>{
   AuthenticationBloc({required authenticationRepository}):
     _authenticationRepository=authenticationRepository, super(Uninitialized(userData: UserData.empty)){
     userData = _authenticationRepository.getUserData();
+    print(userData);
     databaseRepository = DatabaseRepository(uid: userData.uid);
   }
 
@@ -67,11 +68,14 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState>{
 
   Stream<AuthenticationState> _mapAuthenticateUserToState() async* {
     userData = _authenticationRepository.getUserData();
+    print(userData.uid);
     databaseRepository = DatabaseRepository(uid: userData.uid);
     userData = await databaseRepository.completeUserData;
-    final storage = FlutterSecureStorage();
-    String key = await storage.read(key: 'key')??'KeyNotFound';
-    encryptionRepository.updateKey(key);
+    if (!kIsWeb) {
+      final storage = FlutterSecureStorage();
+      String key = await storage.read(key: 'key')??'KeyNotFound';
+      encryptionRepository.updateKey(key);
+    }
     if(userData==UserData.empty){
       yield PartiallyAuthenticated(userData: userData);
     } else {

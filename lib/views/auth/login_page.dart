@@ -35,7 +35,7 @@ class _LoginPageState extends State<LoginPage> {
           if (state == LoginState.success) {
             await compute(EncryptionRepository.scryptHash, password).then((value) {
               context.read<AuthenticationBloc>().encryptionRepository.updateKey(value);
-              if (Platform.isAndroid) {
+              if (!kIsWeb) {
                 final storage = FlutterSecureStorage();
                 storage.write(key: 'key', value: value);
               }

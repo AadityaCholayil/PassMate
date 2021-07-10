@@ -3,12 +3,12 @@ import 'package:passmate/model/password.dart';
 import 'package:passmate/model/payment_card.dart';
 import 'package:passmate/model/secure_note.dart';
 
-class DatabaseState extends Equatable{
-  @override
-  List<Object?> get props => [];
+abstract class DatabaseState extends Equatable{
 }
 
 class Fetching extends DatabaseState{
+  @override
+  List<Object?> get props => ['Fetching'];
 
 }
 
@@ -16,18 +16,27 @@ class PasswordList extends DatabaseState{
   final List<Password> list;
 
   PasswordList(this.list);
+
+  @override
+  List<Object?> get props => ['PasswordList'];
 }
 
 class PaymentCardList extends DatabaseState{
   final List<PaymentCard> list;
 
   PaymentCardList(this.list);
+
+  @override
+  List<Object?> get props => ['PaymentCardList'];
 }
 
 class SecureNotesList extends DatabaseState{
   final List<SecureNote> list;
 
   SecureNotesList(this.list);
+
+  @override
+  List<Object?> get props => ['SecureNotesList'];
 }
 
 class PasswordFormState extends DatabaseState{
@@ -40,6 +49,9 @@ class PasswordFormState extends DatabaseState{
   static PasswordFormState errorOccurred = PasswordFormState('Something went wrong');
 
   static PasswordFormState success = PasswordFormState('Success');
+
+  @override
+  List<Object?> get props => [message];
 }
 
 class PaymentCardFormState extends DatabaseState{
@@ -52,6 +64,9 @@ class PaymentCardFormState extends DatabaseState{
   static PaymentCardFormState errorOccurred = PaymentCardFormState('Something went wrong');
 
   static PaymentCardFormState success = PaymentCardFormState('Success');
+
+  @override
+  List<Object?> get props => [message];
 }
 
 class SecureNoteFormState extends DatabaseState{
@@ -64,4 +79,7 @@ class SecureNoteFormState extends DatabaseState{
   static SecureNoteFormState errorOccurred = SecureNoteFormState('Something went wrong');
 
   static SecureNoteFormState success = SecureNoteFormState('Success');
+
+  @override
+  List<Object?> get props => [message];
 }

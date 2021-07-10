@@ -41,16 +41,24 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState>{
 
     }
   }
+  // bf73cf39b4a9b524ebf892b0c5528608
 
   Stream<DatabaseState> _mapGetPasswordsToState(GetPasswords event) async* {
     yield Fetching();
+    print(encryptionRepository.key);
     List<Password> list = await databaseRepository.getPasswords(event.passwordCategory);
+    list.forEach((element) async {
+      await element.decrypt(encryptionRepository);
+    });
     yield PasswordList(list);
   }
 
   Stream<DatabaseState> _mapAddPasswordToState(AddPassword event) async* {
     yield PasswordFormState.loading;
+    await event.password.encrypt(encryptionRepository);
+    print(event.password);
     String res = await databaseRepository.addPassword(event.password);
+    print(res);
     if(res=='Success'){
       yield PasswordFormState.success;
     } else {
@@ -59,7 +67,9 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState>{
   }
 
   Stream<DatabaseState> _mapUpdatePasswordToState(UpdatePassword event) async* {
-    if (event.form) {
+    print('pass: ${event.password}');
+    await event.password.encrypt(encryptionRepository);
+    if (event.fromForm) {
       yield PasswordFormState.loading;
       String res =
           await databaseRepository.updatePassword(event.password, event.oldPath);
@@ -70,14 +80,15 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState>{
       }
     } else {
       await databaseRepository.updatePassword(event.password, event.oldPath);
+      await event.password.decrypt(encryptionRepository);
     }
   }
 
   Stream<DatabaseState> _mapDeletePasswordToState(DeletePassword event) async* {
     yield Fetching();
+    await event.password.encrypt(encryptionRepository);
     await databaseRepository.deletePassword(event.password);
-    List<Password> list = await databaseRepository.getPasswords(event.passwordCategory);
-    yield PasswordList(list);
+    add(GetPasswords(event.passwordCategory));
   }
 
 

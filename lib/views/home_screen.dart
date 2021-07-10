@@ -5,6 +5,7 @@ import 'package:passmate/bloc/authentication_bloc/auth_bloc_files.dart';
 import 'package:passmate/model/main_screen_provider.dart';
 import 'package:passmate/views/main_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -28,6 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
           builder: (context, provider, child) {
             return ZoomDrawer(
               controller: _zoomController,
+              borderRadius: 40,
               slideWidth: MediaQuery.of(context).size.width * .60,
               menuScreen: MenuScreen(),
               mainScreen: MainScreen(),
@@ -52,9 +54,9 @@ class MenuScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.purple,
+      backgroundColor: Theme.of(context).colorScheme.primary,
       body: Container(
-        padding: EdgeInsets.only(left: 20),
+        padding: EdgeInsets.only(left: 20.w),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -105,16 +107,17 @@ class MenuItem extends StatelessWidget {
       children: [
         Icon(
           icon,
-          size: 30,
+          size: 27.w,
           color: Colors.white,
         ),
-        SizedBox(width: 20,),
+        SizedBox(width: 20.w,),
         TextButton(
           child: Text(
             text,
             style: TextStyle(
               color: Colors.white,
-              fontSize: 22,
+              fontSize: 18,
+              fontWeight: FontWeight.w500
             ),
           ),
           onPressed: () {

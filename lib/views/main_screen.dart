@@ -11,6 +11,7 @@ import 'package:passmate/views/formpages/secure_note_form.dart';
 import 'package:passmate/views/pages/passwords_page.dart';
 import 'package:passmate/views/pages/payment_card_page.dart';
 import 'package:passmate/views/pages/secure_notes_page.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -25,13 +26,13 @@ class _MainScreenState extends State<MainScreen> {
   Widget _buildButton({required IconData icon, void Function()? onPressed}) {
     return Container(
       decoration: BoxDecoration(color: Colors.white, shape: BoxShape.circle),
-      padding: EdgeInsets.all(7),
-      height: 70,
-      width: 70,
+      padding: EdgeInsets.all(7.w),
+      height: 62.w,
+      width: 62.w,
       child: IconButton(
         icon: Icon(
           icon,
-          size: 35,
+          size: 27.w,
         ),
         onPressed: onPressed,
       ),
@@ -41,33 +42,37 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.pink[50],
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.menu),
-          onPressed: () {
-            ZoomDrawer.of(context)!.toggle();
-          },
-        ),
-      ),
-      body: Container(
-        padding: EdgeInsets.symmetric(horizontal: 15),
-        child: [
-          PasswordPage(),
-          PaymentCardPage(),
-          SecureNotesPage(),
-        ][context.read<MenuProvider>().currentPage],
+      backgroundColor: Colors.white,
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: EdgeInsets.fromLTRB(18, 30, 0, 30),
+            child: IconButton(
+              padding: EdgeInsets.zero,
+              icon: Icon(Icons.notes_rounded, size: 40, color: Theme.of(context).colorScheme.primary,),
+              onPressed: () {
+                ZoomDrawer.of(context)!.toggle();
+              },
+            ),
+          ),
+          Expanded(
+            child: [
+              PasswordPage(),
+              PaymentCardPage(),
+              SecureNotesPage(),
+            ][context.read<MenuProvider>().currentPage],
+          ),
+        ],
       ),
       floatingActionButton: FabCircularMenu(
         key: fabKey,
-        // ringDiameter: 500,
-        // ringWidth: 150,
-        fabSize: 72,
-        fabOpenIcon: Icon(Icons.add, size: 45),
-        fabCloseIcon: Icon(Icons.close, size: 40),
-        ringColor: Colors.purple[100],
+        ringDiameter: 450.w,
+        ringWidth: 130.w,
+        fabSize: 65.w,
+        fabOpenIcon: Icon(Icons.add, color: Colors.white, size: 42),
+        fabCloseIcon: Icon(Icons.close, color: Colors.white, size: 37),
+        ringColor: Theme.of(context).colorScheme.secondary.withOpacity(0.3),
         children: [
           _buildButton(
             icon: Icons.sticky_note_2_rounded,
@@ -108,22 +113,6 @@ class _MainScreenState extends State<MainScreen> {
           )
         ],
       ),
-      // floatingActionButton: Container(
-      //   height: 75,
-      //   width: 75,
-      //   child: FloatingActionButton(
-      //     onPressed: () {
-      //       Navigator.push(context,
-      //           MaterialPageRoute(builder: (context) => PasswordFormPage()))
-      //           .then((value) => context.read<DatabaseBloc>()
-      //           .add(GetPasswords(PasswordCategory.All)));
-      //     },
-      //     child: Icon(
-      //       Icons.add,
-      //       size: 50,
-      //     ),
-      //   ),
-      // ),
     );
   }
 }
