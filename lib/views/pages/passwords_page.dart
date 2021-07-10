@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:passmate/bloc/database_bloc/database_barrel.dart';
 import 'package:passmate/model/password.dart';
+import 'package:passmate/shared/custom_widgets.dart';
 import 'package:passmate/shared/loading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:passmate/views/formpages/password_form.dart';
@@ -18,6 +20,7 @@ class PasswordPage extends StatefulWidget {
 class _PasswordPageState extends State<PasswordPage> {
   PasswordCategory passwordCategory = PasswordCategory.All;
   List<Password> passwordList = [];
+  bool favourites = false;
 
   @override
   void initState() {
@@ -25,64 +28,184 @@ class _PasswordPageState extends State<PasswordPage> {
     context.read<DatabaseBloc>().add(GetPasswords(passwordCategory));
   }
 
+  SizedBox _buildChipRow() {
+    bool isDefault =
+        passwordCategory == PasswordCategory.All && favourites==false;
+    return SizedBox(
+      height: 45.w,
+      child: ListView.builder(
+        padding: EdgeInsets.only(left: 20.w),
+        scrollDirection: Axis.horizontal,
+        shrinkWrap: true,
+        itemCount: (!isDefault && !favourites)?PasswordCategory.values.length+1:PasswordCategory.values.length,
+        itemBuilder: (context, index) {
+          bool selected = false;
+          bool fav = false;
+          String label = '';
+          int? selectedIndex;
+          PasswordCategory category = PasswordCategory.All;
+          if (passwordCategory == PasswordCategory.All && !favourites) {
+            label = PasswordCategory.values[index].toString().substring(17);
+            category = PasswordCategory.values[index];
+            if(index==0){
+              label = 'Favourites';
+              fav = true;
+            }
+          } else {
+            selectedIndex = passwordCategory.index;
+            if(selectedIndex==0){
+              //favourites
+              if (index!=0) {
+                label = PasswordCategory.values[index].toString().substring(17);
+                category = PasswordCategory.values[index];
+              } else {
+                selected = true;
+                label = 'Favourites';
+                fav = true;
+              }
+            } else {
+              if (index!=0) {
+                if(index==1){
+                  label = 'Favourites';
+                  fav = true;
+                } else {
+                  label = PasswordCategory.values[index-1].toString().substring(17);
+                  category = PasswordCategory.values[index-1];
+                }
+              } else {
+                selected = true;
+                label = passwordCategory.toString().substring(17);
+                category = PasswordCategory.values[index];
+              }
+            }
+          }
+          if (selectedIndex!=null) {
+            if(selectedIndex+1==index&&selectedIndex!=0){
+              return SizedBox.shrink();
+            }
+          }
+          return Container(
+            margin: EdgeInsets.only(right: 7.w),
+            child: InkWell(
+              onTap: () {
+                  context
+                      .read<DatabaseBloc>()
+                      .add(GetPasswords(category, favourites: fav));
+              },
+              child: Chip(
+                side: selected
+                    ? BorderSide(
+                        color: Theme.of(context).colorScheme.secondary,
+                        width: 2)
+                    : null,
+                avatar: Icon(
+                  Icons.favorite_border_rounded,
+                  size: 25.w,
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
+                backgroundColor: Colors.white,
+                // padding: EdgeInsets.symmetric(horizontal: 12.w,),
+                padding: EdgeInsets.fromLTRB(12.w, 7.w, 12.w, 7.w),
+                labelPadding: EdgeInsets.fromLTRB(10.w, 0, 10.w, 2.w),
+                label: Text(
+                  label,
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.secondary,
+                    fontSize: 17,
+                  ),
+                ),
+                deleteIcon: Icon(
+                  Icons.highlight_remove,
+                  size: 25.w,
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
+                onDeleted: !selected
+                    ? null
+                    : () {
+                        context
+                            .read<DatabaseBloc>()
+                            .add(GetPasswords(PasswordCategory.All));
+                      },
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      clipBehavior: Clip.antiAliasWithSaveLayer,
-      decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.background,
-          borderRadius: BorderRadius.circular(25.w)
-      ),
-      child: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.w),
-          child: BlocConsumer<DatabaseBloc, DatabaseState>(
-            listenWhen: (previous, current) => previous != current,
-            buildWhen: (previous, current) => previous != current,
-            listener: (context, state) {
-              if (state is PasswordList) {
-                passwordList = state.list;
-                state.list.forEach((element) {
-                  print(element);
-                });
-              }
-            },
-            builder: (context, state) {
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(left: 8.w),
-                    child: Text(
-                      'Passwords',
-                      style: TextStyle(
-                        fontSize: 34,
-                        fontWeight: FontWeight.w600,
-                        color: Theme.of(context).colorScheme.onBackground
-                      ),
+    return BlocConsumer<DatabaseBloc, DatabaseState>(
+      listenWhen: (previous, current) => previous != current,
+      buildWhen: (previous, current) => previous != current,
+      listener: (context, state) {
+        if (state is PasswordList) {
+          passwordList = state.list;
+          passwordCategory = state.passwordCategory;
+          favourites = state.favourites;
+        }
+      },
+      builder: (context, state) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            SizedBox(height: 22.w),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.w),
+              child: CustomTextFormField(
+                isSearch: true,
+                labelText: 'Search',
+                onChanged: (val) {
+                  context
+                      .read<DatabaseBloc>()
+                      .add(GetPasswords(passwordCategory, search: val));
+                },
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 28.w, top: 13.w, bottom: 3.w),
+              child: Text(
+                'Passwords',
+                style: TextStyle(
+                    fontSize: 32,
+                    fontWeight: FontWeight.w600,
+                    color: Theme.of(context).colorScheme.onBackground),
+              ),
+            ),
+            _buildChipRow(),
+            SizedBox(height: 10.w),
+            Padding(
+              padding: EdgeInsets.only(left: 28.w, bottom: 10.w),
+              child: Text(
+                'Frequently Used',
+                style: TextStyle(
+                    fontSize: 26,
+                    fontWeight: FontWeight.w600,
+                    color: Theme.of(context).colorScheme.onBackground),
+              ),
+            ),
+            state is Fetching
+                ? Center(child: LoadingSmall())
+                : Flexible(
+                    child: ListView.builder(
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: passwordList.length,
+                      itemBuilder: (context, index) {
+                        Password password = passwordList[index];
+                        return Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 20.w),
+                          child: PasswordCard(password: password),
+                        );
+                      },
                     ),
-                  ),
-                  state is Fetching
-                      ? LoadingSmall()
-                      : Flexible(
-                          child: ListView.builder(
-                            physics: NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: passwordList.length,
-                            itemBuilder: (context, index) {
-                              Password password = passwordList[index];
-                              return PasswordCard(password: password);
-                            },
-                          ),
-                        )
-                ],
-              );
-            },
-          ),
-        ),
-      ),
+                  )
+          ],
+        );
+      },
     );
   }
 }
@@ -137,10 +260,9 @@ class PasswordCard extends StatelessWidget {
                   width: 65.w,
                   clipBehavior: Clip.antiAliasWithSaveLayer,
                   decoration: BoxDecoration(
-                    color: Color(0xFFFFF5FD),
-                    borderRadius: BorderRadius.circular(15.w),
-                    border: Border.all(color: Color(0xFFF5E9F3))
-                  ),
+                      color: Color(0xFFFFF5FD),
+                      borderRadius: BorderRadius.circular(15.w),
+                      border: Border.all(color: Color(0xFFF5E9F3))),
                   padding: EdgeInsets.all(9.w),
                   child: Container(
                     clipBehavior: Clip.antiAliasWithSaveLayer,

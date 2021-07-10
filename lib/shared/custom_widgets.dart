@@ -1,22 +1,38 @@
 import 'package:flutter/material.dart';
 
 class CustomTextFormField extends StatelessWidget {
-
+  final bool isSearch;
   final String? labelText;
   final String? Function(String? onSaved)? validator;
   final void Function(String? onSaved)? onSaved;
   final void Function(String? onSaved)? onChanged;
   final TextInputType? keyboardType;
 
-  const CustomTextFormField({Key? key, this.labelText, this.validator, this.onSaved, this.keyboardType, this.onChanged}) : super(key: key);
+  const CustomTextFormField(
+      {Key? key,
+      this.isSearch = false,
+      this.labelText,
+      this.validator,
+      this.onSaved,
+      this.keyboardType,
+      this.onChanged})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       decoration: InputDecoration(
-        contentPadding: EdgeInsets.fromLTRB(15, 15, 15, 15),
+        suffixIcon: isSearch?Padding(
+          padding: EdgeInsets.only(right: 20.0),
+          child: Icon(Icons.search, size: 30,),
+        ):null,
+        contentPadding: EdgeInsets.fromLTRB(25, 15, 25, 15),
         enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.deepPurple, width: 1.4, style: BorderStyle.solid, ),
+          borderSide: BorderSide(
+            color: isSearch?Colors.white:Theme.of(context).colorScheme.secondaryVariant,
+            width: 1.5,
+            style: BorderStyle.solid,
+          ),
           borderRadius: BorderRadius.all(Radius.circular(17.0)),
         ),
         fillColor: Theme.of(context).colorScheme.surface,
@@ -73,8 +89,8 @@ class CustomTextFormField extends StatelessWidget {
         ),
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(
-            color: Colors.purple,
-            width: 2,
+            color: Theme.of(context).colorScheme.primary,
+            width: 1.5,
             style: BorderStyle.solid,
           ),
           borderRadius: BorderRadius.all(Radius.circular(17.0)),

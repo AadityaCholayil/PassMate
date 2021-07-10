@@ -29,7 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
           builder: (context, provider, child) {
             return ZoomDrawer(
               controller: _zoomController,
-              borderRadius: 40,
+              borderRadius: 35.w,
               slideWidth: MediaQuery.of(context).size.width * .60,
               menuScreen: MenuScreen(),
               mainScreen: MainScreen(),
@@ -117,7 +117,7 @@ class MenuItem extends StatelessWidget {
             style: TextStyle(
               color: Colors.white,
               fontSize: 18,
-              fontWeight: FontWeight.w500
+              fontWeight: FontWeight.w400
             ),
           ),
           onPressed: () {

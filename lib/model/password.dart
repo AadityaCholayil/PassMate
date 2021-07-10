@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:passmate/model/auth_credentials.dart';
 import 'package:passmate/repositories/encryption_repository.dart';

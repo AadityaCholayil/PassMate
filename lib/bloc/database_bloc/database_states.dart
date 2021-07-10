@@ -14,8 +14,10 @@ class Fetching extends DatabaseState{
 
 class PasswordList extends DatabaseState{
   final List<Password> list;
+  final PasswordCategory passwordCategory;
+  final bool favourites;
 
-  PasswordList(this.list);
+  PasswordList(this.list, this.passwordCategory, this.favourites);
 
   @override
   List<Object?> get props => ['PasswordList'];

@@ -1,4 +1,5 @@
 import 'package:fab_circular_menu/fab_circular_menu.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
@@ -42,26 +43,97 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            padding: EdgeInsets.fromLTRB(18, 30, 0, 30),
-            child: IconButton(
-              padding: EdgeInsets.zero,
-              icon: Icon(Icons.notes_rounded, size: 40, color: Theme.of(context).colorScheme.primary,),
-              onPressed: () {
-                ZoomDrawer.of(context)!.toggle();
-              },
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            toolbarHeight: 65.w,
+            elevation: 0,
+            pinned: true,
+            collapsedHeight: 65.w,
+            backgroundColor: Colors.white,
+            expandedHeight: 225.w,
+            title: Container(
+              height: 65.w,
+              alignment: Alignment.centerLeft,
+              child: Row(
+                children: [
+                  IconButton(
+                    iconSize: 42.w,
+                    padding: EdgeInsets.zero,
+                    icon: Icon(
+                      Icons.notes_rounded,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                    onPressed: () {
+                      ZoomDrawer.of(context)!.toggle();
+                    },
+                  ),
+                  Spacer(),
+                  IconButton(
+                    iconSize: 36.w,
+                    padding: EdgeInsets.zero,
+                    icon: Icon(
+                      Icons.settings_rounded,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                    onPressed: () {
+                      ZoomDrawer.of(context)!.toggle();
+                    },
+                  ),
+                ],
+              ),
+            ),
+            flexibleSpace: FlexibleSpaceBar(
+              collapseMode: CollapseMode.parallax,
+              background: Container(
+                padding: EdgeInsets.fromLTRB(20.w, 100.w, 0, 0),
+                alignment: Alignment.topLeft,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Welcome back,',
+                      style: TextStyle(
+                        fontSize: 31,
+                        fontWeight: FontWeight.normal,
+                        color: Theme.of(context).colorScheme.onBackground,
+                        height: 0.9,
+                      ),
+                    ),
+                    Text(
+                      'Aaditya',
+                      style: TextStyle(
+                        height: 1.25,
+                        fontSize: 43,
+                        fontWeight: FontWeight.w700,
+                        color: Theme.of(context).colorScheme.onBackground,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
-          Expanded(
-            child: [
-              PasswordPage(),
-              PaymentCardPage(),
-              SecureNotesPage(),
-            ][context.read<MenuProvider>().currentPage],
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (context, int) => Container(
+                color: Colors.white,
+                child: Container(
+                  clipBehavior: Clip.antiAliasWithSaveLayer,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.background,
+                    borderRadius:
+                        BorderRadius.vertical(top: Radius.circular(25.w)),
+                  ),
+                  child: [
+                    PasswordPage(),
+                    PaymentCardPage(),
+                    SecureNotesPage(),
+                  ][context.read<MenuProvider>().currentPage],
+                ),
+              ),
+              childCount: 1,
+            ),
           ),
         ],
       ),

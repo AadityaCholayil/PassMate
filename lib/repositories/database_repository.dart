@@ -105,8 +105,6 @@ class DatabaseRepository {
 
   Future<String> updatePassword(Password password, String oldPath) async {
     try {
-      print(passwordsRef.path);
-      print(password.id);
       await passwordsRef.doc(password.id).set(password);
       if (password.path != oldPath) {
         FolderData data = await foldersRef

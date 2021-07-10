@@ -5,52 +5,59 @@ import 'package:passmate/repositories/database_repository.dart';
 import 'package:passmate/model/user.dart';
 import 'package:passmate/repositories/encryption_repository.dart';
 
-class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState>{
-
+class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState> {
   final UserData userData;
   final DatabaseRepository databaseRepository;
   final EncryptionRepository encryptionRepository;
 
-  DatabaseBloc({required this.userData, required this.databaseRepository, required this.encryptionRepository}) : super(Fetching());
+  DatabaseBloc(
+      {required this.userData,
+      required this.databaseRepository,
+      required this.encryptionRepository})
+      : super(Fetching());
 
   @override
   Stream<DatabaseState> mapEventToState(DatabaseEvents event) async* {
-    if(event is GetPasswords){
+    if (event is GetPasswords) {
       yield* _mapGetPasswordsToState(event);
-    } else if(event is AddPassword){
+    } else if (event is AddPassword) {
       yield* _mapAddPasswordToState(event);
-    } else if(event is UpdatePassword){
+    } else if (event is UpdatePassword) {
       yield* _mapUpdatePasswordToState(event);
-    } else if(event is DeletePassword){
+    } else if (event is DeletePassword) {
       yield* _mapDeletePasswordToState(event);
-    } else if(event is GetPaymentCards){
+    } else if (event is GetPaymentCards) {
 
-    } else if(event is AddPaymentCard){
+    } else if (event is AddPaymentCard) {
 
-    } else if(event is UpdatePaymentCard){
+    } else if (event is UpdatePaymentCard) {
 
-    } else if(event is DeletePaymentCard){
+    } else if (event is DeletePaymentCard) {
 
-    } else  if(event is GetSecureNote){
+    } else if (event is GetSecureNote) {
 
-    } else if(event is AddSecureNote){
+    } else if (event is AddSecureNote) {
 
-    } else if (event is UpdateSecureNote){
+    } else if (event is UpdateSecureNote) {
 
-    } else if(event is DeleteSecureNote){
+    } else if (event is DeleteSecureNote) {
 
     }
   }
+
   // bf73cf39b4a9b524ebf892b0c5528608
 
   Stream<DatabaseState> _mapGetPasswordsToState(GetPasswords event) async* {
     yield Fetching();
-    print(encryptionRepository.key);
-    List<Password> list = await databaseRepository.getPasswords(event.passwordCategory);
+    List<Password> list =
+        await databaseRepository.getPasswords(event.passwordCategory);
     list.forEach((element) async {
       await element.decrypt(encryptionRepository);
     });
-    yield PasswordList(list);
+    if (event.favourites) {
+      list = list.where((element) => element.favourite).toList();
+    }
+    yield PasswordList(list, event.passwordCategory, event.favourites);
   }
 
   Stream<DatabaseState> _mapAddPasswordToState(AddPassword event) async* {
@@ -59,7 +66,7 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState>{
     print(event.password);
     String res = await databaseRepository.addPassword(event.password);
     print(res);
-    if(res=='Success'){
+    if (res == 'Success') {
       yield PasswordFormState.success;
     } else {
       yield PasswordFormState.errorOccurred;
@@ -67,12 +74,11 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState>{
   }
 
   Stream<DatabaseState> _mapUpdatePasswordToState(UpdatePassword event) async* {
-    print('pass: ${event.password}');
     await event.password.encrypt(encryptionRepository);
     if (event.fromForm) {
       yield PasswordFormState.loading;
-      String res =
-          await databaseRepository.updatePassword(event.password, event.oldPath);
+      String res = await databaseRepository.updatePassword(
+          event.password, event.oldPath);
       if (res == 'Success') {
         yield PasswordFormState.success;
       } else {
@@ -90,7 +96,4 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState>{
     await databaseRepository.deletePassword(event.password);
     add(GetPasswords(event.passwordCategory));
   }
-
-
-
 }
