@@ -45,17 +45,20 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState> {
     }
   }
 
-  // bf73cf39b4a9b524ebf892b0c5528608
-
   Stream<DatabaseState> _mapGetPasswordsToState(GetPasswords event) async* {
     yield Fetching();
-    List<Password> list =
-        await databaseRepository.getPasswords(event.passwordCategory);
-    list.forEach((element) async {
-      await element.decrypt(encryptionRepository);
-    });
-    if (event.favourites) {
-      list = list.where((element) => element.favourite).toList();
+    List<Password> list = [];
+    if (event.list==null) {
+      print('hello');
+      list = await databaseRepository.getPasswords(event.passwordCategory);
+      list.forEach((element) async {
+        await element.decrypt(encryptionRepository);
+      });
+    } else {
+      if (event.favourites) {
+        list = event.list!.where((element) => element.favourite).toList();
+        await Future.delayed(Duration(milliseconds: 500));
+      }
     }
     yield PasswordList(list, event.passwordCategory, event.favourites);
   }
@@ -94,6 +97,8 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState> {
     yield Fetching();
     await event.password.encrypt(encryptionRepository);
     await databaseRepository.deletePassword(event.password);
-    add(GetPasswords(passwordCategory: event.passwordCategory));
+    add(GetPasswords(event.passwordCategory));
   }
+
+
 }

@@ -20,7 +20,7 @@ class _PaymentCardPageState extends State<PaymentCardPage> {
     super.initState();
     context
         .read<DatabaseBloc>()
-        .add(GetPasswords(passwordCategory: passwordCategory));
+        .add(GetPasswords(passwordCategory));
   }
 
   @override

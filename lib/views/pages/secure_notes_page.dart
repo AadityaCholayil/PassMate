@@ -20,7 +20,7 @@ class _SecureNotesPageState extends State<SecureNotesPage> {
     super.initState();
     context
         .read<DatabaseBloc>()
-        .add(GetPasswords(passwordCategory: passwordCategory));
+        .add(GetPasswords(passwordCategory));
   }
 
   @override

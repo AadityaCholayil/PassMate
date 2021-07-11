@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:passmate/bloc/database_bloc/database_barrel.dart';
 import 'package:passmate/repositories/authentication_repository.dart';
 import 'package:passmate/model/user.dart';
 import 'package:passmate/repositories/database_repository.dart';
@@ -14,11 +15,31 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState>{
   late DatabaseRepository databaseRepository;
   EncryptionRepository encryptionRepository = EncryptionRepository();
   late UserData userData;
+  late DatabaseBloc databaseBloc;
 
   AuthenticationBloc({required authenticationRepository}):
     _authenticationRepository=authenticationRepository, super(Uninitialized(userData: UserData.empty)){
     userData = _authenticationRepository.getUserData();
     databaseRepository = DatabaseRepository(uid: userData.uid);
+    databaseBloc = DatabaseBloc(
+      userData: userData,
+      databaseRepository: databaseRepository,
+      encryptionRepository: encryptionRepository,
+    );
+  }
+
+  void updateBloc(){
+    print('isSame?');
+    print(databaseBloc == DatabaseBloc(
+      userData: userData,
+      databaseRepository: databaseRepository,
+      encryptionRepository: encryptionRepository,
+    ));
+    databaseBloc = DatabaseBloc(
+      userData: userData,
+      databaseRepository: databaseRepository,
+      encryptionRepository: encryptionRepository,
+    );
   }
 
   AuthenticationState get initialState => Uninitialized(userData: UserData.empty);
@@ -73,6 +94,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState>{
     userData = _authenticationRepository.getUserData();
     databaseRepository = DatabaseRepository(uid: userData.uid);
     UserData userData2 = await databaseRepository.completeUserData;
+    updateBloc();
     if (!kIsWeb) {
       final storage = FlutterSecureStorage();
       String key = await storage.read(key: 'key')??'KeyNotFound';
@@ -111,6 +133,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState>{
   Stream<AuthenticationState> _mapLoggedOutToState() async* {
     userData = UserData.empty;
     databaseRepository = DatabaseRepository(uid: userData.uid);
+    updateBloc();
     await _authenticationRepository.signOut();
     yield Unauthenticated(userData: userData);
   }

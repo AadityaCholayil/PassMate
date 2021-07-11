@@ -1,11 +1,11 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:passmate/bloc/authentication_bloc/auth_bloc_files.dart';
 import 'package:passmate/routes/routes_name.dart';
 import 'package:passmate/shared/custom_snackbar.dart';
 import 'package:passmate/shared/custom_widgets.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AdditionalDetailsPage extends StatefulWidget {
   const AdditionalDetailsPage({Key? key}) : super(key: key);
@@ -35,13 +35,22 @@ class _AdditionalDetailsPageState extends State<AdditionalDetailsPage> {
       builder: (context, state){
         return Scaffold(
           body: Container(
-            padding: EdgeInsets.symmetric(horizontal: 15),
+            padding: EdgeInsets.symmetric(horizontal: 20.w),
             child: Form(
               key: _formKey,
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('Additional details'),
+                  Text(
+                    'Login',
+                    style: TextStyle(
+                      height: 1.25,
+                      fontSize: 43,
+                      fontWeight: FontWeight.w700,
+                      color: Theme.of(context).colorScheme.onBackground,
+                    ),
+                  ),
                   SizedBox(height: 15,),
                   CustomTextFormField(
                     labelText: 'First Name',
@@ -66,18 +75,20 @@ class _AdditionalDetailsPageState extends State<AdditionalDetailsPage> {
                       }
                     },
                   ),
-                  ElevatedButton(
-                    child: Text('Next'),
-                    onPressed: () async {
-                      if(!_formKey.currentState!.validate()){
-                        return;
-                      }
-                      _formKey.currentState?.save();
-                      ScaffoldMessenger.of(context)
-                          .showSnackBar(showCustomSnackBar(context, ''));
-                      BlocProvider.of<AuthenticationBloc>(context).add(
-                          UpdateUserData(firstName, lastName, photoUrl));
-                    },
+                  Center(
+                    child: ElevatedButton(
+                      child: Text('Next'),
+                      onPressed: () async {
+                        if(!_formKey.currentState!.validate()){
+                          return;
+                        }
+                        _formKey.currentState?.save();
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(showCustomSnackBar(context, ''));
+                        BlocProvider.of<AuthenticationBloc>(context).add(
+                            UpdateUserData(firstName, lastName, photoUrl));
+                      },
+                    ),
                   ),
                 ],
               ),

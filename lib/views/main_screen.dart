@@ -53,9 +53,7 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       body: RefreshIndicator(
         //TODO other events
-        onRefresh: () async => context
-            .read<DatabaseBloc>()
-            .add(GetPasswords()),
+        onRefresh: () async => BlocProvider.of<DatabaseBloc>(context).add(GetPasswords(PasswordCategory.all)),
         child: CustomScrollView(
           physics: BouncingScrollPhysics(),
           slivers: [
@@ -66,7 +64,7 @@ class _MainScreenState extends State<MainScreen> {
               pinned: true,
               collapsedHeight: 65.w,
               backgroundColor: Colors.white,
-              expandedHeight: 225.w,
+              expandedHeight: 200.w,
               title: Container(
                 height: 65.w,
                 alignment: Alignment.centerLeft,
@@ -105,7 +103,7 @@ class _MainScreenState extends State<MainScreen> {
                 background: FittedBox(
                   alignment: Alignment.centerLeft,
                   child: Container(
-                    padding: EdgeInsets.fromLTRB(20.w, 100.w, 90.w, 42.w),
+                    padding: EdgeInsets.fromLTRB(20.w, 90.w, 80.w, 27.w),
                     alignment: Alignment.topLeft,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -174,7 +172,7 @@ class _MainScreenState extends State<MainScreen> {
                       MaterialPageRoute(builder: (context) => SecureNoteForm()))
                   .then((value) => context
                       .read<DatabaseBloc>()
-                      .add(GetPasswords()));
+                      .add(GetPasswords(PasswordCategory.all)));
               fabKey.currentState!.close();
             },
           ),
@@ -187,7 +185,7 @@ class _MainScreenState extends State<MainScreen> {
                       builder: (context) => PaymentCardForm())).then((value) =>
                   context
                       .read<DatabaseBloc>()
-                      .add(GetPasswords()));
+                      .add(GetPasswords(PasswordCategory.all)));
               fabKey.currentState!.close();
             },
           ),
@@ -200,7 +198,7 @@ class _MainScreenState extends State<MainScreen> {
                       builder: (context) => PasswordFormPage())).then((value) =>
                   context
                       .read<DatabaseBloc>()
-                      .add(GetPasswords()));
+                      .add(GetPasswords(PasswordCategory.all)));
               fabKey.currentState!.close();
             },
           )

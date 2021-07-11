@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomTextFormField extends StatelessWidget {
   final bool isSearch;
@@ -23,10 +24,10 @@ class CustomTextFormField extends StatelessWidget {
     return TextFormField(
       decoration: InputDecoration(
         suffixIcon: isSearch?Padding(
-          padding: EdgeInsets.only(right: 20.0),
-          child: Icon(Icons.search, size: 30,),
+          padding: EdgeInsets.only(right: 20.0.w),
+          child: Icon(Icons.search, size: 30.w,),
         ):null,
-        contentPadding: EdgeInsets.fromLTRB(25, 15, 25, 15),
+        contentPadding: EdgeInsets.fromLTRB(25.w, 12.w, 25.w, 12.w),
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(
             color: isSearch?Colors.white:Theme.of(context).colorScheme.secondaryVariant,
@@ -128,3 +129,42 @@ class CustomTextFormField extends StatelessWidget {
     );
   }
 }
+
+class CustomElevatedButton extends StatelessWidget {
+  final void Function()? onPressed;
+  final String text;
+  final int style;
+
+  const CustomElevatedButton({Key? key, this.onPressed, this.text='Submit', this.style = 0}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        primary: style==0?Theme.of(context).colorScheme.primary:Colors.white,
+        shape: RoundedRectangleBorder(
+          side: BorderSide(
+            color: Theme.of(context).colorScheme.primary,
+            width: 2,
+          ),
+          borderRadius: BorderRadius.circular(12.w),
+        ),
+      ),
+      child: Container(
+        alignment: Alignment.center,
+        height: 55.w,
+        child: Text(
+          'SignUp',
+          style: TextStyle(
+              color: Theme.of(context).colorScheme.primary,
+              fontSize: 20,
+              fontWeight: FontWeight.w600
+          ),
+        ),
+      ),
+      onPressed: onPressed,
+    );
+  }
+}
+
+

@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -58,9 +57,18 @@ class _LoginPageState extends State<LoginPage> {
                 child: Form(
                   key: _formKey,
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text('Login'),
+                      Text(
+                        'Login',
+                        style: TextStyle(
+                          height: 1.25,
+                          fontSize: 43,
+                          fontWeight: FontWeight.w700,
+                          color: Theme.of(context).colorScheme.onBackground,
+                        ),
+                      ),
                       SizedBox(
                         height: 15,
                       ),
@@ -89,20 +97,22 @@ class _LoginPageState extends State<LoginPage> {
                           }
                         },
                       ),
-                      ElevatedButton(
-                        child: Text('submit'),
-                        onPressed: () async {
-                          if(!_formKey.currentState!.validate()){
-                            return;
-                          }
-                          _formKey.currentState?.save();
-                          ScaffoldMessenger.of(context).showSnackBar(
-                              showCustomSnackBar(context, state.message));
-                          BlocProvider.of<LoginBloc>(context).add(
-                              LoginUsingCredentials(
-                                  email: AuthEmail(email),
-                                  password: AuthPassword(password)));
-                        },
+                      Center(
+                        child: ElevatedButton(
+                          child: Text('submit'),
+                          onPressed: () async {
+                            if(!_formKey.currentState!.validate()){
+                              return;
+                            }
+                            _formKey.currentState?.save();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                showCustomSnackBar(context, state.message));
+                            BlocProvider.of<LoginBloc>(context).add(
+                                LoginUsingCredentials(
+                                    email: AuthEmail(email),
+                                    password: AuthPassword(password)));
+                          },
+                        ),
                       ),
                     ],
                   ),

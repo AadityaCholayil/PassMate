@@ -25,19 +25,21 @@ class _PasswordPageState extends State<PasswordPage> {
   @override
   void initState() {
     super.initState();
-    context.read<DatabaseBloc>().add(GetPasswords(passwordCategory: passwordCategory));
+    context.read<DatabaseBloc>().add(GetPasswords(passwordCategory));
   }
 
   SizedBox _buildChipRow() {
     bool isDefault =
-        passwordCategory == PasswordCategory.all && favourites==false;
+        passwordCategory == PasswordCategory.all && favourites == false;
     return SizedBox(
       height: 45.w,
       child: ListView.builder(
         padding: EdgeInsets.only(left: 20.w),
         scrollDirection: Axis.horizontal,
         shrinkWrap: true,
-        itemCount: (!isDefault && !favourites)?PasswordCategory.values.length+1:PasswordCategory.values.length,
+        itemCount: (!isDefault && !favourites)
+            ? PasswordCategory.values.length + 1
+            : PasswordCategory.values.length,
         itemBuilder: (context, index) {
           bool selected = false;
           bool fav = false;
@@ -47,15 +49,15 @@ class _PasswordPageState extends State<PasswordPage> {
           if (passwordCategory == PasswordCategory.all && !favourites) {
             label = PasswordCategory.values[index].toString().substring(17);
             category = PasswordCategory.values[index];
-            if(index==0){
+            if (index == 0) {
               label = 'Favourites';
               fav = true;
             }
           } else {
             selectedIndex = passwordCategory.index;
-            if(selectedIndex==0){
+            if (selectedIndex == 0) {
               //favourites
-              if (index!=0) {
+              if (index != 0) {
                 label = PasswordCategory.values[index].toString().substring(17);
                 category = PasswordCategory.values[index];
               } else {
@@ -64,13 +66,15 @@ class _PasswordPageState extends State<PasswordPage> {
                 fav = true;
               }
             } else {
-              if (index!=0) {
-                if(index==1){
+              if (index != 0) {
+                if (index == 1) {
                   label = 'Favourites';
                   fav = true;
                 } else {
-                  label = PasswordCategory.values[index-1].toString().substring(17);
-                  category = PasswordCategory.values[index-1];
+                  label = PasswordCategory.values[index - 1]
+                      .toString()
+                      .substring(17);
+                  category = PasswordCategory.values[index - 1];
                 }
               } else {
                 selected = true;
@@ -79,8 +83,8 @@ class _PasswordPageState extends State<PasswordPage> {
               }
             }
           }
-          if (selectedIndex!=null) {
-            if(selectedIndex+1==index&&selectedIndex!=0){
+          if (selectedIndex != null) {
+            if (selectedIndex + 1 == index && selectedIndex != 0) {
               return SizedBox.shrink();
             }
           }
@@ -90,7 +94,7 @@ class _PasswordPageState extends State<PasswordPage> {
               onTap: () {
                   context
                       .read<DatabaseBloc>()
-                      .add(GetPasswords(passwordCategory: category, favourites: fav));
+                      .add(GetPasswords(category, favourites: fav, list: passwordList));
               },
               child: Chip(
                 side: selected
@@ -122,9 +126,7 @@ class _PasswordPageState extends State<PasswordPage> {
                 onDeleted: !selected
                     ? null
                     : () {
-                        context
-                            .read<DatabaseBloc>()
-                            .add(GetPasswords());
+                        context.read<DatabaseBloc>().add(GetPasswords(PasswordCategory.all));
                       },
               ),
             ),
@@ -137,9 +139,10 @@ class _PasswordPageState extends State<PasswordPage> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<DatabaseBloc, DatabaseState>(
-      listenWhen: (previous, current) => previous != current,
-      buildWhen: (previous, current) => previous != current,
+      // listenWhen: (previous, current) => previous != current,
+      // buildWhen: (previous, current) => previous != current,
       listener: (context, state) {
+        print('widget rebuilt');
         if (state is PasswordList) {
           passwordList = state.list;
           passwordCategory = state.passwordCategory;
@@ -152,19 +155,6 @@ class _PasswordPageState extends State<PasswordPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            SizedBox(height: 22.w),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.w),
-              child: CustomTextFormField(
-                isSearch: true,
-                labelText: 'Search',
-                onChanged: (val) {
-                  context
-                      .read<DatabaseBloc>()
-                      .add(GetPasswords(passwordCategory: passwordCategory, search: val));
-                },
-              ),
-            ),
             Padding(
               padding: EdgeInsets.only(left: 28.w, top: 13.w, bottom: 3.w),
               child: Text(
@@ -175,6 +165,19 @@ class _PasswordPageState extends State<PasswordPage> {
                     color: Theme.of(context).colorScheme.onBackground),
               ),
             ),
+            SizedBox(height: 10.w),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.w),
+              child: CustomTextFormField(
+                isSearch: true,
+                labelText: 'Search',
+                onChanged: (val) {
+                  context.read<DatabaseBloc>().add(GetPasswords(
+                      passwordCategory, search: val));
+                },
+              ),
+            ),
+            SizedBox(height: 15.w),
             _buildChipRow(),
             SizedBox(height: 10.w),
             Padding(
@@ -349,7 +352,7 @@ class PasswordDetailCard extends StatelessWidget {
                                 PasswordFormPage(password: password)),
                       ).then((value) {
                         BlocProvider.of<DatabaseBloc>(context)
-                            .add(GetPasswords());
+                            .add(GetPasswords(PasswordCategory.all));
                         Navigator.pop(context);
                       });
                     },

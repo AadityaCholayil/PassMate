@@ -15,7 +15,7 @@ class GetPasswords extends DatabaseEvents{
   final String? search;
   final List<Password>? list;
 
-  GetPasswords({this.passwordCategory = PasswordCategory.all, this.favourites = false, this.search, this.list});
+  GetPasswords(this.passwordCategory, {this.favourites = false, this.search, this.list});
 }
 
 class AddPassword extends DatabaseEvents {
