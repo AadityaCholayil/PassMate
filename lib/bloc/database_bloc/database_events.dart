@@ -10,10 +10,12 @@ class DatabaseEvents extends Equatable {
 
 class GetPasswords extends DatabaseEvents{
   final PasswordCategory passwordCategory;
+
   final bool favourites;
   final String? search;
+  final List<Password>? list;
 
-  GetPasswords(this.passwordCategory, {this.favourites = false, this.search});
+  GetPasswords({this.passwordCategory = PasswordCategory.all, this.favourites = false, this.search, this.list});
 }
 
 class AddPassword extends DatabaseEvents {

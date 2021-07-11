@@ -13,12 +13,11 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState>{
   final AuthenticationRepository _authenticationRepository;
   late DatabaseRepository databaseRepository;
   EncryptionRepository encryptionRepository = EncryptionRepository();
-  UserData userData = UserData.empty;
+  late UserData userData;
 
   AuthenticationBloc({required authenticationRepository}):
     _authenticationRepository=authenticationRepository, super(Uninitialized(userData: UserData.empty)){
     userData = _authenticationRepository.getUserData();
-    print(userData);
     databaseRepository = DatabaseRepository(uid: userData.uid);
   }
 
@@ -46,14 +45,17 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState>{
       yield Unauthenticated(userData: userData);
     } else {
       try {
+        userData = _authenticationRepository.getUserData();
         if(userData!=UserData.empty){
-          userData = await databaseRepository.completeUserData;
+          databaseRepository = DatabaseRepository(uid: userData.uid);
+          UserData userData2 = await databaseRepository.completeUserData;
           final storage = FlutterSecureStorage();
           String key = await storage.read(key: 'key')??'KeyNotFound';
           encryptionRepository.updateKey(key);
-          if(userData==UserData.empty){
+          if(userData2==UserData.empty){
             yield PartiallyAuthenticated(userData: userData);
           } else {
+            userData=userData2;
             yield FullyAuthenticated(userData: userData);
           }
         } else {
@@ -67,24 +69,26 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState>{
   }
 
   Stream<AuthenticationState> _mapAuthenticateUserToState() async* {
+    yield Uninitialized(userData: userData);
     userData = _authenticationRepository.getUserData();
-    print(userData.uid);
     databaseRepository = DatabaseRepository(uid: userData.uid);
-    userData = await databaseRepository.completeUserData;
+    UserData userData2 = await databaseRepository.completeUserData;
     if (!kIsWeb) {
       final storage = FlutterSecureStorage();
       String key = await storage.read(key: 'key')??'KeyNotFound';
       encryptionRepository.updateKey(key);
     }
-    if(userData==UserData.empty){
+    if(userData2==UserData.empty){
       yield PartiallyAuthenticated(userData: userData);
     } else {
+      userData = userData2;
       yield FullyAuthenticated(userData: userData);
     }
   }
 
   Stream<AuthenticationState> _mapUpdateUserDataToState(UpdateUserData event) async* {
     yield Uninitialized(userData: UserData.empty);
+    userData = _authenticationRepository.getUserData();
     UserData newUserData = UserData(
       uid: userData.uid,
       email: userData.email,
@@ -94,14 +98,19 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState>{
       pinSet: false
     );
     try{
+      databaseRepository = DatabaseRepository(uid: userData.uid);
       databaseRepository.updateUserData(newUserData);
+      userData = newUserData;
+      add(AuthenticateUser());
     } on Exception catch (_){
+      //TODO add exception
       print('Something Went Wrong');
     }
-    add(AuthenticateUser());
   }
 
   Stream<AuthenticationState> _mapLoggedOutToState() async* {
+    userData = UserData.empty;
+    databaseRepository = DatabaseRepository(uid: userData.uid);
     await _authenticationRepository.signOut();
     yield Unauthenticated(userData: userData);
   }

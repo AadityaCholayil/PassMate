@@ -39,10 +39,10 @@ class _LoginPageState extends State<LoginPage> {
                 final storage = FlutterSecureStorage();
                 storage.write(key: 'key', value: value);
               }
-              print('Navigating..');
               context.read<AuthenticationBloc>().add(AuthenticateUser());
               ScaffoldMessenger.of(context).hideCurrentSnackBar();
-              Navigator.pushReplacementNamed(context, RoutesName.WRAPPER);
+              print('Navigating..');
+              Navigator.popUntil(context, ModalRoute.withName(RoutesName.WRAPPER));
             });
           } else {
             ScaffoldMessenger.of(context).hideCurrentSnackBar();

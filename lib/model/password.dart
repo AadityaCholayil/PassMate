@@ -11,7 +11,7 @@ class Password {
   String password = '';
   String imageUrl = '';
   String note = '';
-  PasswordCategory category = PasswordCategory.Others;
+  PasswordCategory category = PasswordCategory.others;
   bool favourite = false;
   int usage = 0;
   Timestamp? lastUsed;
@@ -26,7 +26,7 @@ class Password {
     this.password = '',
     this.imageUrl = '',
     this.note = '',
-    this.category = PasswordCategory.Others,
+    this.category = PasswordCategory.others,
     this.favourite = false,
     this.usage = 0,
     this.lastUsed,
@@ -95,12 +95,18 @@ class Password {
 }
 
 enum PasswordCategory {
-  All,
-  Social,
-  Work,
-  Entertainment,
-  Finance,
-  Education,
-  Ecommerce,
-  Others,
+  all,
+  social,
+  work,
+  entertainment,
+  finance,
+  education,
+  ecommerce,
+  others,
+}
+
+enum PasswordSort {
+  mostUsed,
+  recentlyUsed,
+  recentlyAdded
 }

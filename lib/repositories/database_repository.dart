@@ -76,7 +76,7 @@ class DatabaseRepository {
 
   Future<List<Password>> getPasswords(PasswordCategory passwordCategory) async {
     List<QueryDocumentSnapshot<Password>> list = [];
-    if (passwordCategory == PasswordCategory.All) {
+    if (passwordCategory == PasswordCategory.all) {
       list = await passwordsRef.get().then((snapshot) => snapshot.docs);
     } else {
       list = await passwordsRef
@@ -154,7 +154,7 @@ class DatabaseRepository {
   Future<List<Password>> getPaymentCards(
       PasswordCategory passwordCategory) async {
     List<QueryDocumentSnapshot<Password>> list = [];
-    if (passwordCategory == PasswordCategory.All) {
+    if (passwordCategory == PasswordCategory.all) {
       list = await passwordsRef.get().then((snapshot) => snapshot.docs);
     } else {
       list = await passwordsRef

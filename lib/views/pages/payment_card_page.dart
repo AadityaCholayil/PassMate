@@ -13,14 +13,14 @@ class PaymentCardPage extends StatefulWidget {
 }
 
 class _PaymentCardPageState extends State<PaymentCardPage> {
-  PasswordCategory passwordCategory = PasswordCategory.All;
+  PasswordCategory passwordCategory = PasswordCategory.all;
 
   @override
   void initState() {
     super.initState();
     context
         .read<DatabaseBloc>()
-        .add(GetPasswords(passwordCategory));
+        .add(GetPasswords(passwordCategory: passwordCategory));
   }
 
   @override

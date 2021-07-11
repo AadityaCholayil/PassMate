@@ -8,6 +8,7 @@ import 'package:passmate/repositories/authentication_repository.dart';
 import 'package:passmate/bloc/signup_bloc/signup_barrel.dart';
 import 'package:passmate/model/auth_credentials.dart';
 import 'package:passmate/repositories/encryption_repository.dart';
+import 'package:passmate/routes/routes_name.dart';
 import 'package:passmate/shared/custom_snackbar.dart';
 import 'package:passmate/shared/custom_widgets.dart';
 import 'package:passmate/views/auth/additional_details.dart';
@@ -60,18 +61,15 @@ class _SignUpPageState extends State<SignUpPage> {
         listener: (context, state) async {
           if (state == SignupState.success) {
             await compute(EncryptionRepository.scryptHash, password.password).then((value) {
-              context.read<EncryptionRepository>().updateKey(value);
-              if (Platform.isAndroid) {
+              context.read<AuthenticationBloc>().encryptionRepository.updateKey(value);
+              if (!kIsWeb) {
                 final storage = FlutterSecureStorage();
                 storage.write(key: 'key', value: value);
               }
-              print('Navigating..');
               context.read<AuthenticationBloc>().add(AuthenticateUser());
               ScaffoldMessenger.of(context).hideCurrentSnackBar();
-              Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => AdditionalDetailsPage())
-              );
+              print('Navigating..');
+              Navigator.popUntil(context, ModalRoute.withName(RoutesName.WRAPPER));
             });
           } else {
             ScaffoldMessenger.of(context).hideCurrentSnackBar();

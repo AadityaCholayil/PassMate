@@ -6,9 +6,9 @@ import 'package:passmate/model/user.dart';
 import 'package:passmate/repositories/encryption_repository.dart';
 
 class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState> {
-  final UserData userData;
-  final DatabaseRepository databaseRepository;
-  final EncryptionRepository encryptionRepository;
+  UserData userData;
+  DatabaseRepository databaseRepository;
+  EncryptionRepository encryptionRepository;
 
   DatabaseBloc(
       {required this.userData,
@@ -94,6 +94,6 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState> {
     yield Fetching();
     await event.password.encrypt(encryptionRepository);
     await databaseRepository.deletePassword(event.password);
-    add(GetPasswords(event.passwordCategory));
+    add(GetPasswords(passwordCategory: event.passwordCategory));
   }
 }

@@ -18,19 +18,19 @@ class PasswordPage extends StatefulWidget {
 }
 
 class _PasswordPageState extends State<PasswordPage> {
-  PasswordCategory passwordCategory = PasswordCategory.All;
+  PasswordCategory passwordCategory = PasswordCategory.all;
   List<Password> passwordList = [];
   bool favourites = false;
 
   @override
   void initState() {
     super.initState();
-    context.read<DatabaseBloc>().add(GetPasswords(passwordCategory));
+    context.read<DatabaseBloc>().add(GetPasswords(passwordCategory: passwordCategory));
   }
 
   SizedBox _buildChipRow() {
     bool isDefault =
-        passwordCategory == PasswordCategory.All && favourites==false;
+        passwordCategory == PasswordCategory.all && favourites==false;
     return SizedBox(
       height: 45.w,
       child: ListView.builder(
@@ -43,8 +43,8 @@ class _PasswordPageState extends State<PasswordPage> {
           bool fav = false;
           String label = '';
           int? selectedIndex;
-          PasswordCategory category = PasswordCategory.All;
-          if (passwordCategory == PasswordCategory.All && !favourites) {
+          PasswordCategory category = PasswordCategory.all;
+          if (passwordCategory == PasswordCategory.all && !favourites) {
             label = PasswordCategory.values[index].toString().substring(17);
             category = PasswordCategory.values[index];
             if(index==0){
@@ -90,7 +90,7 @@ class _PasswordPageState extends State<PasswordPage> {
               onTap: () {
                   context
                       .read<DatabaseBloc>()
-                      .add(GetPasswords(category, favourites: fav));
+                      .add(GetPasswords(passwordCategory: category, favourites: fav));
               },
               child: Chip(
                 side: selected
@@ -124,7 +124,7 @@ class _PasswordPageState extends State<PasswordPage> {
                     : () {
                         context
                             .read<DatabaseBloc>()
-                            .add(GetPasswords(PasswordCategory.All));
+                            .add(GetPasswords());
                       },
               ),
             ),
@@ -161,7 +161,7 @@ class _PasswordPageState extends State<PasswordPage> {
                 onChanged: (val) {
                   context
                       .read<DatabaseBloc>()
-                      .add(GetPasswords(passwordCategory, search: val));
+                      .add(GetPasswords(passwordCategory: passwordCategory, search: val));
                 },
               ),
             ),
@@ -334,7 +334,7 @@ class PasswordDetailCard extends StatelessWidget {
                     child: Text('Delete'),
                     onPressed: () {
                       BlocProvider.of<DatabaseBloc>(context)
-                          .add(DeletePassword(password, PasswordCategory.All));
+                          .add(DeletePassword(password, PasswordCategory.all));
                       Navigator.pop(context);
                     },
                   ),
@@ -349,7 +349,7 @@ class PasswordDetailCard extends StatelessWidget {
                                 PasswordFormPage(password: password)),
                       ).then((value) {
                         BlocProvider.of<DatabaseBloc>(context)
-                            .add(GetPasswords(PasswordCategory.All));
+                            .add(GetPasswords());
                         Navigator.pop(context);
                       });
                     },

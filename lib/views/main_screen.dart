@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
+import 'package:passmate/bloc/authentication_bloc/auth_bloc_files.dart';
 import 'package:passmate/bloc/database_bloc/database_barrel.dart';
 import 'package:passmate/model/main_screen_provider.dart';
 import 'package:passmate/model/password.dart';
@@ -23,6 +24,7 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   final GlobalKey<FabCircularMenuState> fabKey = GlobalKey();
+  late final String fName;
 
   Widget _buildButton({required IconData icon, void Function()? onPressed}) {
     return Container(
@@ -41,101 +43,120 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    fName = context.read<AuthenticationBloc>().userData.firstName??'';
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            toolbarHeight: 65.w,
-            elevation: 0,
-            pinned: true,
-            collapsedHeight: 65.w,
-            backgroundColor: Colors.white,
-            expandedHeight: 225.w,
-            title: Container(
-              height: 65.w,
-              alignment: Alignment.centerLeft,
-              child: Row(
-                children: [
-                  IconButton(
-                    iconSize: 42.w,
-                    padding: EdgeInsets.zero,
-                    icon: Icon(
-                      Icons.notes_rounded,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                    onPressed: () {
-                      ZoomDrawer.of(context)!.toggle();
-                    },
-                  ),
-                  Spacer(),
-                  IconButton(
-                    iconSize: 36.w,
-                    padding: EdgeInsets.zero,
-                    icon: Icon(
-                      Icons.settings_rounded,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                    onPressed: () {
-                      ZoomDrawer.of(context)!.toggle();
-                    },
-                  ),
-                ],
-              ),
-            ),
-            flexibleSpace: FlexibleSpaceBar(
-              collapseMode: CollapseMode.parallax,
-              background: Container(
-                padding: EdgeInsets.fromLTRB(20.w, 100.w, 0, 0),
-                alignment: Alignment.topLeft,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+      body: RefreshIndicator(
+        //TODO other events
+        onRefresh: () async => context
+            .read<DatabaseBloc>()
+            .add(GetPasswords()),
+        child: CustomScrollView(
+          physics: BouncingScrollPhysics(),
+          slivers: [
+            SliverAppBar(
+              // bottom: PreferredSize(child: Container(color: Colors.red,), preferredSize: Size(100,40)),
+              toolbarHeight: 65.w,
+              elevation: 0,
+              pinned: true,
+              collapsedHeight: 65.w,
+              backgroundColor: Colors.white,
+              expandedHeight: 225.w,
+              title: Container(
+                height: 65.w,
+                alignment: Alignment.centerLeft,
+                child: Row(
                   children: [
-                    Text(
-                      'Welcome back,',
-                      style: TextStyle(
-                        fontSize: 31,
-                        fontWeight: FontWeight.normal,
-                        color: Theme.of(context).colorScheme.onBackground,
-                        height: 0.9,
+                    IconButton(
+                      iconSize: 42.w,
+                      padding: EdgeInsets.zero,
+                      icon: Icon(
+                        Icons.notes_rounded,
+                        color: Theme.of(context).colorScheme.primary,
                       ),
+                      onPressed: () {
+                        ZoomDrawer.of(context)!.toggle();
+                      },
                     ),
-                    Text(
-                      'Aaditya',
-                      style: TextStyle(
-                        height: 1.25,
-                        fontSize: 43,
-                        fontWeight: FontWeight.w700,
-                        color: Theme.of(context).colorScheme.onBackground,
+                    Spacer(),
+                    IconButton(
+                      iconSize: 36.w,
+                      padding: EdgeInsets.zero,
+                      icon: Icon(
+                        Icons.settings_rounded,
+                        color: Theme.of(context).colorScheme.primary,
                       ),
+                      onPressed: () {
+                        ZoomDrawer.of(context)!.toggle();
+                      },
                     ),
                   ],
                 ),
               ),
-            ),
-          ),
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (context, int) => Container(
-                color: Colors.white,
-                child: Container(
-                  clipBehavior: Clip.antiAliasWithSaveLayer,
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.background,
-                    borderRadius:
-                        BorderRadius.vertical(top: Radius.circular(25.w)),
+              stretch: true,
+              flexibleSpace: FlexibleSpaceBar(
+                collapseMode: CollapseMode.parallax,
+                stretchModes: [StretchMode.zoomBackground],
+                background: FittedBox(
+                  alignment: Alignment.centerLeft,
+                  child: Container(
+                    padding: EdgeInsets.fromLTRB(20.w, 100.w, 90.w, 42.w),
+                    alignment: Alignment.topLeft,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Welcome back,',
+                          style: TextStyle(
+                            fontSize: 31,
+                            fontWeight: FontWeight.normal,
+                            color: Theme.of(context).colorScheme.onBackground,
+                            height: 0.9,
+                          ),
+                        ),
+                        Text(
+                          '$fName',
+                          style: TextStyle(
+                            height: 1.25,
+                            fontSize: 43,
+                            fontWeight: FontWeight.w700,
+                            color: Theme.of(context).colorScheme.onBackground,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                  child: [
-                    PasswordPage(),
-                    PaymentCardPage(),
-                    SecureNotesPage(),
-                  ][context.read<MenuProvider>().currentPage],
                 ),
               ),
-              childCount: 1,
             ),
-          ),
-        ],
+            SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (context, int) => Container(
+                  color: Colors.white,
+                  child: Container(
+                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.background,
+                      borderRadius:
+                          BorderRadius.vertical(top: Radius.circular(25.w)),
+                    ),
+                    child: [
+                      PasswordPage(),
+                      PaymentCardPage(),
+                      SecureNotesPage(),
+                    ][context.read<MenuProvider>().currentPage],
+                  ),
+                ),
+                childCount: 1,
+              ),
+            ),
+          ],
+        ),
       ),
       floatingActionButton: FabCircularMenu(
         key: fabKey,
@@ -153,7 +174,7 @@ class _MainScreenState extends State<MainScreen> {
                       MaterialPageRoute(builder: (context) => SecureNoteForm()))
                   .then((value) => context
                       .read<DatabaseBloc>()
-                      .add(GetPasswords(PasswordCategory.All)));
+                      .add(GetPasswords()));
               fabKey.currentState!.close();
             },
           ),
@@ -166,7 +187,7 @@ class _MainScreenState extends State<MainScreen> {
                       builder: (context) => PaymentCardForm())).then((value) =>
                   context
                       .read<DatabaseBloc>()
-                      .add(GetPasswords(PasswordCategory.All)));
+                      .add(GetPasswords()));
               fabKey.currentState!.close();
             },
           ),
@@ -179,7 +200,7 @@ class _MainScreenState extends State<MainScreen> {
                       builder: (context) => PasswordFormPage())).then((value) =>
                   context
                       .read<DatabaseBloc>()
-                      .add(GetPasswords(PasswordCategory.All)));
+                      .add(GetPasswords()));
               fabKey.currentState!.close();
             },
           )

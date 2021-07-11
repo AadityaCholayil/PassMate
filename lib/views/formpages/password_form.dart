@@ -23,7 +23,7 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
   String _password = '';
   String _imageUrl = 'https://api.faviconkit.com/google.com/144';
   String _note = '';
-  PasswordCategory _category = PasswordCategory.Others;
+  PasswordCategory _category = PasswordCategory.others;
   bool _favourite = false;
   int _usage = 0;
   Timestamp? _timeAdded;
@@ -76,14 +76,14 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
         );
         Password password2 = Password(
           id: widget.password?.id??'',
-          path: '/college',
+          path: '/default',
           siteName: 'Github',
           siteUrl: 'www.github.com',
           email: 'aaditya@xyz.com',
           password: 'aadi123',
           imageUrl: 'https://api.faviconkit.com/www.github.com/144',
           note: 'Bruh',
-          category: PasswordCategory.Entertainment,
+          category: PasswordCategory.work,
           favourite: false,
           usage: 3,
           lastUsed: Timestamp.now(),

@@ -13,14 +13,14 @@ class SecureNotesPage extends StatefulWidget {
 }
 
 class _SecureNotesPageState extends State<SecureNotesPage> {
-  PasswordCategory passwordCategory = PasswordCategory.All;
+  PasswordCategory passwordCategory = PasswordCategory.all;
 
   @override
   void initState() {
     super.initState();
     context
         .read<DatabaseBloc>()
-        .add(GetPasswords(passwordCategory));
+        .add(GetPasswords(passwordCategory: passwordCategory));
   }
 
   @override
