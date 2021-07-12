@@ -27,28 +27,19 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState> {
     } else if (event is DeletePassword) {
       yield* _mapDeletePasswordToState(event);
     } else if (event is GetPaymentCards) {
-
     } else if (event is AddPaymentCard) {
-
     } else if (event is UpdatePaymentCard) {
-
     } else if (event is DeletePaymentCard) {
-
     } else if (event is GetSecureNote) {
-
     } else if (event is AddSecureNote) {
-
     } else if (event is UpdateSecureNote) {
-
-    } else if (event is DeleteSecureNote) {
-
-    }
+    } else if (event is DeleteSecureNote) {}
   }
 
   Stream<DatabaseState> _mapGetPasswordsToState(GetPasswords event) async* {
     yield Fetching();
     List<Password> list = [];
-    if (event.list==null) {
+    if (event.list == null) {
       print('hello');
       list = await databaseRepository.getPasswords(event.passwordCategory);
       list.forEach((element) async {
@@ -57,9 +48,22 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState> {
     } else {
       if (event.favourites) {
         list = event.list!.where((element) => element.favourite).toList();
-        await Future.delayed(Duration(milliseconds: 500));
+      }
+      if (event.passwordCategory != PasswordCategory.all) {
+        list = event.list!
+            .where((password) => password.category == event.passwordCategory)
+            .toList();
       }
     }
+    list.sort((pass1, pass2) {
+      if (event.sortMethod!.index==0) {
+        return pass2.timeAdded!.compareTo(pass1.timeAdded!);
+      } else if(event.sortMethod!.index==1) {
+        return pass2.usage.compareTo(pass2.usage);
+      } else {
+        return pass2.lastUsed!.compareTo(pass1.lastUsed!);
+      }
+    });
     yield PasswordList(list, event.passwordCategory, event.favourites);
   }
 
@@ -97,8 +101,6 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState> {
     yield Fetching();
     await event.password.encrypt(encryptionRepository);
     await databaseRepository.deletePassword(event.password);
-    add(GetPasswords(event.passwordCategory));
+    add(GetPasswords(passwordCategory: event.passwordCategory));
   }
-
-
 }

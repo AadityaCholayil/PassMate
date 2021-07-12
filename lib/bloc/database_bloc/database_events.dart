@@ -2,20 +2,26 @@ import 'package:equatable/equatable.dart';
 import 'package:passmate/model/password.dart';
 import 'package:passmate/model/payment_card.dart';
 import 'package:passmate/model/secure_note.dart';
+import 'package:passmate/model/sort_methods.dart';
 
 class DatabaseEvents extends Equatable {
   @override
   List<Object?> get props => [];
 }
 
-class GetPasswords extends DatabaseEvents{
+class GetPasswords extends DatabaseEvents {
   final PasswordCategory passwordCategory;
-
   final bool favourites;
   final String? search;
   final List<Password>? list;
+  final SortMethod? sortMethod;
 
-  GetPasswords(this.passwordCategory, {this.favourites = false, this.search, this.list});
+  GetPasswords(
+      {this.passwordCategory = PasswordCategory.all,
+      this.favourites = false,
+      this.search,
+      this.list,
+      this.sortMethod=SortMethod.recentlyAdded});
 }
 
 class AddPassword extends DatabaseEvents {
@@ -39,7 +45,7 @@ class DeletePassword extends DatabaseEvents {
   DeletePassword(this.password, this.passwordCategory);
 }
 
-class GetPaymentCards extends DatabaseEvents{
+class GetPaymentCards extends DatabaseEvents {
   final CardType cardType;
 
   GetPaymentCards(this.cardType);
@@ -63,10 +69,7 @@ class DeletePaymentCard extends DatabaseEvents {
   DeletePaymentCard(this.paymentCard);
 }
 
-
-class GetSecureNote extends DatabaseEvents{
-
-}
+class GetSecureNote extends DatabaseEvents {}
 
 class AddSecureNote extends DatabaseEvents {
   final SecureNote secureNote;
@@ -85,4 +88,3 @@ class DeleteSecureNote extends DatabaseEvents {
 
   DeleteSecureNote(this.secureNote);
 }
-

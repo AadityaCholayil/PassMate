@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:passmate/bloc/database_bloc/database_barrel.dart';
 import 'package:passmate/model/password.dart';
+import 'package:passmate/model/sort_methods.dart';
 import 'package:passmate/shared/custom_widgets.dart';
 import 'package:passmate/shared/loading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -19,13 +20,15 @@ class PasswordPage extends StatefulWidget {
 
 class _PasswordPageState extends State<PasswordPage> {
   PasswordCategory passwordCategory = PasswordCategory.all;
+  SortMethod sortMethod = SortMethod.recentlyAdded;
+  List<Password> completePasswordList = [];
   List<Password> passwordList = [];
   bool favourites = false;
 
   @override
   void initState() {
     super.initState();
-    context.read<DatabaseBloc>().add(GetPasswords(passwordCategory));
+    context.read<DatabaseBloc>().add(GetPasswords(passwordCategory: passwordCategory));
   }
 
   SizedBox _buildChipRow() {
@@ -92,9 +95,10 @@ class _PasswordPageState extends State<PasswordPage> {
             margin: EdgeInsets.only(right: 7.w),
             child: InkWell(
               onTap: () {
+                print(category);
                   context
                       .read<DatabaseBloc>()
-                      .add(GetPasswords(category, favourites: fav, list: passwordList));
+                      .add(GetPasswords(passwordCategory: category, favourites: fav, list: completePasswordList));
               },
               child: Chip(
                 side: selected
@@ -108,11 +112,11 @@ class _PasswordPageState extends State<PasswordPage> {
                   color: Theme.of(context).colorScheme.secondary,
                 ),
                 backgroundColor: Colors.white,
-                // padding: EdgeInsets.symmetric(horizontal: 12.w,),
-                padding: EdgeInsets.fromLTRB(12.w, 7.w, 12.w, 7.w),
+                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 7.w),
+                // padding: EdgeInsets.fromLTRB(12.w, 7.w, 12.w, 7.w),
                 labelPadding: EdgeInsets.fromLTRB(10.w, 0, 10.w, 2.w),
                 label: Text(
-                  label,
+                  label.replaceRange(0, 1, label.substring(0,1).toUpperCase()),
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.secondary,
                     fontSize: 17,
@@ -126,7 +130,7 @@ class _PasswordPageState extends State<PasswordPage> {
                 onDeleted: !selected
                     ? null
                     : () {
-                        context.read<DatabaseBloc>().add(GetPasswords(PasswordCategory.all));
+                        context.read<DatabaseBloc>().add(GetPasswords());
                       },
               ),
             ),
@@ -139,14 +143,17 @@ class _PasswordPageState extends State<PasswordPage> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<DatabaseBloc, DatabaseState>(
-      // listenWhen: (previous, current) => previous != current,
-      // buildWhen: (previous, current) => previous != current,
+      listenWhen: (previous, current) => previous != current,
+      buildWhen: (previous, current) => previous != current,
       listener: (context, state) {
         print('widget rebuilt');
         if (state is PasswordList) {
           passwordList = state.list;
           passwordCategory = state.passwordCategory;
           favourites = state.favourites;
+          if(passwordCategory==PasswordCategory.all && !favourites){
+            completePasswordList = state.list;
+          }
         }
       },
       builder: (context, state) {
@@ -173,7 +180,7 @@ class _PasswordPageState extends State<PasswordPage> {
                 labelText: 'Search',
                 onChanged: (val) {
                   context.read<DatabaseBloc>().add(GetPasswords(
-                      passwordCategory, search: val));
+                      passwordCategory: passwordCategory, search: val));
                 },
               ),
             ),
@@ -352,7 +359,7 @@ class PasswordDetailCard extends StatelessWidget {
                                 PasswordFormPage(password: password)),
                       ).then((value) {
                         BlocProvider.of<DatabaseBloc>(context)
-                            .add(GetPasswords(PasswordCategory.all));
+                            .add(GetPasswords());
                         Navigator.pop(context);
                       });
                     },

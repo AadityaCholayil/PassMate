@@ -45,7 +45,7 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     super.initState();
-    fName = context.read<AuthenticationBloc>().userData.firstName??'';
+    fName = context.read<AuthenticationBloc>().userData.firstName ?? '';
   }
 
   @override
@@ -53,7 +53,8 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       body: RefreshIndicator(
         //TODO other events
-        onRefresh: () async => BlocProvider.of<DatabaseBloc>(context).add(GetPasswords(PasswordCategory.all)),
+        onRefresh: () async =>
+            BlocProvider.of<DatabaseBloc>(context).add(GetPasswords()),
         child: CustomScrollView(
           physics: BouncingScrollPhysics(),
           slivers: [
@@ -172,7 +173,7 @@ class _MainScreenState extends State<MainScreen> {
                       MaterialPageRoute(builder: (context) => SecureNoteForm()))
                   .then((value) => context
                       .read<DatabaseBloc>()
-                      .add(GetPasswords(PasswordCategory.all)));
+                      .add(GetPasswords()));
               fabKey.currentState!.close();
             },
           ),
@@ -185,7 +186,7 @@ class _MainScreenState extends State<MainScreen> {
                       builder: (context) => PaymentCardForm())).then((value) =>
                   context
                       .read<DatabaseBloc>()
-                      .add(GetPasswords(PasswordCategory.all)));
+                      .add(GetPasswords()));
               fabKey.currentState!.close();
             },
           ),
@@ -198,7 +199,7 @@ class _MainScreenState extends State<MainScreen> {
                       builder: (context) => PasswordFormPage())).then((value) =>
                   context
                       .read<DatabaseBloc>()
-                      .add(GetPasswords(PasswordCategory.all)));
+                      .add(GetPasswords()));
               fabKey.currentState!.close();
             },
           )

@@ -104,9 +104,3 @@ enum PasswordCategory {
   ecommerce,
   others,
 }
-
-enum PasswordSort {
-  mostUsed,
-  recentlyUsed,
-  recentlyAdded
-}
