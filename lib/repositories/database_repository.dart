@@ -19,6 +19,7 @@ class DatabaseRepository {
           );
 
   Future<UserData> get completeUserData async {
+    //TODO ADD SAFETY
     UserData userDataNew = await usersRef
         .doc(uid)
         .get()

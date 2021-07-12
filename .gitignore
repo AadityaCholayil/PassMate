@@ -51,3 +51,4 @@ app.*.map.json
 /firestore.rules
 /remoteconfig.template.json
 /storage.rules
+/public/

@@ -2,28 +2,30 @@ import 'package:equatable/equatable.dart';
 import 'package:passmate/model/password.dart';
 import 'package:passmate/model/payment_card.dart';
 import 'package:passmate/model/secure_note.dart';
+import 'package:passmate/model/sort_methods.dart';
 
-abstract class DatabaseState extends Equatable{
-}
+abstract class DatabaseState extends Equatable {}
 
-class Fetching extends DatabaseState{
+class Fetching extends DatabaseState {
   @override
   List<Object?> get props => ['Fetching'];
-
 }
 
-class PasswordList extends DatabaseState{
+class PasswordList extends DatabaseState {
   final List<Password> list;
+  final List<Password> completeList;
   final PasswordCategory passwordCategory;
+  final SortMethod sortMethod;
   final bool favourites;
 
-  PasswordList(this.list, this.passwordCategory, this.favourites);
+  PasswordList(this.list, this.completeList, this.passwordCategory,
+      this.sortMethod, this.favourites);
 
   @override
   List<Object?> get props => ['PasswordList'];
 }
 
-class PaymentCardList extends DatabaseState{
+class PaymentCardList extends DatabaseState {
   final List<PaymentCard> list;
 
   PaymentCardList(this.list);
@@ -32,7 +34,7 @@ class PaymentCardList extends DatabaseState{
   List<Object?> get props => ['PaymentCardList'];
 }
 
-class SecureNotesList extends DatabaseState{
+class SecureNotesList extends DatabaseState {
   final List<SecureNote> list;
 
   SecureNotesList(this.list);
@@ -41,14 +43,15 @@ class SecureNotesList extends DatabaseState{
   List<Object?> get props => ['SecureNotesList'];
 }
 
-class PasswordFormState extends DatabaseState{
+class PasswordFormState extends DatabaseState {
   final String message;
 
   PasswordFormState(this.message);
 
   static PasswordFormState loading = PasswordFormState('Loading');
 
-  static PasswordFormState errorOccurred = PasswordFormState('Something went wrong');
+  static PasswordFormState errorOccurred =
+      PasswordFormState('Something went wrong');
 
   static PasswordFormState success = PasswordFormState('Success');
 
@@ -56,14 +59,15 @@ class PasswordFormState extends DatabaseState{
   List<Object?> get props => [message];
 }
 
-class PaymentCardFormState extends DatabaseState{
+class PaymentCardFormState extends DatabaseState {
   final String message;
 
   PaymentCardFormState(this.message);
 
   static PaymentCardFormState loading = PaymentCardFormState('Loading');
 
-  static PaymentCardFormState errorOccurred = PaymentCardFormState('Something went wrong');
+  static PaymentCardFormState errorOccurred =
+      PaymentCardFormState('Something went wrong');
 
   static PaymentCardFormState success = PaymentCardFormState('Success');
 
@@ -71,14 +75,15 @@ class PaymentCardFormState extends DatabaseState{
   List<Object?> get props => [message];
 }
 
-class SecureNoteFormState extends DatabaseState{
+class SecureNoteFormState extends DatabaseState {
   final String message;
 
   SecureNoteFormState(this.message);
 
   static SecureNoteFormState loading = SecureNoteFormState('Loading');
 
-  static SecureNoteFormState errorOccurred = SecureNoteFormState('Something went wrong');
+  static SecureNoteFormState errorOccurred =
+      SecureNoteFormState('Something went wrong');
 
   static SecureNoteFormState success = SecureNoteFormState('Success');
 

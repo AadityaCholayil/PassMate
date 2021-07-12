@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:passmate/bloc/database_bloc/database_barrel.dart';
 import 'package:passmate/views/auth/additional_details.dart';
 import 'package:passmate/views/auth/welcome_screen.dart';
 import 'package:passmate/bloc/authentication_bloc/auth_bloc_files.dart';
@@ -14,8 +12,6 @@ class Wrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(context.read<DatabaseBloc>().databaseRepository.uid);
-    print(context.read<DatabaseBloc>().userData.uid);
     if (state is Uninitialized) {
       return Loading();
     } else if (state is Unauthenticated) {

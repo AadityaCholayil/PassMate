@@ -6,7 +6,6 @@ import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:passmate/bloc/authentication_bloc/auth_bloc_files.dart';
 import 'package:passmate/bloc/database_bloc/database_barrel.dart';
 import 'package:passmate/model/main_screen_provider.dart';
-import 'package:passmate/model/password.dart';
 import 'package:passmate/views/formpages/password_form.dart';
 import 'package:passmate/views/formpages/payment_card_form.dart';
 import 'package:passmate/views/formpages/secure_note_form.dart';

@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
+import 'package:passmate/bloc/authentication_bloc/auth_bloc_files.dart';
 import 'package:passmate/bloc/database_bloc/database_barrel.dart';
 import 'package:passmate/model/password.dart';
 import 'package:passmate/model/sort_methods.dart';
@@ -21,6 +22,7 @@ class PasswordPage extends StatefulWidget {
 class _PasswordPageState extends State<PasswordPage> {
   PasswordCategory passwordCategory = PasswordCategory.all;
   SortMethod sortMethod = SortMethod.recentlyAdded;
+  String sortLabel = '';
   List<Password> completePasswordList = [];
   List<Password> passwordList = [];
   bool favourites = false;
@@ -28,10 +30,150 @@ class _PasswordPageState extends State<PasswordPage> {
   @override
   void initState() {
     super.initState();
-    context.read<DatabaseBloc>().add(GetPasswords(passwordCategory: passwordCategory));
+    sortMethod = context.read<AuthenticationBloc>().userData.sortMethod ??
+        SortMethod.recentlyAdded;
+    sortLabel = sortMethodMessages[sortMethod.index];
+    context.read<DatabaseBloc>().add(GetPasswords(
+        sortMethod: sortMethod, passwordCategory: passwordCategory));
   }
 
-  SizedBox _buildChipRow() {
+  @override
+  Widget build(BuildContext context) {
+    return BlocConsumer<DatabaseBloc, DatabaseState>(
+      listenWhen: (previous, current) => previous != current,
+      buildWhen: (previous, current) => previous != current,
+      listener: (context, state) {
+        print('widget rebuilt');
+        if (state is PasswordList) {
+          passwordList = state.list;
+          passwordCategory = state.passwordCategory;
+          favourites = state.favourites;
+          sortMethod = state.sortMethod;
+          sortLabel = sortMethodMessages[sortMethod.index];
+          if (passwordCategory == PasswordCategory.all && !favourites) {
+            completePasswordList = state.completeList;
+            print(completePasswordList);
+          }
+          if(state.completeList!=state.list){
+            completePasswordList = state.completeList;
+            print('aaaa: $completePasswordList');
+          }
+        }
+      },
+      builder: (context, state) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.only(left: 28.w, top: 13.w),
+              child: Text(
+                'Passwords',
+                style: TextStyle(
+                  fontSize: 32,
+                  fontWeight: FontWeight.w600,
+                  color: Theme.of(context).colorScheme.onBackground,
+                ),
+              ),
+            ),
+            SizedBox(height: 13.w),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.w),
+              child: CustomTextFormField(
+                isSearch: true,
+                labelText: 'Search',
+                onChanged: (val) {
+                  print(val);
+                  context.read<DatabaseBloc>().add(GetPasswords(
+                        search: val,
+                    completeList: completePasswordList,
+                    list: completePasswordList,
+                      ));
+                },
+              ),
+            ),
+            SizedBox(height: 15.w),
+            _buildChipRow(),
+            SizedBox(height: 5.w),
+            _buildSortDropDownBox(context),
+            SizedBox(height: 5.w),
+            state is Fetching
+                ? Container(
+                    height: 180.w,
+                    alignment: Alignment.center,
+                    child: LoadingSmall(),
+                  )
+                : Flexible(
+                    child: ListView.builder(
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: passwordList.length,
+                      itemBuilder: (context, index) {
+                        Password password = passwordList[index];
+                        return Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 20.w),
+                          child: PasswordCard(password: password, completePasswordList: completePasswordList,),
+                        );
+                      },
+                    ),
+                  )
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildSortDropDownBox(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(
+        left: 28.w,
+      ),
+      child: DropdownButton<SortMethod>(
+        value: sortMethod,
+        itemHeight: 55.w,
+        items: <SortMethod>[
+          SortMethod.values[0],
+          SortMethod.values[1],
+          SortMethod.values[2],
+        ].map<DropdownMenuItem<SortMethod>>((value) {
+          String label = sortMethodMessages[value.index];
+          return DropdownMenuItem(
+            value: value,
+            child: Container(
+              padding: EdgeInsets.fromLTRB(0, 7.w, 10.w, 7.w),
+              child: Text(
+                label,
+                style: value == sortMethod
+                    ? TextStyle(
+                        fontSize: 26,
+                        fontWeight: FontWeight.w600,
+                        color: Theme.of(context).colorScheme.onBackground,
+                      )
+                    : TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w400,
+                        color: Theme.of(context).colorScheme.onBackground,
+                      ),
+              ),
+            ),
+          );
+        }).toList(),
+        underline: Container(),
+        icon: Icon(Icons.keyboard_arrow_down),
+        iconEnabledColor: Theme.of(context).primaryColor,
+        iconSize: 30.w,
+        onChanged: (val) {
+          sortMethod = val ?? sortMethod;
+          context
+              .read<DatabaseBloc>()
+              .add(GetPasswords(completeList: completePasswordList, sortMethod: sortMethod));
+        },
+      ),
+    );
+  }
+
+  Widget _buildChipRow() {
     bool isDefault =
         passwordCategory == PasswordCategory.all && favourites == false;
     return SizedBox(
@@ -96,9 +238,10 @@ class _PasswordPageState extends State<PasswordPage> {
             child: InkWell(
               onTap: () {
                 print(category);
-                  context
-                      .read<DatabaseBloc>()
-                      .add(GetPasswords(passwordCategory: category, favourites: fav, list: completePasswordList));
+                context.read<DatabaseBloc>().add(GetPasswords(
+                    passwordCategory: category,
+                    favourites: fav,
+                    list: completePasswordList, completeList: completePasswordList, ));
               },
               child: Chip(
                 side: selected
@@ -116,7 +259,7 @@ class _PasswordPageState extends State<PasswordPage> {
                 // padding: EdgeInsets.fromLTRB(12.w, 7.w, 12.w, 7.w),
                 labelPadding: EdgeInsets.fromLTRB(10.w, 0, 10.w, 2.w),
                 label: Text(
-                  label.replaceRange(0, 1, label.substring(0,1).toUpperCase()),
+                  label.replaceRange(0, 1, label.substring(0, 1).toUpperCase()),
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.secondary,
                     fontSize: 17,
@@ -130,7 +273,7 @@ class _PasswordPageState extends State<PasswordPage> {
                 onDeleted: !selected
                     ? null
                     : () {
-                        context.read<DatabaseBloc>().add(GetPasswords());
+                        context.read<DatabaseBloc>().add(GetPasswords(completeList: completePasswordList,));
                       },
               ),
             ),
@@ -139,94 +282,17 @@ class _PasswordPageState extends State<PasswordPage> {
       ),
     );
   }
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocConsumer<DatabaseBloc, DatabaseState>(
-      listenWhen: (previous, current) => previous != current,
-      buildWhen: (previous, current) => previous != current,
-      listener: (context, state) {
-        print('widget rebuilt');
-        if (state is PasswordList) {
-          passwordList = state.list;
-          passwordCategory = state.passwordCategory;
-          favourites = state.favourites;
-          if(passwordCategory==PasswordCategory.all && !favourites){
-            completePasswordList = state.list;
-          }
-        }
-      },
-      builder: (context, state) {
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Padding(
-              padding: EdgeInsets.only(left: 28.w, top: 13.w, bottom: 3.w),
-              child: Text(
-                'Passwords',
-                style: TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.w600,
-                    color: Theme.of(context).colorScheme.onBackground),
-              ),
-            ),
-            SizedBox(height: 10.w),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.w),
-              child: CustomTextFormField(
-                isSearch: true,
-                labelText: 'Search',
-                onChanged: (val) {
-                  context.read<DatabaseBloc>().add(GetPasswords(
-                      passwordCategory: passwordCategory, search: val));
-                },
-              ),
-            ),
-            SizedBox(height: 15.w),
-            _buildChipRow(),
-            SizedBox(height: 10.w),
-            Padding(
-              padding: EdgeInsets.only(left: 28.w, bottom: 10.w),
-              child: Text(
-                'Frequently Used',
-                style: TextStyle(
-                    fontSize: 26,
-                    fontWeight: FontWeight.w600,
-                    color: Theme.of(context).colorScheme.onBackground),
-              ),
-            ),
-            state is Fetching
-                ? Center(child: LoadingSmall())
-                : Flexible(
-                    child: ListView.builder(
-                      physics: NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: passwordList.length,
-                      itemBuilder: (context, index) {
-                        Password password = passwordList[index];
-                        return Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 20.w),
-                          child: PasswordCard(password: password),
-                        );
-                      },
-                    ),
-                  )
-          ],
-        );
-      },
-    );
-  }
 }
 
 class PasswordCard extends StatelessWidget {
   const PasswordCard({
     Key? key,
     required this.password,
+    required this.completePasswordList,
   }) : super(key: key);
 
   final Password password;
+  final List<Password> completePasswordList;
 
   @override
   Widget build(BuildContext context) {
@@ -253,7 +319,7 @@ class PasswordCard extends StatelessWidget {
                 barrierColor: Colors.black.withOpacity(0.25),
                 backgroundColor: Colors.transparent,
                 builder: (context) {
-                  return PasswordDetailCard(password: password);
+                  return PasswordDetailCard(password: password, completePasswordList: completePasswordList,);
                 },
               );
             }
@@ -322,9 +388,11 @@ class PasswordDetailCard extends StatelessWidget {
   const PasswordDetailCard({
     Key? key,
     required this.password,
+    required this.completePasswordList,
   }) : super(key: key);
 
   final Password password;
+  final List<Password> completePasswordList;
 
   @override
   Widget build(BuildContext context) {
@@ -359,7 +427,7 @@ class PasswordDetailCard extends StatelessWidget {
                                 PasswordFormPage(password: password)),
                       ).then((value) {
                         BlocProvider.of<DatabaseBloc>(context)
-                            .add(GetPasswords());
+                            .add(GetPasswords(completeList: completePasswordList, ));
                         Navigator.pop(context);
                       });
                     },

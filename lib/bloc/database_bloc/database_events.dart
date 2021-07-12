@@ -14,6 +14,7 @@ class GetPasswords extends DatabaseEvents {
   final bool favourites;
   final String? search;
   final List<Password>? list;
+  final List<Password>? completeList;
   final SortMethod? sortMethod;
 
   GetPasswords(
@@ -21,7 +22,8 @@ class GetPasswords extends DatabaseEvents {
       this.favourites = false,
       this.search,
       this.list,
-      this.sortMethod=SortMethod.recentlyAdded});
+      this.completeList,
+      this.sortMethod});
 }
 
 class AddPassword extends DatabaseEvents {

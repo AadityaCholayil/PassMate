@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:passmate/bloc/database_bloc/database_barrel.dart';
+import 'package:passmate/model/sort_methods.dart';
 import 'package:passmate/repositories/authentication_repository.dart';
 import 'package:passmate/model/user.dart';
 import 'package:passmate/repositories/database_repository.dart';
@@ -117,7 +118,8 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState>{
       firstName: event.firstName,
       lastName: event.lastName,
       photoUrl: event.photoUrl,
-      pinSet: false
+      pinSet: false,
+      sortMethod: SortMethod.recentlyAdded
     );
     try{
       databaseRepository = DatabaseRepository(uid: userData.uid);

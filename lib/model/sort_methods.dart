@@ -1,5 +1,11 @@
 enum SortMethod {
   recentlyAdded,
-  mostUsed,
+  frequentlyUsed,
   recentlyUsed,
 }
+
+List<String> sortMethodMessages = [
+  'Recently Added',
+  'Frequently Used',
+  'Recently Used',
+];

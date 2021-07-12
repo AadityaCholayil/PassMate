@@ -8,18 +8,10 @@ import 'package:passmate/routes/route_generator.dart';
 import 'package:passmate/theme/theme.dart';
 import 'package:passmate/views/wrapper.dart';
 import 'package:provider/provider.dart';
-
 import 'bloc/database_bloc/database_barrel.dart';
 
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
-
-  @override
-  _MyAppState createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  late DatabaseBloc databaseBloc;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +21,7 @@ class _MyAppState extends State<MyApp> {
         create: (context) {
           AuthenticationBloc authenticationBloc = AuthenticationBloc(
               authenticationRepository:
-                  context.read<AuthenticationRepository>());
+              context.read<AuthenticationRepository>());
           authenticationBloc.add(AppStarted());
           return authenticationBloc;
         },
@@ -74,3 +66,4 @@ class _MyAppState extends State<MyApp> {
     );
   }
 }
+

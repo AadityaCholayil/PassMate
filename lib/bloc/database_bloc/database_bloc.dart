@@ -38,14 +38,36 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState> {
 
   Stream<DatabaseState> _mapGetPasswordsToState(GetPasswords event) async* {
     yield Fetching();
-    List<Password> list = [];
-    if (event.list == null) {
+    if (userData.sortMethod == null) {
       print('hello');
+      userData = await databaseRepository.completeUserData;
+      print(userData.sortMethod);
+    }
+    if (event.sortMethod != null) {
+      if (event.sortMethod != userData.sortMethod) {
+        UserData userData2 = UserData(
+          uid: userData.uid,
+          email: userData.email,
+          firstName: userData.firstName,
+          lastName: userData.lastName,
+          photoUrl: userData.photoUrl,
+          pinSet: userData.pinSet,
+          sortMethod: event.sortMethod,
+        );
+        userData = userData2;
+        databaseRepository.updateUserData(userData2);
+      }
+    }
+    List<Password> list = [];
+    List<Password> completeList = [];
+    if (event.list == null) {
       list = await databaseRepository.getPasswords(event.passwordCategory);
       list.forEach((element) async {
         await element.decrypt(encryptionRepository);
       });
+      completeList = list;
     } else {
+      completeList = event.completeList??[];
       if (event.favourites) {
         list = event.list!.where((element) => element.favourite).toList();
       }
@@ -54,17 +76,28 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState> {
             .where((password) => password.category == event.passwordCategory)
             .toList();
       }
+      if (event.search != null) {
+        print('search: ${event.search}');
+        list = event.completeList!
+            .where((element) {
+
+              return element.siteName.toLowerCase().contains('${event.search}');
+            })
+            .toList();
+        print(list);
+      }
     }
     list.sort((pass1, pass2) {
-      if (event.sortMethod!.index==0) {
+      if (userData.sortMethod!.index == 0) {
         return pass2.timeAdded!.compareTo(pass1.timeAdded!);
-      } else if(event.sortMethod!.index==1) {
+      } else if (userData.sortMethod!.index == 1) {
         return pass2.usage.compareTo(pass2.usage);
       } else {
         return pass2.lastUsed!.compareTo(pass1.lastUsed!);
       }
     });
-    yield PasswordList(list, event.passwordCategory, event.favourites);
+    yield PasswordList(
+        list, completeList, event.passwordCategory, userData.sortMethod!, event.favourites);
   }
 
   Stream<DatabaseState> _mapAddPasswordToState(AddPassword event) async* {
