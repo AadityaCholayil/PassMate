@@ -23,6 +23,7 @@ class _PasswordPageState extends State<PasswordPage> {
   PasswordCategory passwordCategory = PasswordCategory.all;
   SortMethod sortMethod = SortMethod.recentlyAdded;
   String sortLabel = '';
+  String? searchLabel;
   List<Password> completePasswordList = [];
   List<Password> passwordList = [];
   bool favourites = false;
@@ -49,12 +50,13 @@ class _PasswordPageState extends State<PasswordPage> {
           passwordCategory = state.passwordCategory;
           favourites = state.favourites;
           sortMethod = state.sortMethod;
+          searchLabel = state.search;
           sortLabel = sortMethodMessages[sortMethod.index];
           if (passwordCategory == PasswordCategory.all && !favourites) {
             completePasswordList = state.completeList;
             print(completePasswordList);
           }
-          if(state.completeList!=state.list){
+          if (state.completeList != state.list) {
             completePasswordList = state.completeList;
             print('aaaa: $completePasswordList');
           }
@@ -80,15 +82,19 @@ class _PasswordPageState extends State<PasswordPage> {
             SizedBox(height: 13.w),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20.w),
-              child: CustomTextFormField(
-                isSearch: true,
-                labelText: 'Search',
+              child: TextFormField(
+                initialValue: searchLabel,
+                decoration: customInputDecoration(
+                  context: context,
+                  labelText: 'Search',
+                  isSearch: true,
+                ),
                 onChanged: (val) {
-                  print(val);
                   context.read<DatabaseBloc>().add(GetPasswords(
                         search: val,
-                    completeList: completePasswordList,
-                    list: completePasswordList,
+                        passwordCategory: passwordCategory,
+                        completeList: completePasswordList,
+                        list: completePasswordList,
                       ));
                 },
               ),
@@ -113,7 +119,7 @@ class _PasswordPageState extends State<PasswordPage> {
                         Password password = passwordList[index];
                         return Padding(
                           padding: EdgeInsets.symmetric(horizontal: 20.w),
-                          child: PasswordCard(password: password, completePasswordList: completePasswordList,),
+                          child: PasswordCard(password: password),
                         );
                       },
                     ),
@@ -167,7 +173,7 @@ class _PasswordPageState extends State<PasswordPage> {
           sortMethod = val ?? sortMethod;
           context
               .read<DatabaseBloc>()
-              .add(GetPasswords(completeList: completePasswordList, sortMethod: sortMethod));
+              .add(GetPasswords(sortMethod: sortMethod));
         },
       ),
     );
@@ -239,9 +245,12 @@ class _PasswordPageState extends State<PasswordPage> {
               onTap: () {
                 print(category);
                 context.read<DatabaseBloc>().add(GetPasswords(
-                    passwordCategory: category,
-                    favourites: fav,
-                    list: completePasswordList, completeList: completePasswordList, ));
+                      search: searchLabel,
+                      passwordCategory: category,
+                      favourites: fav,
+                      list: completePasswordList,
+                      completeList: completePasswordList,
+                    ));
               },
               child: Chip(
                 side: selected
@@ -273,7 +282,7 @@ class _PasswordPageState extends State<PasswordPage> {
                 onDeleted: !selected
                     ? null
                     : () {
-                        context.read<DatabaseBloc>().add(GetPasswords(completeList: completePasswordList,));
+                        context.read<DatabaseBloc>().add(GetPasswords());
                       },
               ),
             ),
@@ -288,11 +297,9 @@ class PasswordCard extends StatelessWidget {
   const PasswordCard({
     Key? key,
     required this.password,
-    required this.completePasswordList,
   }) : super(key: key);
 
   final Password password;
-  final List<Password> completePasswordList;
 
   @override
   Widget build(BuildContext context) {
@@ -319,7 +326,7 @@ class PasswordCard extends StatelessWidget {
                 barrierColor: Colors.black.withOpacity(0.25),
                 backgroundColor: Colors.transparent,
                 builder: (context) {
-                  return PasswordDetailCard(password: password, completePasswordList: completePasswordList,);
+                  return PasswordDetailCard(password: password);
                 },
               );
             }
@@ -388,11 +395,9 @@ class PasswordDetailCard extends StatelessWidget {
   const PasswordDetailCard({
     Key? key,
     required this.password,
-    required this.completePasswordList,
   }) : super(key: key);
 
   final Password password;
-  final List<Password> completePasswordList;
 
   @override
   Widget build(BuildContext context) {
@@ -427,7 +432,7 @@ class PasswordDetailCard extends StatelessWidget {
                                 PasswordFormPage(password: password)),
                       ).then((value) {
                         BlocProvider.of<DatabaseBloc>(context)
-                            .add(GetPasswords(completeList: completePasswordList, ));
+                            .add(GetPasswords());
                         Navigator.pop(context);
                       });
                     },

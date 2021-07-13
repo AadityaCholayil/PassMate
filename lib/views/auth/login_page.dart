@@ -29,97 +29,103 @@ class _LoginPageState extends State<LoginPage> {
     return BlocProvider<LoginBloc>(
       create: (context) => LoginBloc(
           authenticationRepository: context.read<AuthenticationRepository>()),
-      child: BlocConsumer<LoginBloc, LoginState>(
-        listener: (context, state) async {
-          if (state == LoginState.success) {
-            await compute(EncryptionRepository.scryptHash, password).then((value) {
-              context.read<AuthenticationBloc>().encryptionRepository.updateKey(value);
-              if (!kIsWeb) {
-                final storage = FlutterSecureStorage();
-                storage.write(key: 'key', value: value);
-              }
-              context.read<AuthenticationBloc>().add(AuthenticateUser());
-              ScaffoldMessenger.of(context).hideCurrentSnackBar();
-              print('Navigating..');
-              Navigator.popUntil(context, ModalRoute.withName(RoutesName.WRAPPER));
-            });
-          } else {
+      child:
+          BlocConsumer<LoginBloc, LoginState>(listener: (context, state) async {
+        if (state == LoginState.success) {
+          await compute(EncryptionRepository.scryptHash, password)
+              .then((value) {
+            context
+                .read<AuthenticationBloc>()
+                .encryptionRepository
+                .updateKey(value);
+            if (!kIsWeb) {
+              final storage = FlutterSecureStorage();
+              storage.write(key: 'key', value: value);
+            }
+            context.read<AuthenticationBloc>().add(AuthenticateUser());
             ScaffoldMessenger.of(context).hideCurrentSnackBar();
-            ScaffoldMessenger.of(context)
-                .showSnackBar(showCustomSnackBar(context, state.message));
-          }
-        },
-        builder: (context, state) {
-          return Scaffold(
-            body: Center(
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 15),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Login',
-                        style: TextStyle(
-                          height: 1.25,
-                          fontSize: 43,
-                          fontWeight: FontWeight.w700,
-                          color: Theme.of(context).colorScheme.onBackground,
-                        ),
+            print('Navigating..');
+            Navigator.popUntil(
+                context, ModalRoute.withName(RoutesName.WRAPPER));
+          });
+        } else {
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          ScaffoldMessenger.of(context)
+              .showSnackBar(showCustomSnackBar(context, state.message));
+        }
+      }, builder: (context, state) {
+        return Scaffold(
+          body: Center(
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 15),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Login',
+                      style: TextStyle(
+                        height: 1.25,
+                        fontSize: 43,
+                        fontWeight: FontWeight.w700,
+                        color: Theme.of(context).colorScheme.onBackground,
                       ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      CustomTextFormField(
-                        labelText: 'Email',
-                        onSaved: (value) {
-                          email = value ?? '';
-                        },
-                        validator: (value) {
-                          if(value==null || value.isEmpty){
-                            return 'Please enter your email';
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    TextFormField(
+                      decoration: customInputDecoration(
+                          context: context, labelText: 'Email'),
+                      onSaved: (value) {
+                        email = value ?? '';
+                      },
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your email';
+                        }
+                      },
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    TextFormField(
+                      decoration: customInputDecoration(
+                          context: context, labelText: 'Password'),
+                      onSaved: (value) {
+                        password = value ?? '';
+                      },
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your password';
+                        }
+                      },
+                    ),
+                    Center(
+                      child: ElevatedButton(
+                        child: Text('submit'),
+                        onPressed: () async {
+                          if (!_formKey.currentState!.validate()) {
+                            return;
                           }
+                          _formKey.currentState?.save();
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              showCustomSnackBar(context, state.message));
+                          BlocProvider.of<LoginBloc>(context).add(
+                              LoginUsingCredentials(
+                                  email: AuthEmail(email),
+                                  password: AuthPassword(password)));
                         },
                       ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      CustomTextFormField(
-                        labelText: 'Password',
-                        onSaved: (value) {
-                          password = value ?? '';
-                        },
-                        validator: (value) {
-                          if(value==null || value.isEmpty){
-                            return 'Please enter your password';
-                          }
-                        },
-                      ),
-                      Center(
-                        child: ElevatedButton(
-                          child: Text('submit'),
-                          onPressed: () async {
-                            if(!_formKey.currentState!.validate()){
-                              return;
-                            }
-                            _formKey.currentState?.save();
-                            ScaffoldMessenger.of(context).showSnackBar(
-                                showCustomSnackBar(context, state.message));
-                            BlocProvider.of<LoginBloc>(context).add(
-                                LoginUsingCredentials(
-                                    email: AuthEmail(email),
-                                    password: AuthPassword(password)));
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),
-          );
+          ),
+        );
       }),
     );
   }

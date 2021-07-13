@@ -14,11 +14,12 @@ class Fetching extends DatabaseState {
 class PasswordList extends DatabaseState {
   final List<Password> list;
   final List<Password> completeList;
+  final String? search;
   final PasswordCategory passwordCategory;
   final SortMethod sortMethod;
   final bool favourites;
 
-  PasswordList(this.list, this.completeList, this.passwordCategory,
+  PasswordList(this.list, this.completeList, this.search, this.passwordCategory,
       this.sortMethod, this.favourites);
 
   @override

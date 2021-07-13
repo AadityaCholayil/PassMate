@@ -67,7 +67,8 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState> {
       });
       completeList = list;
     } else {
-      completeList = event.completeList??[];
+      completeList = event.completeList ?? [];
+      list = event.list ?? [];
       if (event.favourites) {
         list = event.list!.where((element) => element.favourite).toList();
       }
@@ -78,12 +79,9 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState> {
       }
       if (event.search != null) {
         print('search: ${event.search}');
-        list = event.completeList!
-            .where((element) {
-
-              return element.siteName.toLowerCase().contains('${event.search}');
-            })
-            .toList();
+        list = list.where((element) {
+          return element.siteName.toLowerCase().contains('${event.search}');
+        }).toList();
         print(list);
       }
     }
@@ -96,8 +94,8 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState> {
         return pass2.lastUsed!.compareTo(pass1.lastUsed!);
       }
     });
-    yield PasswordList(
-        list, completeList, event.passwordCategory, userData.sortMethod!, event.favourites);
+    yield PasswordList(list, completeList, event.search, event.passwordCategory,
+        userData.sortMethod!, event.favourites);
   }
 
   Stream<DatabaseState> _mapAddPasswordToState(AddPassword event) async* {

@@ -106,8 +106,9 @@ class _SignUpPageState extends State<SignUpPage> {
                       SizedBox(
                         height: 15,
                       ),
-                      CustomTextFormField(
-                        labelText: 'Email',
+                      TextFormField(
+                        decoration: customInputDecoration(
+                            context: context, labelText: 'Email'),
                         onSaved: (value) {
                           email.email = value ?? '';
                         },
@@ -120,11 +121,12 @@ class _SignUpPageState extends State<SignUpPage> {
                       SizedBox(
                         height: 15,
                       ),
-                      CustomTextFormField(
-                        labelText: 'Password',
+                      TextFormField(
+                        decoration: customInputDecoration(
+                            context: context, labelText: 'Password'),
                         onChanged: (value) {
                           setState(() {
-                            password.password = value ?? '';
+                            password.password = value;
                             passwordStrength = password.passwordStrength;
                           });
                         },
