@@ -109,6 +109,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       TextFormField(
                         decoration: customInputDecoration(
                             context: context, labelText: 'Email'),
+                        style: formTextStyle(context),
                         onSaved: (value) {
                           email.email = value ?? '';
                         },
@@ -124,6 +125,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       TextFormField(
                         decoration: customInputDecoration(
                             context: context, labelText: 'Password'),
+                        style: formTextStyle(context),
                         onChanged: (value) {
                           setState(() {
                             password.password = value;

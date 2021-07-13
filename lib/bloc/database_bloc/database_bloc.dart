@@ -39,9 +39,7 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState> {
   Stream<DatabaseState> _mapGetPasswordsToState(GetPasswords event) async* {
     yield Fetching();
     if (userData.sortMethod == null) {
-      print('hello');
       userData = await databaseRepository.completeUserData;
-      print(userData.sortMethod);
     }
     if (event.sortMethod != null) {
       if (event.sortMethod != userData.sortMethod) {
@@ -67,7 +65,7 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState> {
       });
       completeList = list;
     } else {
-      completeList = event.completeList ?? [];
+      completeList = event.list ?? [];
       list = event.list ?? [];
       if (event.favourites) {
         list = event.list!.where((element) => element.favourite).toList();

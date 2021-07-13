@@ -56,6 +56,7 @@ class _AdditionalDetailsPageState extends State<AdditionalDetailsPage> {
                   TextFormField(
                     decoration: customInputDecoration(
                         context: context, labelText: 'First Name'),
+                    style: formTextStyle(context),
                     onSaved: (value) {
                       firstName = value ?? '';
                     },
@@ -71,6 +72,7 @@ class _AdditionalDetailsPageState extends State<AdditionalDetailsPage> {
                   TextFormField(
                     decoration: customInputDecoration(
                         context: context, labelText: 'Last Name'),
+                    style: formTextStyle(context),
                     onSaved: (value) {
                       lastName = value ?? '';
                     },

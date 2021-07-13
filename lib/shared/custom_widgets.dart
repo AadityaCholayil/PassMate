@@ -8,14 +8,14 @@ InputDecoration customInputDecoration(
   return InputDecoration(
     suffixIcon: isSearch
         ? Padding(
-            padding: EdgeInsets.only(right: 20.0.w),
+            padding: EdgeInsets.only(right: 20.w),
             child: Icon(
               Icons.search,
               size: 30.w,
             ),
           )
         : null,
-    contentPadding: EdgeInsets.fromLTRB(20.w, 13.w, 15.w, 13.w),
+    contentPadding: EdgeInsets.fromLTRB(22.w, 16.w, 15.w, 16.w),
     enabledBorder: OutlineInputBorder(
       borderSide: BorderSide(
         color: isSearch
@@ -24,11 +24,11 @@ InputDecoration customInputDecoration(
         width: 1.5,
         style: BorderStyle.solid,
       ),
-      borderRadius: BorderRadius.all(Radius.circular(17.0.w)),
+      borderRadius: BorderRadius.all(Radius.circular(15.0.w)),
     ),
     fillColor: Theme.of(context).colorScheme.surface,
     labelText: labelText,
-    labelStyle: TextStyle(fontSize: 22),
+    labelStyle: TextStyle(fontSize: 19),
     floatingLabelBehavior: FloatingLabelBehavior.never,
     helperStyle: TextStyle(
       color: Color(0xdd000000),
@@ -76,7 +76,7 @@ InputDecoration customInputDecoration(
         width: 2,
         style: BorderStyle.solid,
       ),
-      borderRadius: BorderRadius.all(Radius.circular(17.0.w)),
+      borderRadius: BorderRadius.all(Radius.circular(15.0.w)),
     ),
     focusedBorder: OutlineInputBorder(
       borderSide: BorderSide(
@@ -84,7 +84,7 @@ InputDecoration customInputDecoration(
         width: 1.5,
         style: BorderStyle.solid,
       ),
-      borderRadius: BorderRadius.all(Radius.circular(17.0.w)),
+      borderRadius: BorderRadius.all(Radius.circular(15.0.w)),
     ),
     focusedErrorBorder: OutlineInputBorder(
       borderSide: BorderSide(
@@ -92,7 +92,7 @@ InputDecoration customInputDecoration(
         width: 2,
         style: BorderStyle.solid,
       ),
-      borderRadius: BorderRadius.all(Radius.circular(17.0.w)),
+      borderRadius: BorderRadius.all(Radius.circular(15.0.w)),
     ),
     disabledBorder: OutlineInputBorder(
       borderSide: BorderSide(
@@ -100,7 +100,7 @@ InputDecoration customInputDecoration(
         width: 2,
         style: BorderStyle.solid,
       ),
-      borderRadius: BorderRadius.all(Radius.circular(17.0.w)),
+      borderRadius: BorderRadius.all(Radius.circular(15.0.w)),
     ),
     border: OutlineInputBorder(
       borderSide: BorderSide(
@@ -108,10 +108,15 @@ InputDecoration customInputDecoration(
         width: 2,
         style: BorderStyle.solid,
       ),
-      borderRadius: BorderRadius.all(Radius.circular(17.0.w)),
+      borderRadius: BorderRadius.all(Radius.circular(15.0.w)),
     ),
   );
 }
+
+TextStyle formTextStyle(BuildContext context) => TextStyle(
+  fontSize: 19,
+  color: Theme.of(context).primaryColor
+);
 
 class CustomElevatedButton extends StatelessWidget {
   final void Function()? onPressed;

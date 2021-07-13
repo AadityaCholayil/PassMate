@@ -79,6 +79,7 @@ class _LoginPageState extends State<LoginPage> {
                     TextFormField(
                       decoration: customInputDecoration(
                           context: context, labelText: 'Email'),
+                      style: formTextStyle(context),
                       onSaved: (value) {
                         email = value ?? '';
                       },
@@ -94,6 +95,7 @@ class _LoginPageState extends State<LoginPage> {
                     TextFormField(
                       decoration: customInputDecoration(
                           context: context, labelText: 'Password'),
+                      style: formTextStyle(context),
                       onSaved: (value) {
                         password = value ?? '';
                       },

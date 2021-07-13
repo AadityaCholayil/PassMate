@@ -54,11 +54,9 @@ class _PasswordPageState extends State<PasswordPage> {
           sortLabel = sortMethodMessages[sortMethod.index];
           if (passwordCategory == PasswordCategory.all && !favourites) {
             completePasswordList = state.completeList;
-            print(completePasswordList);
           }
           if (state.completeList != state.list) {
             completePasswordList = state.completeList;
-            print('aaaa: $completePasswordList');
           }
         }
       },
@@ -89,11 +87,11 @@ class _PasswordPageState extends State<PasswordPage> {
                   labelText: 'Search',
                   isSearch: true,
                 ),
+                style: formTextStyle(context),
                 onChanged: (val) {
                   context.read<DatabaseBloc>().add(GetPasswords(
                         search: val,
                         passwordCategory: passwordCategory,
-                        completeList: completePasswordList,
                         list: completePasswordList,
                       ));
                 },
@@ -249,7 +247,6 @@ class _PasswordPageState extends State<PasswordPage> {
                       passwordCategory: category,
                       favourites: fav,
                       list: completePasswordList,
-                      completeList: completePasswordList,
                     ));
               },
               child: Chip(
