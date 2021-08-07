@@ -94,7 +94,7 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
         } else {
           context
               .read<DatabaseBloc>()
-              .add(UpdatePassword(true, password2, widget.password!.path));
+              .add(UpdatePassword(password2, true, widget.password!.path));
         }
       },
     );

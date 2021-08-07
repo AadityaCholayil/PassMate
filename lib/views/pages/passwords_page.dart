@@ -78,29 +78,11 @@ class _PasswordPageState extends State<PasswordPage> {
               ),
             ),
             SizedBox(height: 13.w),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.w),
-              child: TextFormField(
-                initialValue: searchLabel,
-                decoration: customInputDecoration(
-                  context: context,
-                  labelText: 'Search',
-                  isSearch: true,
-                ),
-                style: formTextStyle(context),
-                onChanged: (val) {
-                  context.read<DatabaseBloc>().add(GetPasswords(
-                        search: val,
-                        passwordCategory: passwordCategory,
-                        list: completePasswordList,
-                      ));
-                },
-              ),
-            ),
+            _buildSearch(context),
             SizedBox(height: 15.w),
-            _buildChipRow(),
+            completePasswordList.isNotEmpty ? _buildChipRow() : SizedBox.shrink(),
             SizedBox(height: 5.w),
-            _buildSortDropDownBox(context),
+            completePasswordList.isNotEmpty ? _buildSortDropDownBox(context) : SizedBox.shrink(),
             SizedBox(height: 5.w),
             state is Fetching
                 ? Container(
@@ -108,70 +90,75 @@ class _PasswordPageState extends State<PasswordPage> {
                     alignment: Alignment.center,
                     child: LoadingSmall(),
                   )
-                : Flexible(
-                    child: ListView.builder(
-                      physics: NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: passwordList.length,
-                      itemBuilder: (context, index) {
-                        Password password = passwordList[index];
-                        return Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 20.w),
-                          child: PasswordCard(password: password),
-                        );
-                      },
-                    ),
-                  )
+                : completePasswordList.isEmpty
+                    ? Container(
+                        alignment: Alignment.center,
+                        height: 320.w,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Start Adding Passwords',
+                              style: TextStyle(
+                                fontSize: 25,
+                                fontWeight: FontWeight.w700,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                            Text(
+                              'All your passwords will be secure\nusing AES-256 encryption.',
+                              style: TextStyle(
+                                fontSize: 17,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        ),
+                      )
+                    : Flexible(
+                        child: ListView.builder(
+                          physics: NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: passwordList.length,
+                          itemBuilder: (context, index) {
+                            Password password = passwordList[index];
+                            return Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 20.w),
+                              child: PasswordCard(password: password),
+                            );
+                          },
+                        ),
+                      ),
+            SizedBox(
+              height: passwordList.length < 3
+                  ? passwordList.isEmpty
+                      ? 12.w
+                      : 200.w
+                  : 0,
+            ),
           ],
         );
       },
     );
   }
 
-  Widget _buildSortDropDownBox(BuildContext context) {
+  Padding _buildSearch(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(
-        left: 28.w,
-      ),
-      child: DropdownButton<SortMethod>(
-        value: sortMethod,
-        itemHeight: 55.w,
-        items: <SortMethod>[
-          SortMethod.values[0],
-          SortMethod.values[1],
-          SortMethod.values[2],
-        ].map<DropdownMenuItem<SortMethod>>((value) {
-          String label = sortMethodMessages[value.index];
-          return DropdownMenuItem(
-            value: value,
-            child: Container(
-              padding: EdgeInsets.fromLTRB(0, 7.w, 10.w, 7.w),
-              child: Text(
-                label,
-                style: value == sortMethod
-                    ? TextStyle(
-                        fontSize: 26,
-                        fontWeight: FontWeight.w600,
-                        color: Theme.of(context).colorScheme.onBackground,
-                      )
-                    : TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w400,
-                        color: Theme.of(context).colorScheme.onBackground,
-                      ),
-              ),
-            ),
-          );
-        }).toList(),
-        underline: Container(),
-        icon: Icon(Icons.keyboard_arrow_down),
-        iconEnabledColor: Theme.of(context).primaryColor,
-        iconSize: 30.w,
+      padding: EdgeInsets.symmetric(horizontal: 20.w),
+      child: TextFormField(
+        initialValue: searchLabel,
+        decoration: customInputDecoration(
+          context: context,
+          labelText: 'Search',
+          isSearch: true,
+        ),
+        style: formTextStyle(context),
         onChanged: (val) {
-          sortMethod = val ?? sortMethod;
-          context
-              .read<DatabaseBloc>()
-              .add(GetPasswords(sortMethod: sortMethod));
+          context.read<DatabaseBloc>().add(GetPasswords(
+                search: val,
+                passwordCategory: passwordCategory,
+                list: completePasswordList,
+              ));
         },
       ),
     );
@@ -257,18 +244,18 @@ class _PasswordPageState extends State<PasswordPage> {
                     : null,
                 avatar: Icon(
                   Icons.favorite_border_rounded,
-                  size: 25.w,
+                  size: 23.w,
                   color: Theme.of(context).colorScheme.secondary,
                 ),
                 backgroundColor: Colors.white,
                 padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 7.w),
                 // padding: EdgeInsets.fromLTRB(12.w, 7.w, 12.w, 7.w),
-                labelPadding: EdgeInsets.fromLTRB(10.w, 0, 10.w, 2.w),
+                labelPadding: EdgeInsets.fromLTRB(10.w, 0, 10.w, 0),
                 label: Text(
                   label.replaceRange(0, 1, label.substring(0, 1).toUpperCase()),
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.secondary,
-                    fontSize: 17,
+                    fontSize: 16,
                   ),
                 ),
                 deleteIcon: Icon(
@@ -284,6 +271,55 @@ class _PasswordPageState extends State<PasswordPage> {
               ),
             ),
           );
+        },
+      ),
+    );
+  }
+
+  Widget _buildSortDropDownBox(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(
+        left: 28.w,
+      ),
+      child: DropdownButton<SortMethod>(
+        value: sortMethod,
+        itemHeight: 55.w,
+        items: <SortMethod>[
+          SortMethod.values[0],
+          SortMethod.values[1],
+          SortMethod.values[2],
+        ].map<DropdownMenuItem<SortMethod>>((value) {
+          String label = sortMethodMessages[value.index];
+          return DropdownMenuItem(
+            value: value,
+            child: Container(
+              padding: EdgeInsets.fromLTRB(0, 7.w, 10.w, 7.w),
+              child: Text(
+                label,
+                style: value == sortMethod
+                    ? TextStyle(
+                        fontSize: 26,
+                        fontWeight: FontWeight.w600,
+                        color: Theme.of(context).colorScheme.onBackground,
+                      )
+                    : TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w400,
+                        color: Theme.of(context).colorScheme.onBackground,
+                      ),
+              ),
+            ),
+          );
+        }).toList(),
+        underline: Container(),
+        icon: Icon(Icons.keyboard_arrow_down),
+        iconEnabledColor: Theme.of(context).primaryColor,
+        iconSize: 30.w,
+        onChanged: (val) {
+          sortMethod = val ?? sortMethod;
+          context
+              .read<DatabaseBloc>()
+              .add(GetPasswords(sortMethod: sortMethod));
         },
       ),
     );
@@ -317,7 +353,7 @@ class PasswordCard extends StatelessWidget {
               password.usage++;
               context
                   .read<DatabaseBloc>()
-                  .add(UpdatePassword(false, password, password.path));
+                  .add(UpdatePassword(password, false, password.path));
               showModalBottomSheet(
                 context: context,
                 barrierColor: Colors.black.withOpacity(0.25),
@@ -357,7 +393,7 @@ class PasswordCard extends StatelessWidget {
                   ),
                 ),
                 SizedBox(
-                  width: 17.w,
+                  width: 19.w,
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -414,7 +450,7 @@ class PasswordDetailCard extends StatelessWidget {
                     child: Text('Delete'),
                     onPressed: () {
                       BlocProvider.of<DatabaseBloc>(context)
-                          .add(DeletePassword(password, PasswordCategory.all));
+                          .add(DeletePassword(password));
                       Navigator.pop(context);
                     },
                   ),

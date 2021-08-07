@@ -10,18 +10,19 @@ class DatabaseEvents extends Equatable {
 }
 
 class GetPasswords extends DatabaseEvents {
+  final List<Password>? list;
   final PasswordCategory passwordCategory;
   final bool favourites;
   final String? search;
-  final List<Password>? list;
   final SortMethod? sortMethod;
 
-  GetPasswords(
-      {this.passwordCategory = PasswordCategory.all,
-      this.favourites = false,
-      this.search,
-      this.list,
-      this.sortMethod});
+  GetPasswords({
+    this.list,
+    this.passwordCategory = PasswordCategory.all,
+    this.favourites = false,
+    this.search,
+    this.sortMethod,
+  });
 }
 
 class AddPassword extends DatabaseEvents {
@@ -31,24 +32,37 @@ class AddPassword extends DatabaseEvents {
 }
 
 class UpdatePassword extends DatabaseEvents {
-  final bool fromForm;
   final Password password;
+  final bool fromForm;
   final String oldPath;
 
-  UpdatePassword(this.fromForm, this.password, this.oldPath);
+  UpdatePassword(
+    this.password,
+    this.fromForm,
+    this.oldPath,
+  );
 }
 
 class DeletePassword extends DatabaseEvents {
   final Password password;
-  final PasswordCategory passwordCategory;
 
-  DeletePassword(this.password, this.passwordCategory);
+  DeletePassword(this.password);
 }
 
 class GetPaymentCards extends DatabaseEvents {
-  final CardType cardType;
+  final List<PaymentCard>? list;
+  final PaymentCardType paymentCardType;
+  final bool favourites;
+  final String? search;
+  final SortMethod? sortMethod;
 
-  GetPaymentCards(this.cardType);
+  GetPaymentCards({
+    this.list,
+    this.paymentCardType = PaymentCardType.all,
+    this.favourites = false,
+    this.search,
+    this.sortMethod,
+  });
 }
 
 class AddPaymentCard extends DatabaseEvents {
@@ -58,9 +72,15 @@ class AddPaymentCard extends DatabaseEvents {
 }
 
 class UpdatePaymentCard extends DatabaseEvents {
+  final bool fromForm;
   final PaymentCard paymentCard;
+  final String oldPath;
 
-  UpdatePaymentCard(this.paymentCard);
+  UpdatePaymentCard(
+    this.paymentCard,
+    this.fromForm,
+    this.oldPath,
+  );
 }
 
 class DeletePaymentCard extends DatabaseEvents {
@@ -69,7 +89,19 @@ class DeletePaymentCard extends DatabaseEvents {
   DeletePaymentCard(this.paymentCard);
 }
 
-class GetSecureNote extends DatabaseEvents {}
+class GetSecureNotes extends DatabaseEvents {
+  final List<SecureNote>? list;
+  final bool favourites;
+  final String? search;
+  final SortMethod? sortMethod;
+
+  GetSecureNotes({
+    this.list,
+    this.favourites = false,
+    this.search,
+    this.sortMethod,
+  });
+}
 
 class AddSecureNote extends DatabaseEvents {
   final SecureNote secureNote;
@@ -79,12 +111,26 @@ class AddSecureNote extends DatabaseEvents {
 
 class UpdateSecureNote extends DatabaseEvents {
   final SecureNote secureNote;
+  final bool fromForm;
+  final String oldPath;
 
-  UpdateSecureNote(this.secureNote);
+  UpdateSecureNote(
+    this.secureNote,
+    this.fromForm,
+    this.oldPath,
+  );
 }
 
 class DeleteSecureNote extends DatabaseEvents {
   final SecureNote secureNote;
 
   DeleteSecureNote(this.secureNote);
+}
+
+class GetFolder extends DatabaseEvents {
+  final String path;
+
+  GetFolder({
+    this.path='/',
+  });
 }

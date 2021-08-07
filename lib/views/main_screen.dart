@@ -29,8 +29,8 @@ class _MainScreenState extends State<MainScreen> {
     return Container(
       decoration: BoxDecoration(color: Colors.white, shape: BoxShape.circle),
       padding: EdgeInsets.all(7.w),
-      height: 62.w,
-      width: 62.w,
+      height: 60.w,
+      width: 60.w,
       child: IconButton(
         icon: Icon(
           icon,
@@ -52,8 +52,11 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       body: RefreshIndicator(
         //TODO other events
-        onRefresh: () async =>
-            BlocProvider.of<DatabaseBloc>(context).add(GetPasswords()),
+        onRefresh: () async => BlocProvider.of<DatabaseBloc>(context).add([
+          GetPasswords(),
+          GetPaymentCards(),
+          GetSecureNotes(),
+        ][context.read<MenuProvider>().currentPage]),
         child: CustomScrollView(
           physics: BouncingScrollPhysics(),
           slivers: [
@@ -71,7 +74,7 @@ class _MainScreenState extends State<MainScreen> {
                 child: Row(
                   children: [
                     IconButton(
-                      iconSize: 42.w,
+                      iconSize: 38.w,
                       padding: EdgeInsets.zero,
                       icon: Icon(
                         Icons.notes_rounded,
@@ -83,7 +86,7 @@ class _MainScreenState extends State<MainScreen> {
                     ),
                     Spacer(),
                     IconButton(
-                      iconSize: 36.w,
+                      iconSize: 34.w,
                       padding: EdgeInsets.zero,
                       icon: Icon(
                         Icons.settings_rounded,
@@ -158,7 +161,7 @@ class _MainScreenState extends State<MainScreen> {
       ),
       floatingActionButton: FabCircularMenu(
         key: fabKey,
-        ringDiameter: 450.w,
+        ringDiameter: 445.w,
         ringWidth: 130.w,
         fabSize: 65.w,
         fabOpenIcon: Icon(Icons.add, color: Colors.white, size: 42),
@@ -169,10 +172,9 @@ class _MainScreenState extends State<MainScreen> {
             icon: Icons.sticky_note_2_rounded,
             onPressed: () {
               Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => SecureNoteForm()))
-                  .then((value) => context
-                      .read<DatabaseBloc>()
-                      .add(GetPasswords()));
+                      MaterialPageRoute(builder: (context) => SecureNoteFormPage()))
+                  .then((value) =>
+                      context.read<DatabaseBloc>().add(GetSecureNotes()));
               fabKey.currentState!.close();
             },
           ),
@@ -182,10 +184,8 @@ class _MainScreenState extends State<MainScreen> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => PaymentCardForm())).then((value) =>
-                  context
-                      .read<DatabaseBloc>()
-                      .add(GetPasswords()));
+                      builder: (context) => PaymentCardFormPage())).then(
+                  (value) => context.read<DatabaseBloc>().add(GetPaymentCards()));
               fabKey.currentState!.close();
             },
           ),
@@ -195,10 +195,8 @@ class _MainScreenState extends State<MainScreen> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => PasswordFormPage())).then((value) =>
-                  context
-                      .read<DatabaseBloc>()
-                      .add(GetPasswords()));
+                      builder: (context) => PasswordFormPage())).then(
+                  (value) => context.read<DatabaseBloc>().add(GetPasswords()));
               fabKey.currentState!.close();
             },
           )

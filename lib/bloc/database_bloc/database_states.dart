@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:passmate/model/folder.dart';
 import 'package:passmate/model/password.dart';
 import 'package:passmate/model/payment_card.dart';
 import 'package:passmate/model/secure_note.dart';
@@ -19,8 +20,14 @@ class PasswordList extends DatabaseState {
   final SortMethod sortMethod;
   final bool favourites;
 
-  PasswordList(this.list, this.completeList, this.search, this.passwordCategory,
-      this.sortMethod, this.favourites);
+  PasswordList(
+    this.list,
+    this.completeList,
+    this.search,
+    this.passwordCategory,
+    this.sortMethod,
+    this.favourites,
+  );
 
   @override
   List<Object?> get props => ['PasswordList'];
@@ -28,8 +35,20 @@ class PasswordList extends DatabaseState {
 
 class PaymentCardList extends DatabaseState {
   final List<PaymentCard> list;
+  final List<PaymentCard> completeList;
+  final String? search;
+  final PaymentCardType paymentCardType;
+  final SortMethod sortMethod;
+  final bool favourites;
 
-  PaymentCardList(this.list);
+  PaymentCardList(
+    this.list,
+    this.completeList,
+    this.search,
+    this.paymentCardType,
+    this.sortMethod,
+    this.favourites,
+  );
 
   @override
   List<Object?> get props => ['PaymentCardList'];
@@ -37,11 +56,25 @@ class PaymentCardList extends DatabaseState {
 
 class SecureNotesList extends DatabaseState {
   final List<SecureNote> list;
+  final List<SecureNote> completeList;
+  final String? search;
+  final SortMethod sortMethod;
+  final bool favourites;
 
-  SecureNotesList(this.list);
+  SecureNotesList(this.list, this.completeList, this.search, this.sortMethod,
+      this.favourites);
 
   @override
   List<Object?> get props => ['SecureNotesList'];
+}
+
+class FolderListState extends DatabaseState {
+  final Folder folder;
+
+  FolderListState(this.folder);
+
+  @override
+  List<Object?> get props => ['FolderListState'];
 }
 
 class PasswordFormState extends DatabaseState {

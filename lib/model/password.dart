@@ -3,17 +3,17 @@ import 'package:passmate/model/auth_credentials.dart';
 import 'package:passmate/repositories/encryption_repository.dart';
 
 class Password {
-  String id = '';
-  String path = '';
-  String siteName = '';
-  String siteUrl = '';
-  String email = '';
-  String password = '';
-  String imageUrl = '';
-  String note = '';
-  PasswordCategory category = PasswordCategory.others;
-  bool favourite = false;
-  int usage = 0;
+  String id;
+  String path;
+  String siteName;
+  String siteUrl;
+  String email;
+  String password;
+  String imageUrl;
+  String note;
+  PasswordCategory category;
+  bool favourite;
+  int usage;
   Timestamp? lastUsed;
   Timestamp? timeAdded;
 

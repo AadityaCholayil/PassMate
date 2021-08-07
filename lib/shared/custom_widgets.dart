@@ -11,11 +11,11 @@ InputDecoration customInputDecoration(
             padding: EdgeInsets.only(right: 20.w),
             child: Icon(
               Icons.search,
-              size: 30.w,
+              size: 25.w,
             ),
           )
         : null,
-    contentPadding: EdgeInsets.fromLTRB(22.w, 16.w, 15.w, 16.w),
+    contentPadding: EdgeInsets.fromLTRB(22.w, 15.w, 15.w, 15.w),
     enabledBorder: OutlineInputBorder(
       borderSide: BorderSide(
         color: isSearch
