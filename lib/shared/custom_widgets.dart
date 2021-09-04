@@ -19,9 +19,9 @@ InputDecoration customInputDecoration(
     enabledBorder: OutlineInputBorder(
       borderSide: BorderSide(
         color: isSearch
-            ? Colors.white
+            ? Theme.of(context).cardColor
             : Theme.of(context).colorScheme.secondaryVariant,
-        width: 1.5,
+        width: 2.w,
         style: BorderStyle.solid,
       ),
       borderRadius: BorderRadius.all(Radius.circular(15.0.w)),
@@ -73,7 +73,7 @@ InputDecoration customInputDecoration(
     errorBorder: OutlineInputBorder(
       borderSide: BorderSide(
         color: Color(0xffd32f2f),
-        width: 2,
+        width: 2.w,
         style: BorderStyle.solid,
       ),
       borderRadius: BorderRadius.all(Radius.circular(15.0.w)),
@@ -81,7 +81,7 @@ InputDecoration customInputDecoration(
     focusedBorder: OutlineInputBorder(
       borderSide: BorderSide(
         color: Theme.of(context).colorScheme.primary,
-        width: 1.5,
+        width: 2.w,
         style: BorderStyle.solid,
       ),
       borderRadius: BorderRadius.all(Radius.circular(15.0.w)),
@@ -89,7 +89,7 @@ InputDecoration customInputDecoration(
     focusedErrorBorder: OutlineInputBorder(
       borderSide: BorderSide(
         color: Color(0xffd32f2f),
-        width: 2,
+        width: 2.w,
         style: BorderStyle.solid,
       ),
       borderRadius: BorderRadius.all(Radius.circular(15.0.w)),
@@ -97,7 +97,7 @@ InputDecoration customInputDecoration(
     disabledBorder: OutlineInputBorder(
       borderSide: BorderSide(
         color: Color(0xff000000),
-        width: 2,
+        width: 2.w,
         style: BorderStyle.solid,
       ),
       borderRadius: BorderRadius.all(Radius.circular(15.0.w)),
@@ -105,7 +105,7 @@ InputDecoration customInputDecoration(
     border: OutlineInputBorder(
       borderSide: BorderSide(
         color: Color(0xff000000),
-        width: 2,
+        width: 2.w,
         style: BorderStyle.solid,
       ),
       borderRadius: BorderRadius.all(Radius.circular(15.0.w)),
@@ -145,9 +145,9 @@ class CustomElevatedButton extends StatelessWidget {
         alignment: Alignment.center,
         height: 55.w,
         child: Text(
-          'SignUp',
+          text,
           style: TextStyle(
-              color: Theme.of(context).colorScheme.primary,
+              color: style == 0 ?Theme.of(context).colorScheme.onPrimary: Theme.of(context).colorScheme.primary,
               fontSize: 20,
               fontWeight: FontWeight.w600),
         ),
@@ -156,3 +156,21 @@ class CustomElevatedButton extends StatelessWidget {
     );
   }
 }
+
+class CustomBackButton extends StatelessWidget {
+  const CustomBackButton({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      padding: EdgeInsets.fromLTRB(0, 8.w, 15.w, 8.w),
+      iconSize: 35.w,
+      color: Theme.of(context).primaryColor,
+      icon: Icon(Icons.arrow_back_ios_rounded),
+      onPressed: (){
+        Navigator.pop(context);
+      },
+    );
+  }
+}
+

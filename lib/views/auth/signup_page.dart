@@ -135,8 +135,8 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                       _buildPasswordStrength(),
                       Center(
-                        child: ElevatedButton(
-                          child: Text('submit'),
+                        child: CustomElevatedButton(
+                          text: 'Sign Up',
                           onPressed: (passwordStrength.strength < 5)
                               ? null
                               : () async {

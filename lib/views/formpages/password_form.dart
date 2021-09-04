@@ -5,6 +5,7 @@ import 'package:passmate/bloc/database_bloc/database_barrel.dart';
 import 'package:passmate/model/password.dart';
 import 'package:passmate/shared/custom_snackbar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:passmate/shared/custom_widgets.dart';
 
 class PasswordFormPage extends StatefulWidget {
   final Password? password;
@@ -73,7 +74,14 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
             return Container(
               padding: EdgeInsets.symmetric(horizontal: 25.w),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  IconButton(
+                    icon: Icon(Icons.arrow_back_ios),
+                    onPressed: (){
+
+                    },
+                  ),
                   Text(
                     'Add Password',
                     style: TextStyle(
@@ -97,13 +105,9 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
   }
 
   Widget _buildSubmitButton() {
-    return ElevatedButton(
-      child: Text(
-        _isUpdate ? 'Update' : 'Submit',
-        style: TextStyle(
-          fontSize: 20,
-        ),
-      ),
+    return CustomElevatedButton(
+      style: 0,
+      text: _isUpdate ? 'Update' : 'Submit',
       onPressed: () {
         Password password = Password(
           id: _id,

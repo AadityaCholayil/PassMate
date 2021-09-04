@@ -15,6 +15,7 @@ import 'package:passmate/views/pages/passwords_page.dart';
 import 'package:passmate/views/pages/payment_card_page.dart';
 import 'package:passmate/views/pages/secure_notes_page.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:passmate/views/pages/settings_page.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -162,7 +163,10 @@ class MainListPage extends StatelessWidget {
                       color: Theme.of(context).colorScheme.primary,
                     ),
                     onPressed: () {
-                      ZoomDrawer.of(context)!.toggle();
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => SettingsPage())
+                      );
                     },
                   ),
                 ],
