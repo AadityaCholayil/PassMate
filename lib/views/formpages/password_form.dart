@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:passmate/bloc/database_bloc/database_barrel.dart';
 import 'package:passmate/model/password.dart';
 import 'package:passmate/shared/custom_snackbar.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class PasswordFormPage extends StatefulWidget {
   final Password? password;
@@ -16,7 +17,7 @@ class PasswordFormPage extends StatefulWidget {
 
 class _PasswordFormPageState extends State<PasswordFormPage> {
   String _id = '';
-  String _path = '/default';
+  String _path = 'root/default';
   String _siteName = '';
   String _siteUrl = '';
   String _email = '';
@@ -50,6 +51,51 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
     }
   }
 
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Scaffold(
+        body: BlocConsumer<DatabaseBloc, DatabaseState>(
+          listener: (context, state) async {
+            if (state is PasswordFormState) {
+              if (state == PasswordFormState.success) {
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                await Future.delayed(Duration(milliseconds: 300));
+                Navigator.pop(context);
+              } else {
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(showCustomSnackBar(context, state.message));
+              }
+            }
+          },
+          builder: (context, state) {
+            return Container(
+              padding: EdgeInsets.symmetric(horizontal: 25.w),
+              child: Column(
+                children: [
+                  Text(
+                    'Add Password',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onBackground,
+                      fontSize: 42,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  _buildSubmitButton(),
+                ],
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _buildName() {
+    return Container();
+  }
+
   Widget _buildSubmitButton() {
     return ElevatedButton(
       child: Text(
@@ -76,7 +122,7 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
         );
         Password password2 = Password(
           id: widget.password?.id??'',
-          path: '/default',
+          path: 'root/default',
           siteName: 'Google',
           siteUrl: 'www.google.com',
           email: 'aaditya@xyz.com',
@@ -97,44 +143,6 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
               .add(UpdatePassword(password2, true, widget.password!.path));
         }
       },
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: BlocConsumer<DatabaseBloc, DatabaseState>(
-          listener: (context, state) async {
-            if (state is PasswordFormState) {
-              if (state == PasswordFormState.success) {
-                ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                await Future.delayed(Duration(milliseconds: 300));
-                Navigator.pop(context);
-              } else {
-                ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                ScaffoldMessenger.of(context)
-                    .showSnackBar(showCustomSnackBar(context, state.message));
-              }
-            }
-          },
-          builder: (context, state) {
-            return Container(
-              child: Column(
-                children: [
-                  Text(
-                    'Add Password',
-                    style: TextStyle(
-                      fontSize: 30,
-                    ),
-                  ),
-                  _buildSubmitButton(),
-                ],
-              ),
-            );
-          },
-        ),
-      ),
     );
   }
 }

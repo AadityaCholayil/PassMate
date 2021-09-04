@@ -17,7 +17,7 @@ class SecureNoteFormPage extends StatefulWidget {
 
 class _SecureNoteFormPageState extends State<SecureNoteFormPage> {
   String _id = '';
-  String _path = '/default';
+  String _path = 'root/default';
   String _title = '';
   String _content = '';
   bool _favourite = false;
@@ -62,7 +62,7 @@ class _SecureNoteFormPageState extends State<SecureNoteFormPage> {
         );
         SecureNote secureNote2 = SecureNote(
           id: widget.secureNote?.id ?? '',
-          path: '/default',
+          path: 'root/default',
           title: 'Test',
           content:
               'Lorem ipsum dolor sit amet, consectetur adipiscing. Quisque ligula neque, venenatis sit amet sem eget, vestibulum maximus turpis.',

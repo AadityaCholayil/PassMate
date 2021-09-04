@@ -3,36 +3,42 @@ import 'package:passmate/model/payment_card.dart';
 import 'package:passmate/model/secure_note.dart';
 
 class Folder {
+  String folderName = '';
+  String path = '';
   List<String> subFolderList = [];
   List<Password> passwordList = [];
   List<PaymentCard> paymentCardList = [];
   List<SecureNote> secureNotesList = [];
 
   Folder({
+    required this.folderName,
+    required this.path,
+    required this.subFolderList,
     required this.passwordList,
     required this.paymentCardList,
     required this.secureNotesList,
   });
+
+  static Folder get empty => Folder(folderName: '',
+    path: '',
+    subFolderList: [],
+    passwordList: [],
+    paymentCardList: [],
+    secureNotesList: [],);
 }
 
 class FolderData {
-  List<String> passwordList = [];
-  List<String> paymentCardList = [];
-  List<String> secureNotesList = [];
+  List<String> folderList = [];
 
   FolderData();
 
   FolderData.fromDB(Map<String, Object?> json) {
-    passwordList = List<String>.from(json['passwordList'] as List);
-    paymentCardList = List<String>.from(json['paymentCardList'] as List);
-    secureNotesList = List<String>.from(json['secureNotesList'] as List);
+    folderList = List<String>.from(json['folderList'] as List);
   }
 
   Map<String, Object?> toJson() {
     return {
-      'passwordList': passwordList,
-      'paymentCardList': paymentCardList,
-      'secureNotesList': secureNotesList,
+      'folderList': folderList,
     };
   }
 }

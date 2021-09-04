@@ -119,18 +119,8 @@ class _PaymentCardPageState extends State<PaymentCardPage> {
                         ),
                       )
                     : Flexible(
-                        child: ListView.builder(
-                          physics: NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          itemCount: paymentCardList.length,
-                          itemBuilder: (context, index) {
-                            PaymentCard paymentCard = paymentCardList[index];
-                            return Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 20.w),
-                              child: PaymentCardTile(paymentCard: paymentCard),
-                            );
-                          },
-                        ),
+                        child: PaymentCardTileList(
+                            paymentCardList: paymentCardList),
                       ),
             SizedBox(
               height: paymentCardList.length < 3
@@ -335,6 +325,31 @@ class _PaymentCardPageState extends State<PaymentCardPage> {
               .add(GetPaymentCards(sortMethod: sortMethod));
         },
       ),
+    );
+  }
+}
+
+class PaymentCardTileList extends StatelessWidget {
+  const PaymentCardTileList({
+    Key? key,
+    required this.paymentCardList,
+  }) : super(key: key);
+
+  final List<PaymentCard> paymentCardList;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      physics: NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
+      itemCount: paymentCardList.length,
+      itemBuilder: (context, index) {
+        PaymentCard paymentCard = paymentCardList[index];
+        return Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20.w),
+          child: PaymentCardTile(paymentCard: paymentCard),
+        );
+      },
     );
   }
 }

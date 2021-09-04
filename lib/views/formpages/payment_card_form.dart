@@ -16,7 +16,7 @@ class PaymentCardFormPage extends StatefulWidget {
 
 class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
   String _id = '';
-  String _path = '/default';
+  String _path = 'root/default';
   String _bankName = '';
   String _cardNo = '';
   String _holderName = '';
@@ -26,6 +26,7 @@ class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
   PaymentCardType _cardType = PaymentCardType.others;
   bool _favourite = false;
   int _usage = 0;
+  String _color = '';
   Timestamp? _timeAdded;
 
   bool _isUpdate = false;
@@ -46,6 +47,7 @@ class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
       _cardType = widget.paymentCard!.cardType;
       _favourite = widget.paymentCard!.favourite;
       _usage = widget.paymentCard!.usage;
+      _color = widget.paymentCard!.color;
       _timeAdded = widget.paymentCard!.timeAdded;
     }
   }
@@ -71,12 +73,13 @@ class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
           note: _note,
           favourite: _favourite,
           usage: _usage,
+          color: _color,
           lastUsed: Timestamp.now(),
           timeAdded: _timeAdded,
         );
         PaymentCard paymentCard2 = PaymentCard(
-          id: widget.paymentCard?.id??'',
-          path: '/default',
+          id: widget.paymentCard?.id ?? '',
+          path: 'root/default',
           bankName: 'Canara',
           cardNo: '222211110000',
           holderName: 'Aaditya Cholayil',
@@ -86,15 +89,18 @@ class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
           note: 'Bruh',
           favourite: false,
           usage: 0,
+          color: 'purple',
           lastUsed: Timestamp.now(),
           timeAdded: Timestamp.now(),
         );
         if (!_isUpdate) {
           context.read<DatabaseBloc>().add(AddPaymentCard(paymentCard2));
         } else {
-          context
-              .read<DatabaseBloc>()
-              .add(UpdatePaymentCard(paymentCard2, true, widget.paymentCard!.path));
+          context.read<DatabaseBloc>().add(UpdatePaymentCard(
+                paymentCard2,
+                true,
+                widget.paymentCard!.path,
+              ));
         }
       },
     );
@@ -138,4 +144,3 @@ class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
     );
   }
 }
-

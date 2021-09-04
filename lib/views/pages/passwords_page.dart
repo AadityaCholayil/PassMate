@@ -80,9 +80,13 @@ class _PasswordPageState extends State<PasswordPage> {
             SizedBox(height: 13.w),
             _buildSearch(context),
             SizedBox(height: 15.w),
-            completePasswordList.isNotEmpty ? _buildChipRow() : SizedBox.shrink(),
+            completePasswordList.isNotEmpty
+                ? _buildChipRow()
+                : SizedBox.shrink(),
             SizedBox(height: 5.w),
-            completePasswordList.isNotEmpty ? _buildSortDropDownBox(context) : SizedBox.shrink(),
+            completePasswordList.isNotEmpty
+                ? _buildSortDropDownBox(context)
+                : SizedBox.shrink(),
             SizedBox(height: 5.w),
             state is Fetching
                 ? Container(
@@ -116,18 +120,7 @@ class _PasswordPageState extends State<PasswordPage> {
                         ),
                       )
                     : Flexible(
-                        child: ListView.builder(
-                          physics: NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          itemCount: passwordList.length,
-                          itemBuilder: (context, index) {
-                            Password password = passwordList[index];
-                            return Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 20.w),
-                              child: PasswordCard(password: password),
-                            );
-                          },
-                        ),
+                        child: PasswordCardList(passwordList: passwordList),
                       ),
             SizedBox(
               height: passwordList.length < 3
@@ -247,7 +240,7 @@ class _PasswordPageState extends State<PasswordPage> {
                   size: 23.w,
                   color: Theme.of(context).colorScheme.secondary,
                 ),
-                backgroundColor: Colors.white,
+                backgroundColor: Theme.of(context).cardColor,
                 padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 7.w),
                 // padding: EdgeInsets.fromLTRB(12.w, 7.w, 12.w, 7.w),
                 labelPadding: EdgeInsets.fromLTRB(10.w, 0, 10.w, 0),
@@ -326,6 +319,31 @@ class _PasswordPageState extends State<PasswordPage> {
   }
 }
 
+class PasswordCardList extends StatelessWidget {
+  const PasswordCardList({
+    Key? key,
+    required this.passwordList,
+  }) : super(key: key);
+
+  final List<Password> passwordList;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      physics: NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
+      itemCount: passwordList.length,
+      itemBuilder: (context, index) {
+        Password password = passwordList[index];
+        return Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20.w),
+          child: PasswordCard(password: password),
+        );
+      },
+    );
+  }
+}
+
 class PasswordCard extends StatelessWidget {
   const PasswordCard({
     Key? key,
@@ -376,14 +394,18 @@ class PasswordCard extends StatelessWidget {
                   width: 65.w,
                   clipBehavior: Clip.antiAliasWithSaveLayer,
                   decoration: BoxDecoration(
-                      color: Color(0xFFFFF5FD),
+                      color: Theme.of(context).backgroundColor,
                       borderRadius: BorderRadius.circular(15.w),
-                      border: Border.all(color: Color(0xFFF5E9F3))),
+                      border: Border.all(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .secondary
+                              .withOpacity(0.2))),
                   padding: EdgeInsets.all(9.w),
                   child: Container(
                     clipBehavior: Clip.antiAliasWithSaveLayer,
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: Theme.of(context).cardColor,
                       borderRadius: BorderRadius.circular(12.w),
                     ),
                     child: Image.network(

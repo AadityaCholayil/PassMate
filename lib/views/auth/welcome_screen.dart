@@ -59,7 +59,7 @@ class WelcomeScreen extends StatelessWidget {
             SizedBox(height: 25.w,),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                primary: Colors.white,
+                primary: Theme.of(context).cardColor,
                 shape: RoundedRectangleBorder(
                   side: BorderSide(
                     color: Theme.of(context).colorScheme.primary,

@@ -124,6 +124,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState>{
     try{
       databaseRepository = DatabaseRepository(uid: userData.uid);
       databaseRepository.updateUserData(newUserData);
+      databaseRepository.addFolder(folderName: 'root/default');
       userData = newUserData;
       add(AuthenticateUser());
     } on Exception catch (_){

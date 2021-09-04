@@ -13,6 +13,7 @@ class PaymentCard {
   String note;
   bool favourite;
   int usage;
+  String color;
   Timestamp? lastUsed;
   Timestamp? timeAdded;
 
@@ -28,6 +29,7 @@ class PaymentCard {
     this.note = '',
     this.favourite = false,
     this.usage = 0,
+    this.color = '',
     this.lastUsed,
     this.timeAdded,
   });
@@ -45,6 +47,7 @@ class PaymentCard {
           note: json['note']! as String,
           favourite: json['favourite']! as bool,
           usage: json['usage']! as int,
+          color: json['color']! as String,
           lastUsed: json['lastUsed'] as Timestamp,
           timeAdded: json['timeAdded'] as Timestamp,
         );
@@ -61,6 +64,7 @@ class PaymentCard {
       'note': note,
       'favourite': favourite,
       'usage': usage,
+      'color': color,
       'lastUsed': lastUsed,
       'timeAdded': timeAdded
     };

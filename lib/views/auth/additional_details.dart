@@ -42,7 +42,7 @@ class _AdditionalDetailsPageState extends State<AdditionalDetailsPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'Login',
+                    'Additional Details',
                     style: TextStyle(
                       height: 1.25,
                       fontSize: 43,

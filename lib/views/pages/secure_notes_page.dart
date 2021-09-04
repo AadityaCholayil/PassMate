@@ -114,18 +114,7 @@ class _SecureNotesPageState extends State<SecureNotesPage> {
                         ),
                       )
                     : Flexible(
-                        child: ListView.builder(
-                          physics: NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          itemCount: secureNoteList.length,
-                          itemBuilder: (context, index) {
-                            SecureNote secureNote = secureNoteList[index];
-                            return Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 20.w),
-                              child: SecureNoteCard(secureNote: secureNote),
-                            );
-                          },
-                        ),
+                        child: SecureNoteCardList(secureNoteList: secureNoteList),
                       ),
             SizedBox(
               height: secureNoteList.length < 3
@@ -207,6 +196,31 @@ class _SecureNotesPageState extends State<SecureNotesPage> {
               .add(GetSecureNotes(sortMethod: sortMethod));
         },
       ),
+    );
+  }
+}
+
+class SecureNoteCardList extends StatelessWidget {
+  const SecureNoteCardList({
+    Key? key,
+    required this.secureNoteList,
+  }) : super(key: key);
+
+  final List<SecureNote> secureNoteList;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      physics: NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
+      itemCount: secureNoteList.length,
+      itemBuilder: (context, index) {
+        SecureNote secureNote = secureNoteList[index];
+        return Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20.w),
+          child: SecureNoteCard(secureNote: secureNote),
+        );
+      },
     );
   }
 }

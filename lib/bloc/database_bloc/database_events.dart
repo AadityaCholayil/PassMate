@@ -131,6 +131,32 @@ class GetFolder extends DatabaseEvents {
   final String path;
 
   GetFolder({
+    this.path='root',
+  });
+}
+
+class AddFolder extends DatabaseEvents {
+  final String path;
+
+  AddFolder({
+    this.path='/',
+  });
+}
+
+class RenameFolder extends DatabaseEvents {
+  final String oldPath;
+  final String newPath;
+
+  RenameFolder({
+    this.oldPath='/',
+    this.newPath='/',
+  });
+}
+
+class DeleteFolder extends DatabaseEvents {
+  final String path;
+
+  DeleteFolder({
     this.path='/',
   });
 }

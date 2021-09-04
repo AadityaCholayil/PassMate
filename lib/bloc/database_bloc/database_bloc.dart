@@ -12,15 +12,33 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState> {
   UserData userData;
   DatabaseRepository databaseRepository;
   EncryptionRepository encryptionRepository;
+  List<String>? folderList;
 
-  DatabaseBloc(
-      {required this.userData,
-      required this.databaseRepository,
-      required this.encryptionRepository})
-      : super(Fetching());
+  DatabaseBloc({
+    required this.userData,
+    required this.databaseRepository,
+    required this.encryptionRepository,
+  }) : super(Fetching()) {
+    if (userData!=UserData.empty) {
+      updateFolderList();
+    }
+  }
+
+  Future updateFolderList() async {
+    folderList = [];
+    FolderData data = await databaseRepository.getFolder();
+    data.folderList.forEach((path) {
+      if (path.split('/').length == 2) {
+        folderList!.add(path);
+      }
+    });
+  }
 
   @override
   Stream<DatabaseState> mapEventToState(DatabaseEvents event) async* {
+    if (folderList == null && userData!=UserData.empty) {
+      await updateFolderList();
+    }
     if (event is GetPasswords) {
       yield* _mapGetPasswordsToState(event);
     } else if (event is AddPassword) {
@@ -346,24 +364,53 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState> {
 
   Stream<DatabaseState> _mapGetFolderToState(GetFolder event) async* {
     yield Fetching();
-    FolderData data = await databaseRepository.getFolder(path: event.path);
-    List<Password> passwordList = await databaseRepository.getPasswords();
-    passwordList =
-        passwordList.where((password) => password.path == event.path).toList();
-    List<PaymentCard> paymentCardList =
-        await databaseRepository.getPaymentCards();
-    paymentCardList = paymentCardList
-        .where((paymentCard) => paymentCard.path == event.path)
-        .toList();
-    List<SecureNote> secureNoteList = await databaseRepository.getSecureNotes();
-    secureNoteList = secureNoteList
-        .where((secureNote) => secureNote.path == event.path)
-        .toList();
+    FolderData data = await databaseRepository.getFolder();
+    List<String> folderList = [];
+    List<Password> passwordList = [];
+    List<PaymentCard> paymentCardList = [];
+    List<SecureNote> secureNoteList = [];
+    String folderName = event.path.split('/').last;
+    if (event.path != 'root') {
+      passwordList = await databaseRepository.getPasswords(path: event.path);
+      passwordList.forEach((element) async {
+        await element.decrypt(encryptionRepository);
+      });
+      paymentCardList =
+          await databaseRepository.getPaymentCards(path: event.path);
+      paymentCardList.forEach((element) async {
+        await element.decrypt(encryptionRepository);
+      });
+      secureNoteList =
+          await databaseRepository.getSecureNotes(path: event.path);
+      secureNoteList.forEach((element) async {
+        await element.decrypt(encryptionRepository);
+      });
+      data.folderList.forEach((path) {
+        List<String> pathList = path.split('/');
+        if (pathList[pathList.length - 2] == folderName) {
+          folderList.add(path);
+        }
+      });
+    } else {
+      data.folderList.forEach((path) {
+        if (path.split('/').length == 2) {
+          folderList.add(path);
+        }
+      });
+    }
+    if (folderName == 'root') {
+      folderName = 'My Folders';
+    }
     Folder folder = Folder(
+      folderName: folderName.replaceRange(0, 1, folderName[0].toUpperCase()),
+      path: event.path,
+      subFolderList: folderList,
       passwordList: passwordList,
       paymentCardList: paymentCardList,
       secureNotesList: secureNoteList,
     );
     yield FolderListState(folder);
   }
+
+  Stream<DatabaseState> _mapAddFolderToState(GetFolder event) async* {}
 }
