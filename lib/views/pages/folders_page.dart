@@ -1,8 +1,6 @@
 import 'dart:async';
-
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
@@ -53,13 +51,13 @@ class _FolderPageState extends State<FolderPage> {
           List<String> list = _folder.path.split('/');
           pathList = [];
           _path = _folder.path;
-          list.forEach((path) {
+          for (var path in list) {
             if (path == 'root') {
               pathList.add('My Folders');
             } else {
               pathList.add(path.replaceRange(0, 1, path[0].toUpperCase()));
             }
-          });
+          }
         } else if (state is PasswordList ||
             state is PaymentCardList ||
             state is SecureNotesList) {
@@ -80,71 +78,68 @@ class _FolderPageState extends State<FolderPage> {
             }
           },
           child: SingleChildScrollView(
-            child: Container(
-              // height: MediaQuery.of(context).size.height-20.w,
-              child: Column(
-                // mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: state is Fetching
-                    ? <Widget>[
-                        _buildAppBar(context),
-                        Container(
-                          height: MediaQuery.of(context).size.height * 0.8,
-                          alignment: Alignment.center,
-                          child: LoadingSmall(),
-                        ),
-                      ]
-                    : <Widget>[
-                        _buildAppBar(context),
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(22.w, 10.w, 20.w, 0),
-                          child: Text(
-                            _folder.folderName,
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.onBackground,
-                              fontSize: 42,
-                              fontWeight: FontWeight.w700,
-                            ),
+            child: Column(
+              // mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: state is Fetching
+                  ? <Widget>[
+                      _buildAppBar(context),
+                      Container(
+                        height: MediaQuery.of(context).size.height * 0.8,
+                        alignment: Alignment.center,
+                        child: const LoadingSmall(),
+                      ),
+                    ]
+                  : <Widget>[
+                      _buildAppBar(context),
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(22.w, 10.w, 20.w, 0),
+                        child: Text(
+                          _folder.folderName,
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.onBackground,
+                            fontSize: 42,
+                            fontWeight: FontWeight.w700,
                           ),
                         ),
-                        _buildFolderPath(),
-                        SizedBox(height: 10.w),
-                        _buildHeader(context, 'Folders'),
-                        FolderList(folder: _folder),
-                        SizedBox(height: 5.w),
-                        _folder.passwordList.length > 0
-                            ? Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  _buildHeader(context, 'Passwords'),
-                                  PasswordCardList(
-                                      passwordList: _folder.passwordList),
-                                ],
-                              )
-                            : SizedBox.shrink(),
-                        _folder.paymentCardList.length > 0
-                            ? Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  _buildHeader(context, 'Payment Cards'),
-                                  PaymentCardTileList(
-                                      paymentCardList: _folder.paymentCardList),
-                                ],
-                              )
-                            : SizedBox.shrink(),
-                        _folder.secureNotesList.length > 0
-                            ? Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  _buildHeader(context, 'Secure Notes'),
-                                  SecureNoteCardList(
-                                      secureNoteList: _folder.secureNotesList),
-                                ],
-                              )
-                            : SizedBox.shrink(),
-                        SizedBox(height: 100.w),
-                      ],
-              ),
+                      ),
+                      _buildFolderPath(),
+                      SizedBox(height: 10.w),
+                      _buildHeader(context, 'Folders'),
+                      FolderList(folder: _folder),
+                      SizedBox(height: 5.w),
+                      _folder.passwordList.isNotEmpty
+                          ? Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _buildHeader(context, 'Passwords'),
+                                PasswordCardList(
+                                    passwordList: _folder.passwordList),
+                              ],
+                            )
+                          : const SizedBox.shrink(),
+                      _folder.paymentCardList.isNotEmpty
+                          ? Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _buildHeader(context, 'Payment Cards'),
+                                PaymentCardTileList(
+                                    paymentCardList: _folder.paymentCardList),
+                              ],
+                            )
+                          : const SizedBox.shrink(),
+                      _folder.secureNotesList.isNotEmpty
+                          ? Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _buildHeader(context, 'Secure Notes'),
+                                SecureNoteCardList(
+                                    secureNoteList: _folder.secureNotesList),
+                              ],
+                            )
+                          : const SizedBox.shrink(),
+                      SizedBox(height: 100.w),
+                    ],
             ),
           ),
         );
@@ -169,7 +164,7 @@ class _FolderPageState extends State<FolderPage> {
               ZoomDrawer.of(context)!.toggle();
             },
           ),
-          Spacer(),
+          const Spacer(),
           IconButton(
             iconSize: 34.w,
             padding: EdgeInsets.zero,
@@ -212,7 +207,7 @@ class _FolderPageState extends State<FolderPage> {
             child: ListView.separated(
               controller: _controller,
               shrinkWrap: true,
-              physics: BouncingScrollPhysics(),
+              physics: const BouncingScrollPhysics(),
               itemCount: pathList.length + 1,
               scrollDirection: Axis.horizontal,
               itemBuilder: (context, index) {
@@ -255,10 +250,10 @@ class _FolderPageState extends State<FolderPage> {
               separatorBuilder: (context, index) {
                 if (index == pathList.length - 1) {
                   Timer(
-                      Duration(milliseconds: 100),
+                      const Duration(milliseconds: 100),
                       () => _controller.animateTo(
                             _controller.position.maxScrollExtent,
-                            duration: Duration(milliseconds: 500),
+                            duration: const Duration(milliseconds: 500),
                             curve: Curves.fastOutSlowIn,
                           ));
                 }
@@ -290,7 +285,7 @@ class FolderList extends StatelessWidget {
       padding: EdgeInsets.fromLTRB(20.w, 1.w, 20.w, 10.w),
       primary: false,
       shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
+      physics: const NeverScrollableScrollPhysics(),
       itemCount: folder.subFolderList.length + 1,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
@@ -370,8 +365,8 @@ class FolderList extends StatelessWidget {
                       height: 14.w,
                     ),
                     Text(
-                      '${folderName.replaceRange(0, 1, folderName[0].toUpperCase())}',
-                      style: TextStyle(
+                      folderName.replaceRange(0, 1, folderName[0].toUpperCase()),
+                      style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w500,
                       ),

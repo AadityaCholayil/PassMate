@@ -27,11 +27,11 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState> {
   Future updateFolderList() async {
     folderList = [];
     FolderData data = await databaseRepository.getFolder();
-    data.folderList.forEach((path) {
+    for (var path in data.folderList) {
       if (path.split('/').length == 2) {
         folderList!.add(path);
       }
-    });
+    }
   }
 
   @override
@@ -92,9 +92,9 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState> {
     List<Password> completeList = [];
     if (event.list == null) {
       list = await databaseRepository.getPasswords();
-      list.forEach((element) async {
+      for (var element in list) {
         await element.decrypt(encryptionRepository);
-      });
+      }
       completeList = list;
     } else {
       completeList = event.list ?? [];
@@ -190,9 +190,9 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState> {
     List<PaymentCard> completeList = [];
     if (event.list == null) {
       list = await databaseRepository.getPaymentCards();
-      list.forEach((element) async {
+      for (var element in list) {
         await element.decrypt(encryptionRepository);
-      });
+      }
       completeList = list;
     } else {
       completeList = event.list ?? [];
@@ -291,9 +291,9 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState> {
     List<SecureNote> completeList = [];
     if (event.list == null) {
       list = await databaseRepository.getSecureNotes();
-      list.forEach((element) async {
+      for (var element in list) {
         await element.decrypt(encryptionRepository);
-      });
+      }
       completeList = list;
     } else {
       completeList = event.list ?? [];
@@ -372,31 +372,31 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState> {
     String folderName = event.path.split('/').last;
     if (event.path != 'root') {
       passwordList = await databaseRepository.getPasswords(path: event.path);
-      passwordList.forEach((element) async {
+      for (var element in passwordList) {
         await element.decrypt(encryptionRepository);
-      });
+      }
       paymentCardList =
           await databaseRepository.getPaymentCards(path: event.path);
-      paymentCardList.forEach((element) async {
+      for (var element in paymentCardList) {
         await element.decrypt(encryptionRepository);
-      });
+      }
       secureNoteList =
           await databaseRepository.getSecureNotes(path: event.path);
-      secureNoteList.forEach((element) async {
+      for (var element in secureNoteList) {
         await element.decrypt(encryptionRepository);
-      });
-      data.folderList.forEach((path) {
+      }
+      for (var path in data.folderList) {
         List<String> pathList = path.split('/');
         if (pathList[pathList.length - 2] == folderName) {
           folderList.add(path);
         }
-      });
+      }
     } else {
-      data.folderList.forEach((path) {
+      for (var path in data.folderList) {
         if (path.split('/').length == 2) {
           folderList.add(path);
         }
-      });
+      }
     }
     if (folderName == 'root') {
       folderName = 'My Folders';

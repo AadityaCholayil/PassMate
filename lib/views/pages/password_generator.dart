@@ -10,8 +10,6 @@ class PasswordGeneratorPage extends StatefulWidget {
 class _PasswordGeneratorPageState extends State<PasswordGeneratorPage> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Text('Password Generator Page'),
-    );
+    return const Text('Password Generator Page');
   }
 }

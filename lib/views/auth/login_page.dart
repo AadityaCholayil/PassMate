@@ -15,7 +15,7 @@ import 'package:passmate/views/auth/signup_page.dart';
 import 'package:passmate/views/pages/temp_error.dart';
 
 class LoginPage extends StatefulWidget {
-  LoginPage({Key? key}) : super(key: key);
+  const LoginPage({Key? key}) : super(key: key);
 
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -30,8 +30,8 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<LoginBloc>(
-      create: (context) => LoginBloc(
-          authenticationRepository: context.read<AuthRepository>()),
+      create: (context) =>
+          LoginBloc(authenticationRepository: context.read<AuthRepository>()),
       child: BlocConsumer<LoginBloc, LoginState>(
         listener: (context, state) async {
           if (state == LoginState.success) {
@@ -39,14 +39,11 @@ class _LoginPageState extends State<LoginPage> {
             await compute(EncryptionRepository.scryptHash, password)
                 .then((value) {
               /// Update Key in Encryption Repository
-              context
-                  .read<AppBloc>()
-                  .encryptionRepository
-                  .updateKey(value);
+              context.read<AppBloc>().encryptionRepository.updateKey(value);
 
               /// Storing password hash on Android
               if (!kIsWeb) {
-                final storage = FlutterSecureStorage();
+                const storage = FlutterSecureStorage();
                 storage.write(key: 'key', value: value);
               }
 
@@ -55,7 +52,7 @@ class _LoginPageState extends State<LoginPage> {
               ScaffoldMessenger.of(context).hideCurrentSnackBar();
               print('Navigating..');
               Navigator.popUntil(
-                  context, ModalRoute.withName(RoutesName.WRAPPER));
+                  context, ModalRoute.withName(RoutesName.wrapper));
             });
           } else {
             ScaffoldMessenger.of(context).hideCurrentSnackBar();
@@ -72,7 +69,7 @@ class _LoginPageState extends State<LoginPage> {
                 print('Layout Changed');
                 if (constraints.maxHeight < 1.2 * constraints.maxWidth) {
                   ///LandScape
-                  return TempError(pageName: 'Login Screen');
+                  return const TempError(pageName: 'Login Screen');
                 }
                 return _buildLoginPortrait(context, state);
               }),
@@ -93,7 +90,7 @@ class _LoginPageState extends State<LoginPage> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             SizedBox(height: 25.h),
-            CustomBackButton(),
+            const CustomBackButton(),
             SizedBox(height: 50.h),
             Text(
               'Welcome to,',
@@ -183,9 +180,8 @@ class _LoginPageState extends State<LoginPage> {
                         color: Theme.of(context).colorScheme.primary),
                   ),
                   onPressed: () {
-                    Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(builder: (context) => SignUpPage())
-                    );
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(
+                        builder: (context) => const SignUpPage()));
                   },
                 ),
               ],

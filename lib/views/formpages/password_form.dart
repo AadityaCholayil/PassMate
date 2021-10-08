@@ -31,7 +31,7 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
   Timestamp? _timeAdded;
 
   bool _isUpdate = false;
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -58,13 +58,13 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
     return SafeArea(
       child: Scaffold(
         body: SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
+          physics: const BouncingScrollPhysics(),
           child: BlocConsumer<DatabaseBloc, DatabaseState>(
             listener: (context, state) async {
               if (state is PasswordFormState) {
                 if (state == PasswordFormState.success) {
                   ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                  await Future.delayed(Duration(milliseconds: 300));
+                  await Future.delayed(const Duration(milliseconds: 300));
                   Navigator.pop(context);
                 } else {
                   ScaffoldMessenger.of(context).hideCurrentSnackBar();
@@ -82,7 +82,7 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(height: 25.w),
-                      CustomBackButton(),
+                      const CustomBackButton(),
                       SizedBox(height: 12.w),
                       Padding(
                         padding: EdgeInsets.only(left: 5.w),
@@ -181,7 +181,7 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
           if (value == null) {
             return 'This field cannot be empty!';
           }
-          if (value.length >= 1 &&
+          if (value.isNotEmpty &&
               !RegExp(r'[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)')
                   .hasMatch(value)) {
             return 'Invalid URL format';
@@ -290,13 +290,13 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
               SizedBox(width: 10.w),
               Text(
                 label,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 18,
                 ),
               ),
-              Spacer(),
+              const Spacer(),
               SizedBox(width: 5.w),
-              Icon(
+              const Icon(
                 Icons.expand_more,
                 size: 35,
               )
@@ -311,7 +311,7 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
     PasswordCategory category = _category;
     return StatefulBuilder(builder: (context, setState) {
       return Card(
-        margin: EdgeInsets.all(10),
+        margin: EdgeInsets.all(10.w),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
         child: Container(
           padding: EdgeInsets.all(15.w),
@@ -352,7 +352,7 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
                             setState(() {
                               category = PasswordCategory.values[index];
                             });
-                            Future.delayed(Duration(milliseconds: 50), () {
+                            Future.delayed(const Duration(milliseconds: 50), () {
                               Navigator.pop(context, category);
                             });
                           },
@@ -436,7 +436,7 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
                 child: ListView.separated(
                   shrinkWrap: true,
                   padding: EdgeInsets.zero,
-                  physics: BouncingScrollPhysics(),
+                  physics: const BouncingScrollPhysics(),
                   itemCount: pathList.length,
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (context, index) {
@@ -448,7 +448,7 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
                       return Center(
                         child: Text(
                           pathList[index],
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 18,
                             // fontWeight: FontWeight.w500,
                           ),
@@ -468,7 +468,7 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
                 ),
               ),
               SizedBox(width: 5.w),
-              Icon(
+              const Icon(
                 Icons.expand_more,
                 size: 35,
               )

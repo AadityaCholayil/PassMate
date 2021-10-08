@@ -4,20 +4,20 @@ import 'package:passmate/model/auth_credentials.dart';
 
 @immutable
 abstract class SignupEvent extends Equatable {
-  SignupEvent([List props = const []]) : super();
+  const SignupEvent([List props = const []]) : super();
 }
 
 class SignupUsingCredentials extends SignupEvent {
   final AuthEmail email;
   final AuthPassword password;
 
-  SignupUsingCredentials({required this.email, required this.password});
+  const SignupUsingCredentials({required this.email, required this.password});
 
   @override
   String toString() => 'LogInUsingCredentials';
 
   @override
-  List<Object?> get props => [this.toString()];
+  List<Object?> get props => [toString()];
 }
 
 class SignupUsingGoogle extends SignupEvent {
@@ -25,5 +25,5 @@ class SignupUsingGoogle extends SignupEvent {
   String toString() => 'LogInUsingGoogle';
 
   @override
-  List<Object?> get props => [this.toString()];
+  List<Object?> get props => [toString()];
 }

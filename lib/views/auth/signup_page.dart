@@ -47,7 +47,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
             /// Storing password hash on Android
             if (!kIsWeb) {
-              final storage = FlutterSecureStorage();
+              const storage = FlutterSecureStorage();
               storage.write(key: 'key', value: value);
             }
 
@@ -56,7 +56,7 @@ class _SignUpPageState extends State<SignUpPage> {
             ScaffoldMessenger.of(context).hideCurrentSnackBar();
             print('Navigating..');
             Navigator.popUntil(
-                context, ModalRoute.withName(RoutesName.WRAPPER));
+                context, ModalRoute.withName(RoutesName.wrapper));
           });
         } else {
           ScaffoldMessenger.of(context).hideCurrentSnackBar();
@@ -73,7 +73,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 print('Layout Changed');
                 if (constraints.maxHeight < 1.2 * constraints.maxWidth) {
                   ///LandScape
-                  return TempError(pageName: 'SignUp Screen');
+                  return const TempError(pageName: 'SignUp Screen');
                 }
                 return _buildSignUpPortrait(context, state);
               },
@@ -95,7 +95,7 @@ class _SignUpPageState extends State<SignUpPage> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             SizedBox(height: 25.h),
-            CustomBackButton(),
+            const CustomBackButton(),
             SizedBox(height: 15.h),
             Expanded(
               child: Column(
@@ -209,7 +209,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           onPressed: () {
                             Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(
-                                    builder: (context) => LoginPage()));
+                                    builder: (context) => const LoginPage()));
                           },
                         ),
                       ],
@@ -296,7 +296,7 @@ class _SignUpPageState extends State<SignUpPage> {
             ),
           ),
           ListView.builder(
-            padding: passwordStrength.list.length == 0
+            padding: passwordStrength.list.isEmpty
                 ? EdgeInsets.only(top: 9.w)
                 : EdgeInsets.only(top: 9.w, bottom: 9.w),
             shrinkWrap: true,

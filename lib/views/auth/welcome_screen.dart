@@ -17,9 +17,9 @@ class WelcomeScreen extends StatelessWidget {
             print('Layout Changed');
             if (constraints.maxHeight < 1.2 * constraints.maxWidth) {
               ///LandScape
-              return TempError(pageName: 'Welcome to PassMate');
+              return const TempError(pageName: 'Welcome to PassMate');
             }
-            return WelcomeScreenPortrait();
+            return const WelcomeScreenPortrait();
           }
         ),
       ),
@@ -64,7 +64,7 @@ class WelcomeScreenPortrait extends StatelessWidget {
             style: 0,
             text: 'Login',
             onPressed: () {
-              Navigator.pushNamed(context, RoutesName.LOGIN_PAGE);
+              Navigator.pushNamed(context, RoutesName.loginPage);
             },
           ),
           SizedBox(height: 25.w,),
@@ -72,7 +72,7 @@ class WelcomeScreenPortrait extends StatelessWidget {
             style: 1,
             text: 'Sign Up',
             onPressed: () {
-              Navigator.pushNamed(context, RoutesName.SIGNUP_PAGE);
+              Navigator.pushNamed(context, RoutesName.signupPage);
             },
           ),
         ],

@@ -81,17 +81,17 @@ class _PaymentCardPageState extends State<PaymentCardPage> {
             SizedBox(height: 15.w),
             completePaymentCardList.isNotEmpty
                 ? _buildChipRow()
-                : SizedBox.shrink(),
+                : const SizedBox.shrink(),
             SizedBox(height: 5.w),
             completePaymentCardList.isNotEmpty
                 ? _buildSortDropDownBox(context)
-                : SizedBox.shrink(),
+                : const SizedBox.shrink(),
             SizedBox(height: 5.w),
             state is Fetching
                 ? Container(
                     height: 180.w,
                     alignment: Alignment.center,
-                    child: LoadingSmall(),
+                    child: const LoadingSmall(),
                   )
                 : completePaymentCardList.isEmpty
                     ? Container(
@@ -99,7 +99,7 @@ class _PaymentCardPageState extends State<PaymentCardPage> {
                         height: 320.w,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
+                          children: const [
                             Text(
                               'Start adding your Cards',
                               style: TextStyle(
@@ -214,7 +214,7 @@ class _PaymentCardPageState extends State<PaymentCardPage> {
           }
           if (selectedIndex != null) {
             if (selectedIndex + 1 == index && selectedIndex != 0) {
-              return SizedBox.shrink();
+              return const SizedBox.shrink();
             }
           }
           switch (label) {
@@ -315,7 +315,7 @@ class _PaymentCardPageState extends State<PaymentCardPage> {
           );
         }).toList(),
         underline: Container(),
-        icon: Icon(Icons.keyboard_arrow_down),
+        icon: const Icon(Icons.keyboard_arrow_down),
         iconEnabledColor: Theme.of(context).primaryColor,
         iconSize: 30.w,
         onChanged: (val) {
@@ -340,7 +340,7 @@ class PaymentCardTileList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      physics: NeverScrollableScrollPhysics(),
+      physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       itemCount: paymentCardList.length,
       itemBuilder: (context, index) {
@@ -404,17 +404,17 @@ class PaymentCardTile extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      '${paymentCard.bankName}',
-                      style: TextStyle(
+                      paymentCard.bankName,
+                      style: const TextStyle(
                         fontWeight: FontWeight.w600,
                         fontSize: 22,
                       ),
                     ),
                     Text(
-                      '${paymentCard.cardNo}',
-                      style: TextStyle(fontSize: 13),
+                      paymentCard.cardNo,
+                      style: const TextStyle(fontSize: 13),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 3,
                     ),
                   ],
@@ -438,20 +438,20 @@ class PaymentCardDetailCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 450.w,
       child: Card(
-        margin: EdgeInsets.all(10),
+        margin: const EdgeInsets.all(10),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
         child: Container(
-          padding: EdgeInsets.all(15),
+          padding: const EdgeInsets.all(15),
           child: Column(
             children: [
-              Spacer(),
+              const Spacer(),
               Row(
                 children: [
                   ElevatedButton(
-                    child: Text('Delete'),
+                    child: const Text('Delete'),
                     onPressed: () {
                       BlocProvider.of<DatabaseBloc>(context)
                           .add(DeletePaymentCard(paymentCard));
@@ -459,7 +459,7 @@ class PaymentCardDetailCard extends StatelessWidget {
                     },
                   ),
                   ElevatedButton(
-                    child: Text('Edit Payment Card'),
+                    child: const Text('Edit Payment Card'),
                     onPressed: () {
                       print(paymentCard.id);
                       Navigator.push(

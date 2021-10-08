@@ -34,14 +34,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   /// Responsive
                   print('Layout Changed');
                   if (constraints.maxHeight < 1.5 * constraints.maxWidth) {
-                    return TempError(pageName: 'HomeScreen');
+                    return const TempError(pageName: 'HomeScreen');
                   }
                   return ZoomDrawer(
                     controller: _zoomController,
                     borderRadius: 35.w,
                     slideWidth: MediaQuery.of(context).size.width * .60,
-                    menuScreen: MenuScreen(),
-                    mainScreen: MainScreen(),
+                    menuScreen: const MenuScreen(),
+                    mainScreen: const MainScreen(),
                   );
                 },
               );
@@ -88,17 +88,17 @@ class _MenuScreenState extends State<MenuScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              MenuItem(
+              const MenuItem(
                 index: 0,
                 text: 'Passwords',
                 icon: Icons.password_rounded,
               ),
-              MenuItem(
+              const MenuItem(
                 index: 1,
                 text: 'Payment Cards',
                 icon: Icons.credit_card_rounded,
               ),
-              MenuItem(
+              const MenuItem(
                 index: 2,
                 text: 'Secure Notes',
                 icon: Icons.sticky_note_2_rounded,
@@ -113,7 +113,7 @@ class _MenuScreenState extends State<MenuScreen> {
                 ),
               ),
               SizedBox(height: 5.w),
-              MenuItem(
+              const MenuItem(
                 index: 3,
                 text: 'Password Generator',
                 icon: Icons.vpn_key_outlined,
@@ -128,7 +128,7 @@ class _MenuScreenState extends State<MenuScreen> {
                 ),
               ),
               SizedBox(height: 5.w),
-              MenuItem(
+              const MenuItem(
                 index: 4,
                 text: 'All Folders',
                 icon: Icons.folder_open_outlined,
@@ -136,7 +136,7 @@ class _MenuScreenState extends State<MenuScreen> {
               ListView.builder(
                 primary: false,
                 shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
+                physics: const NeverScrollableScrollPhysics(),
                 itemCount: folderList.length,
                 itemBuilder: (context, index) {
                   String folderName = folderList[index].split('/').last;
@@ -189,7 +189,7 @@ class MenuItem extends StatelessWidget {
           ),
           Text(
             text,
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.white,
               fontSize: 18,
               fontWeight: FontWeight.w400,

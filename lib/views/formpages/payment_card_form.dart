@@ -56,7 +56,7 @@ class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
     return ElevatedButton(
       child: Text(
         _isUpdate ? 'Update' : 'Submit',
-        style: TextStyle(
+        style: const TextStyle(
           fontSize: 20,
         ),
       ),
@@ -115,7 +115,7 @@ class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
             if (state is PaymentCardFormState) {
               if (state == PaymentCardFormState.success) {
                 ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                await Future.delayed(Duration(milliseconds: 300));
+                await Future.delayed(const Duration(milliseconds: 300));
                 Navigator.pop(context);
               } else {
                 ScaffoldMessenger.of(context).hideCurrentSnackBar();
@@ -125,18 +125,16 @@ class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
             }
           },
           builder: (context, state) {
-            return Container(
-              child: Column(
-                children: [
-                  Text(
-                    'Add Payment Card',
-                    style: TextStyle(
-                      fontSize: 30,
-                    ),
+            return Column(
+              children: [
+                const Text(
+                  'Add Payment Card',
+                  style: TextStyle(
+                    fontSize: 30,
                   ),
-                  _buildSubmitButton(),
-                ],
-              ),
+                ),
+                _buildSubmitButton(),
+              ],
             );
           },
         ),

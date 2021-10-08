@@ -82,17 +82,17 @@ class _PasswordPageState extends State<PasswordPage> {
             SizedBox(height: 15.w),
             completePasswordList.isNotEmpty
                 ? _buildChipRow()
-                : SizedBox.shrink(),
+                : const SizedBox.shrink(),
             SizedBox(height: 5.w),
             completePasswordList.isNotEmpty
                 ? _buildSortDropDownBox(context)
-                : SizedBox.shrink(),
+                : const SizedBox.shrink(),
             SizedBox(height: 5.w),
             state is Fetching
                 ? Container(
                     height: 180.w,
                     alignment: Alignment.center,
-                    child: LoadingSmall(),
+                    child: const LoadingSmall(),
                   )
                 : completePasswordList.isEmpty
                     ? Container(
@@ -100,7 +100,7 @@ class _PasswordPageState extends State<PasswordPage> {
                         height: 320.w,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
+                          children: const [
                             Text(
                               'Start Adding Passwords',
                               style: TextStyle(
@@ -214,7 +214,7 @@ class _PasswordPageState extends State<PasswordPage> {
           }
           if (selectedIndex != null) {
             if (selectedIndex + 1 == index && selectedIndex != 0) {
-              return SizedBox.shrink();
+              return const SizedBox.shrink();
             }
           }
           return Container(
@@ -305,7 +305,7 @@ class _PasswordPageState extends State<PasswordPage> {
           );
         }).toList(),
         underline: Container(),
-        icon: Icon(Icons.keyboard_arrow_down),
+        icon: const Icon(Icons.keyboard_arrow_down),
         iconEnabledColor: Theme.of(context).primaryColor,
         iconSize: 30.w,
         onChanged: (val) {
@@ -330,7 +330,7 @@ class PasswordCardList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      physics: NeverScrollableScrollPhysics(),
+      physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       itemCount: passwordList.length,
       itemBuilder: (context, index) {
@@ -423,17 +423,17 @@ class PasswordCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      '${password.siteName}',
-                      style: TextStyle(
+                      password.siteName,
+                      style: const TextStyle(
                         fontWeight: FontWeight.w600,
                         fontSize: 22,
                       ),
                     ),
                     Text(
-                      '${password.email}',
-                      style: TextStyle(fontSize: 13),
+                      password.email,
+                      style: const TextStyle(fontSize: 13),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 3,
                     ),
                   ],
@@ -457,7 +457,7 @@ class PasswordDetailCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 450.w,
       child: Card(
         margin: EdgeInsets.all(10.w),
@@ -466,11 +466,11 @@ class PasswordDetailCard extends StatelessWidget {
           padding: EdgeInsets.all(15.w),
           child: Column(
             children: [
-              Spacer(),
+              const Spacer(),
               Row(
                 children: [
                   ElevatedButton(
-                    child: Text('Delete'),
+                    child: const Text('Delete'),
                     onPressed: () {
                       BlocProvider.of<DatabaseBloc>(context)
                           .add(DeletePassword(password));
@@ -478,7 +478,7 @@ class PasswordDetailCard extends StatelessWidget {
                     },
                   ),
                   ElevatedButton(
-                    child: Text('Edit Password'),
+                    child: const Text('Edit Password'),
                     onPressed: () {
                       print(password.id);
                       Navigator.push(

@@ -45,7 +45,7 @@ class _SecureNoteFormPageState extends State<SecureNoteFormPage> {
     return ElevatedButton(
       child: Text(
         _isUpdate ? 'Update' : 'Submit',
-        style: TextStyle(
+        style: const TextStyle(
           fontSize: 20,
         ),
       ),
@@ -90,7 +90,7 @@ class _SecureNoteFormPageState extends State<SecureNoteFormPage> {
             if (state is SecureNoteFormState) {
               if (state == SecureNoteFormState.success) {
                 ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                await Future.delayed(Duration(milliseconds: 300));
+                await Future.delayed(const Duration(milliseconds: 300));
                 Navigator.pop(context);
               } else {
                 ScaffoldMessenger.of(context).hideCurrentSnackBar();
@@ -100,18 +100,16 @@ class _SecureNoteFormPageState extends State<SecureNoteFormPage> {
             }
           },
           builder: (context, state) {
-            return Container(
-              child: Column(
-                children: [
-                  Text(
-                    'Add Secure Note',
-                    style: TextStyle(
-                      fontSize: 30,
-                    ),
+            return Column(
+              children: [
+                const Text(
+                  'Add Secure Note',
+                  style: TextStyle(
+                    fontSize: 30,
                   ),
-                  _buildSubmitButton(),
-                ],
-              ),
+                ),
+                _buildSubmitButton(),
+              ],
             );
           },
         ),

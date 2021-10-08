@@ -80,13 +80,13 @@ class _SecureNotesPageState extends State<SecureNotesPage> {
             SizedBox(height: 5.w),
             completeSecureNoteList.isNotEmpty
                 ? _buildSortDropDownBox(context)
-                : SizedBox.shrink(),
+                : const SizedBox.shrink(),
             SizedBox(height: 5.w),
             state is Fetching
                 ? Container(
                     height: 180.w,
                     alignment: Alignment.center,
-                    child: LoadingSmall(),
+                    child: const LoadingSmall(),
                   )
                 : completeSecureNoteList.isEmpty
                     ? Container(
@@ -94,7 +94,7 @@ class _SecureNotesPageState extends State<SecureNotesPage> {
                         height: 420.h,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
+                          children: const [
                             Text(
                               'Start adding Notes',
                               style: TextStyle(
@@ -186,7 +186,7 @@ class _SecureNotesPageState extends State<SecureNotesPage> {
           );
         }).toList(),
         underline: Container(),
-        icon: Icon(Icons.keyboard_arrow_down),
+        icon: const Icon(Icons.keyboard_arrow_down),
         iconEnabledColor: Theme.of(context).primaryColor,
         iconSize: 30.w,
         onChanged: (val) {
@@ -211,7 +211,7 @@ class SecureNoteCardList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      physics: NeverScrollableScrollPhysics(),
+      physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       itemCount: secureNoteList.length,
       itemBuilder: (context, index) {
@@ -273,20 +273,20 @@ class SecureNoteCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  '${secureNote.title}',
-                  style: TextStyle(
+                  secureNote.title,
+                  style: const TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: 22,
                   ),
                 ),
                 Text(
-                  '${secureNote.content}',
+                  secureNote.content,
                   softWrap: false,
                   overflow: TextOverflow.fade,
                   maxLines: 1,
-                  style: TextStyle(fontSize: 13),
+                  style: const TextStyle(fontSize: 13),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 3,
                 ),
               ],
@@ -308,20 +308,20 @@ class SecureNoteDetailCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 450.w,
       child: Card(
-        margin: EdgeInsets.all(10),
+        margin: EdgeInsets.all(10.w),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
         child: Container(
-          padding: EdgeInsets.all(15),
+          padding: EdgeInsets.all(15.w),
           child: Column(
             children: [
-              Spacer(),
+              const Spacer(),
               Row(
                 children: [
                   ElevatedButton(
-                    child: Text('Delete'),
+                    child: const Text('Delete'),
                     onPressed: () {
                       BlocProvider.of<DatabaseBloc>(context)
                           .add(DeleteSecureNote(secureNote));
@@ -329,7 +329,7 @@ class SecureNoteDetailCard extends StatelessWidget {
                     },
                   ),
                   ElevatedButton(
-                    child: Text('Edit Secure Note'),
+                    child: const Text('Edit Secure Note'),
                     onPressed: () {
                       print(secureNote.id);
                       Navigator.push(

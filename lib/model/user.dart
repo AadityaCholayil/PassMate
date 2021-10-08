@@ -11,7 +11,7 @@ class UserData extends Equatable {
   final bool? pinSet;
   final SortMethod? sortMethod;
 
-  UserData(
+  const UserData(
       {required this.uid,
       this.email,
       this.firstName,

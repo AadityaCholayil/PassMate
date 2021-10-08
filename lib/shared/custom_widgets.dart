@@ -28,22 +28,22 @@ InputDecoration customInputDecoration(
     ),
     fillColor: Theme.of(context).colorScheme.surface,
     labelText: labelText,
-    labelStyle: TextStyle(fontSize: 18),
+    labelStyle: const TextStyle(fontSize: 18),
     alignLabelWithHint: true,
     floatingLabelBehavior: FloatingLabelBehavior.never,
-    helperStyle: TextStyle(
+    helperStyle: const TextStyle(
       color: Color(0xdd000000),
       fontSize: 16.0,
       fontWeight: FontWeight.w400,
       fontStyle: FontStyle.normal,
     ),
-    hintStyle: TextStyle(
+    hintStyle: const TextStyle(
       color: Color(0xdd000000),
       fontSize: 16.0,
       fontWeight: FontWeight.w400,
       fontStyle: FontStyle.normal,
     ),
-    errorStyle: TextStyle(
+    errorStyle: const TextStyle(
       color: Color(0xffd32f2f),
       fontSize: 16.0,
       fontWeight: FontWeight.w400,
@@ -52,19 +52,19 @@ InputDecoration customInputDecoration(
     errorMaxLines: null,
     isDense: false,
     isCollapsed: false,
-    prefixStyle: TextStyle(
+    prefixStyle: const TextStyle(
       color: Color(0xdd000000),
       fontSize: 16.0,
       fontWeight: FontWeight.w400,
       fontStyle: FontStyle.normal,
     ),
-    suffixStyle: TextStyle(
+    suffixStyle: const TextStyle(
       color: Color(0xdd000000),
       fontSize: 16.0,
       fontWeight: FontWeight.w400,
       fontStyle: FontStyle.normal,
     ),
-    counterStyle: TextStyle(
+    counterStyle: const TextStyle(
       color: Color(0xdd000000),
       fontSize: 16.0,
       fontWeight: FontWeight.w400,
@@ -73,7 +73,7 @@ InputDecoration customInputDecoration(
     filled: true,
     errorBorder: OutlineInputBorder(
       borderSide: BorderSide(
-        color: Color(0xffd32f2f),
+        color: const Color(0xffd32f2f),
         width: 2.w,
         style: BorderStyle.solid,
       ),
@@ -89,7 +89,7 @@ InputDecoration customInputDecoration(
     ),
     focusedErrorBorder: OutlineInputBorder(
       borderSide: BorderSide(
-        color: Color(0xffd32f2f),
+        color: const Color(0xffd32f2f),
         width: 2.w,
         style: BorderStyle.solid,
       ),
@@ -97,7 +97,7 @@ InputDecoration customInputDecoration(
     ),
     disabledBorder: OutlineInputBorder(
       borderSide: BorderSide(
-        color: Color(0xff000000),
+        color: const Color(0xff000000),
         width: 2.w,
         style: BorderStyle.solid,
       ),
@@ -105,7 +105,7 @@ InputDecoration customInputDecoration(
     ),
     border: OutlineInputBorder(
       borderSide: BorderSide(
-        color: Color(0xff000000),
+        color: const Color(0xff000000),
         width: 2.w,
         style: BorderStyle.solid,
       ),
@@ -172,7 +172,7 @@ class CustomBackButton extends StatelessWidget {
       padding: EdgeInsets.fromLTRB(0, 9.w, 15.w, 9.w),
       iconSize: 32.w,
       color: Theme.of(context).primaryColor,
-      icon: Icon(Icons.arrow_back_ios_rounded),
+      icon: const Icon(Icons.arrow_back_ios_rounded),
       onPressed: (){
         Navigator.pop(context);
       },

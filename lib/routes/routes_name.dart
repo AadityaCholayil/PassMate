@@ -1,5 +1,5 @@
 class RoutesName {
-  static const String WRAPPER = '/';
-  static const String LOGIN_PAGE = '/login';
-  static const String SIGNUP_PAGE = '/signup';
+  static const String wrapper = '/';
+  static const String loginPage = '/login';
+  static const String signupPage = '/signup';
 }

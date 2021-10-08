@@ -6,34 +6,32 @@ SnackBar showCustomSnackBar(BuildContext context, String message) {
     margin: EdgeInsets.all(15),
     behavior: SnackBarBehavior.floating,
     backgroundColor: Colors.white,
-    content: Container(
-      child: Row(
-        children: [
-          Text(
-            message,
-            style: TextStyle(
-              fontSize: 15,
-              color: Theme.of(context).colorScheme.onSurface,
-            ),
+    content: Row(
+      children: [
+        Text(
+          message,
+          style: TextStyle(
+            fontSize: 15,
+            color: Theme.of(context).colorScheme.onSurface,
           ),
-          Spacer(),
-          message == LoginState.loading.message
-              ? SizedBox(
-              height: 25,
-              width: 25,
-              child: CircularProgressIndicator(
-                color: Colors.blue,
-                strokeWidth: 2,
-              ))
-              : SizedBox.shrink(),
-        ],
-      ),
+        ),
+        const Spacer(),
+        message == LoginState.loading.message
+            ? const SizedBox(
+            height: 25,
+            width: 25,
+            child: CircularProgressIndicator(
+              color: Colors.blue,
+              strokeWidth: 2,
+            ))
+            : const SizedBox.shrink(),
+      ],
     ),
     action: message == LoginState.loading.message
         ? null
         : SnackBarAction(
       label: 'OK',
-      textColor: Theme.of(context).accentColor,
+      textColor: Theme.of(context).colorScheme.secondary,
       onPressed: () {},
     ),
   );

@@ -14,19 +14,17 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: Container(
-          child: Column(
-            children: [
-              Text('Settings Page'),
-              TextButton(
-                child: Text('Logout'),
-                onPressed: (){
-                  context.read<AppBloc>().add(LoggedOut());
-                  Navigator.pop(context);
-                },
-              ),
-            ],
-          ),
+        body: Column(
+          children: [
+            const Text('Settings Page'),
+            TextButton(
+              child: const Text('Logout'),
+              onPressed: (){
+                context.read<AppBloc>().add(LoggedOut());
+                Navigator.pop(context);
+              },
+            ),
+          ],
         ),
       ),
     );

@@ -13,15 +13,15 @@ class Wrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (state is Uninitialized) {
-      return Loading();
+      return const Loading();
     } else if (state is Unauthenticated) {
-      return WelcomeScreen();
+      return const WelcomeScreen();
     } else if (state is PartiallyAuthenticated) {
-      return AdditionalDetailsPage();
+      return const AdditionalDetailsPage();
     } else if (state is FullyAuthenticated) {
-      return HomeScreen();
+      return const HomeScreen();
     } else {
-      return Loading();
+      return const Loading();
     }
   }
 }

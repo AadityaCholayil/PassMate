@@ -3,23 +3,23 @@ import 'package:equatable/equatable.dart';
 class LoginState extends Equatable {
   final String message;
 
-  LoginState({required this.message});
+  const LoginState({required this.message});
 
-  static LoginState loading = LoginState(message: 'Loading');
+  static LoginState loading = const LoginState(message: 'Loading');
 
-  static LoginState success = LoginState(message: 'Successful');
+  static LoginState success = const LoginState(message: 'Successful');
 
   static LoginState invalidEmailFormat =
-      LoginState(message: 'Invalid Email Format');
+      const LoginState(message: 'Invalid Email Format');
 
   static LoginState noUserFound =
-      LoginState(message: 'No user found for that email');
+      const LoginState(message: 'No user found for that email');
 
   static LoginState wrongPassword =
-      LoginState(message: 'Wrong Password provided for that user');
+      const LoginState(message: 'Wrong Password provided for that user');
 
   static LoginState somethingWentWrong =
-      LoginState(message: 'Something went wrong, Please try again');
+      const LoginState(message: 'Something went wrong, Please try again');
 
   @override
   List<Object?> get props => [message];

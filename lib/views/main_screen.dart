@@ -30,7 +30,7 @@ class _MainScreenState extends State<MainScreen> {
 
   Widget _buildSubFAB({required IconData icon, void Function()? onPressed}) {
     return Container(
-      decoration: BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+      decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
       padding: EdgeInsets.all(7.w),
       height: 60.w,
       width: 60.w,
@@ -56,8 +56,8 @@ class _MainScreenState extends State<MainScreen> {
       body: context.read<MenuProvider>().currentPage < 3
           ? MainListPage(fName: fName)
           : [
-              PasswordGeneratorPage(),
-              FolderPage(),
+              const PasswordGeneratorPage(),
+              const FolderPage(),
               for (String path in context.read<DatabaseBloc>().folderList??[])
                 FolderPage(path: path),
             ][context.read<MenuProvider>().currentPage-3],
@@ -66,8 +66,8 @@ class _MainScreenState extends State<MainScreen> {
         ringDiameter: 445.w,
         ringWidth: 130.w,
         fabSize: 65.w,
-        fabOpenIcon: Icon(Icons.add, color: Colors.white, size: 42),
-        fabCloseIcon: Icon(Icons.close, color: Colors.white, size: 37),
+        fabOpenIcon: const Icon(Icons.add, color: Colors.white, size: 42),
+        fabCloseIcon: const Icon(Icons.close, color: Colors.white, size: 37),
         ringColor: Theme.of(context).colorScheme.secondary.withOpacity(0.3),
         children: [
           _buildSubFAB(
@@ -76,7 +76,7 @@ class _MainScreenState extends State<MainScreen> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => SecureNoteFormPage())).then(
+                      builder: (context) => const SecureNoteFormPage())).then(
                   (value) =>
                       context.read<DatabaseBloc>().add(GetSecureNotes()));
               fabKey.currentState!.close();
@@ -88,7 +88,7 @@ class _MainScreenState extends State<MainScreen> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => PaymentCardFormPage())).then(
+                      builder: (context) => const PaymentCardFormPage())).then(
                   (value) =>
                       context.read<DatabaseBloc>().add(GetPaymentCards()));
               fabKey.currentState!.close();
@@ -100,7 +100,7 @@ class _MainScreenState extends State<MainScreen> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => PasswordFormPage())).then(
+                      builder: (context) => const PasswordFormPage())).then(
                   (value) => context.read<DatabaseBloc>().add(GetPasswords()));
               fabKey.currentState!.close();
             },
@@ -128,7 +128,7 @@ class MainListPage extends StatelessWidget {
         GetSecureNotes(),
       ][context.read<MenuProvider>().currentPage]),
       child: CustomScrollView(
-        physics: BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         slivers: [
           SliverAppBar(
             // bottom: PreferredSize(child: Container(color: Colors.red,), preferredSize: Size(100,40)),
@@ -154,7 +154,7 @@ class MainListPage extends StatelessWidget {
                       ZoomDrawer.of(context)!.toggle();
                     },
                   ),
-                  Spacer(),
+                  const Spacer(),
                   IconButton(
                     iconSize: 34.w,
                     padding: EdgeInsets.zero,
@@ -165,7 +165,7 @@ class MainListPage extends StatelessWidget {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => SettingsPage())
+                        MaterialPageRoute(builder: (context) => const SettingsPage())
                       );
                     },
                   ),
@@ -175,7 +175,7 @@ class MainListPage extends StatelessWidget {
             stretch: true,
             flexibleSpace: FlexibleSpaceBar(
               collapseMode: CollapseMode.parallax,
-              stretchModes: [StretchMode.zoomBackground],
+              stretchModes: const [StretchMode.zoomBackground],
               background: FittedBox(
                 alignment: Alignment.centerLeft,
                 child: Container(
@@ -194,7 +194,7 @@ class MainListPage extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        '$fName',
+                        fName,
                         style: TextStyle(
                           height: 1.25,
                           fontSize: 43,
@@ -210,7 +210,7 @@ class MainListPage extends StatelessWidget {
           ),
           SliverList(
             delegate: SliverChildBuilderDelegate(
-              (context, int) => Container(
+              (context, index) => Container(
                 color: Colors.white,
                 child: Container(
                   clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -220,9 +220,9 @@ class MainListPage extends StatelessWidget {
                         BorderRadius.vertical(top: Radius.circular(25.w)),
                   ),
                   child: [
-                    PasswordPage(),
-                    PaymentCardPage(),
-                    SecureNotesPage(),
+                    const PasswordPage(),
+                    const PaymentCardPage(),
+                    const SecureNotesPage(),
                   ][context.read<MenuProvider>().currentPage],
                 ),
               ),

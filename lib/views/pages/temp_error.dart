@@ -32,13 +32,13 @@ class _TempErrorState extends State<TempError> {
           children: [
             Text(
               '${widget.pageName} ${widget.pageName=='HomeScreen'?'($page)':''}',
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w700,
               ),
               textAlign: TextAlign.center,
             ),
-            Text(
+            const Text(
               'Landscape mode is coming soon.\nTill then kindly open on a Smartphone.',
               style: TextStyle(
                 fontSize: 9,

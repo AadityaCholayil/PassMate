@@ -29,22 +29,20 @@ class _AdditionalDetailsPageState extends State<AdditionalDetailsPage> {
       listener: (context, state) {
         if (state is FullyAuthenticated) {
           ScaffoldMessenger.of(context).hideCurrentSnackBar();
-          Navigator.pushReplacementNamed(context, RoutesName.WRAPPER);
+          Navigator.pushReplacementNamed(context, RoutesName.wrapper);
         }
       },
       builder: (context, state) {
         return Scaffold(
-          body: LayoutBuilder(
-              builder: (context, constraints) {
-                /// Responsive
-                print('Layout Changed');
-                if (constraints.maxHeight < 1.2 * constraints.maxWidth) {
-                  ///LandScape
-                  return TempError(pageName: 'Additional Details Screen');
-                }
-                return _buildAdditionalDetailsPortrait(context);
-              }
-          ),
+          body: LayoutBuilder(builder: (context, constraints) {
+            /// Responsive
+            print('Layout Changed');
+            if (constraints.maxHeight < 1.2 * constraints.maxWidth) {
+              ///LandScape
+              return const TempError(pageName: 'Additional Details Screen');
+            }
+            return _buildAdditionalDetailsPortrait(context);
+          }),
         );
       },
     );
@@ -52,72 +50,72 @@ class _AdditionalDetailsPageState extends State<AdditionalDetailsPage> {
 
   Container _buildAdditionalDetailsPortrait(BuildContext context) {
     return Container(
-          padding: EdgeInsets.symmetric(horizontal: 20.w),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'Additional Details',
-                  style: TextStyle(
-                    height: 1.25,
-                    fontSize: 43,
-                    fontWeight: FontWeight.w700,
-                    color: Theme.of(context).colorScheme.onBackground,
-                  ),
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                TextFormField(
-                  decoration: customInputDecoration(
-                      context: context, labelText: 'First Name'),
-                  style: formTextStyle(context),
-                  onSaved: (value) {
-                    firstName = value ?? '';
-                  },
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your first name';
-                    }
-                  },
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                TextFormField(
-                  decoration: customInputDecoration(
-                      context: context, labelText: 'Last Name'),
-                  style: formTextStyle(context),
-                  onSaved: (value) {
-                    lastName = value ?? '';
-                  },
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your last name';
-                    }
-                  },
-                ),
-                Center(
-                  child: ElevatedButton(
-                    child: Text('Next'),
-                    onPressed: () async {
-                      if (!_formKey.currentState!.validate()) {
-                        return;
-                      }
-                      _formKey.currentState?.save();
-                      ScaffoldMessenger.of(context)
-                          .showSnackBar(showCustomSnackBar(context, ''));
-                      BlocProvider.of<AppBloc>(context)
-                          .add(UpdateUserData(firstName, lastName, photoUrl));
-                    },
-                  ),
-                ),
-              ],
+      padding: EdgeInsets.symmetric(horizontal: 20.w),
+      child: Form(
+        key: _formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Additional Details',
+              style: TextStyle(
+                height: 1.25,
+                fontSize: 43,
+                fontWeight: FontWeight.w700,
+                color: Theme.of(context).colorScheme.onBackground,
+              ),
             ),
-          ),
-        );
+            SizedBox(
+              height: 15.w,
+            ),
+            TextFormField(
+              decoration: customInputDecoration(
+                  context: context, labelText: 'First Name'),
+              style: formTextStyle(context),
+              onSaved: (value) {
+                firstName = value ?? '';
+              },
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter your first name';
+                }
+              },
+            ),
+            SizedBox(
+              height: 15.w,
+            ),
+            TextFormField(
+              decoration: customInputDecoration(
+                  context: context, labelText: 'Last Name'),
+              style: formTextStyle(context),
+              onSaved: (value) {
+                lastName = value ?? '';
+              },
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter your last name';
+                }
+              },
+            ),
+            Center(
+              child: ElevatedButton(
+                child: const Text('Next'),
+                onPressed: () async {
+                  if (!_formKey.currentState!.validate()) {
+                    return;
+                  }
+                  _formKey.currentState?.save();
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(showCustomSnackBar(context, ''));
+                  BlocProvider.of<AppBloc>(context)
+                      .add(UpdateUserData(firstName, lastName, photoUrl));
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
