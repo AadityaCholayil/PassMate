@@ -15,7 +15,7 @@ InputDecoration customInputDecoration(
             ),
           )
         : null,
-    contentPadding: EdgeInsets.fromLTRB(22.w, 15.w, 15.w, 15.w),
+    contentPadding: EdgeInsets.fromLTRB(20.w, 15.w, 15.w, 15.w),
     enabledBorder: OutlineInputBorder(
       borderSide: BorderSide(
         color: isSearch
@@ -28,7 +28,8 @@ InputDecoration customInputDecoration(
     ),
     fillColor: Theme.of(context).colorScheme.surface,
     labelText: labelText,
-    labelStyle: TextStyle(fontSize: 19),
+    labelStyle: TextStyle(fontSize: 18),
+    alignLabelWithHint: true,
     floatingLabelBehavior: FloatingLabelBehavior.never,
     helperStyle: TextStyle(
       color: Color(0xdd000000),
@@ -43,7 +44,7 @@ InputDecoration customInputDecoration(
       fontStyle: FontStyle.normal,
     ),
     errorStyle: TextStyle(
-      color: Color(0xdd000000),
+      color: Color(0xffd32f2f),
       fontSize: 16.0,
       fontWeight: FontWeight.w400,
       fontStyle: FontStyle.normal,
@@ -114,8 +115,13 @@ InputDecoration customInputDecoration(
 }
 
 TextStyle formTextStyle(BuildContext context) => TextStyle(
-  fontSize: 19,
+  fontSize: 18,
   color: Theme.of(context).primaryColor
+);
+
+TextStyle formTextStyle2(BuildContext context) => TextStyle(
+    fontSize: 18,
+    color: Theme.of(context).colorScheme.onSurface
 );
 
 class CustomElevatedButton extends StatelessWidget {
@@ -148,7 +154,7 @@ class CustomElevatedButton extends StatelessWidget {
           text,
           style: TextStyle(
               color: style == 0 ?Theme.of(context).colorScheme.onPrimary: Theme.of(context).colorScheme.primary,
-              fontSize: 20,
+              fontSize: 19,
               fontWeight: FontWeight.w600),
         ),
       ),
@@ -163,8 +169,8 @@ class CustomBackButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      padding: EdgeInsets.fromLTRB(0, 8.w, 15.w, 8.w),
-      iconSize: 35.w,
+      padding: EdgeInsets.fromLTRB(0, 9.w, 15.w, 9.w),
+      iconSize: 32.w,
       color: Theme.of(context).primaryColor,
       icon: Icon(Icons.arrow_back_ios_rounded),
       onPressed: (){

@@ -49,10 +49,17 @@ class MyApp extends StatelessWidget {
                         state: state,
                       ),
                       builder: (context, child) {
+                        int height = MediaQuery.of(context).size.height.toInt();
                         int width = MediaQuery.of(context).size.width.toInt();
+                        int factor = 0;
+                        if(height < 1.2*width){
+                          factor = height;
+                        } else {
+                          factor = width;
+                        }
                         return MediaQuery(
                             data: MediaQuery.of(context)
-                                .copyWith(textScaleFactor: width / 375),
+                                .copyWith(textScaleFactor: factor / 375),
                             child: child ?? Container());
                       },
                     );

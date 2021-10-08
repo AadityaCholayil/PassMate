@@ -11,6 +11,8 @@ import 'package:passmate/routes/routes_name.dart';
 import 'package:passmate/shared/custom_snackbar.dart';
 import 'package:passmate/shared/custom_widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:passmate/views/auth/signup_page.dart';
+import 'package:passmate/views/pages/temp_error.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key? key}) : super(key: key);
@@ -33,16 +35,22 @@ class _LoginPageState extends State<LoginPage> {
       child: BlocConsumer<LoginBloc, LoginState>(
         listener: (context, state) async {
           if (state == LoginState.success) {
+            /// Compute Password Hash
             await compute(EncryptionRepository.scryptHash, password)
                 .then((value) {
+              /// Update Key in Encryption Repository
               context
                   .read<AuthenticationBloc>()
                   .encryptionRepository
                   .updateKey(value);
+
+              /// Storing password hash on Android
               if (!kIsWeb) {
                 final storage = FlutterSecureStorage();
                 storage.write(key: 'key', value: value);
               }
+
+              /// Start Authentication
               context.read<AuthenticationBloc>().add(AuthenticateUser());
               ScaffoldMessenger.of(context).hideCurrentSnackBar();
               print('Navigating..');
@@ -59,121 +67,131 @@ class _LoginPageState extends State<LoginPage> {
           return SafeArea(
             child: Scaffold(
               resizeToAvoidBottomInset: false,
-              body: Container(
-                padding: EdgeInsets.symmetric(horizontal: 20.w),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      SizedBox(height: 25.h),
-                      CustomBackButton(),
-                      SizedBox(height: 50.h),
-                      Text(
-                        'Welcome to,',
-                        style: TextStyle(
-                          fontSize: 33,
-                          fontWeight: FontWeight.normal,
-                          color: Theme.of(context).colorScheme.onBackground,
-                          height: 0.9,
-                        ),
-                      ),
-                      Text(
-                        'PassMate',
-                        style: TextStyle(
-                          height: 1.25,
-                          fontSize: 44,
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).colorScheme.onBackground,
-                        ),
-                      ),
-                      SizedBox(height: 50.h),
-                      Text(
-                        'Login to continue',
-                        style: TextStyle(
-                          height: 1.25.w,
-                          fontSize: 25,
-                          fontWeight: FontWeight.w600,
-                          color: Theme.of(context).colorScheme.onBackground,
-                        ),
-                      ),
-                      SizedBox(height: 25.h),
-                      TextFormField(
-                        decoration: customInputDecoration(
-                            context: context, labelText: 'Email'),
-                        style: formTextStyle(context),
-                        onSaved: (value) {
-                          email = value ?? '';
-                        },
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your email';
-                          }
-                        },
-                      ),
-                      SizedBox(height: 20.w),
-                      TextFormField(
-                        decoration: customInputDecoration(
-                            context: context, labelText: 'Password'),
-                        style: formTextStyle(context),
-                        onSaved: (value) {
-                          password = value ?? '';
-                        },
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your password';
-                          }
-                        },
-                      ),
-                      SizedBox(height: 25.w),
-                      CustomElevatedButton(
-                        text: 'Login',
-                        onPressed: () async {
-                          if (!_formKey.currentState!.validate()) {
-                            return;
-                          }
-                          _formKey.currentState?.save();
-                          ScaffoldMessenger.of(context).showSnackBar(
-                              showCustomSnackBar(context, state.message));
-                          BlocProvider.of<LoginBloc>(context).add(
-                              LoginUsingCredentials(
-                                  email: AuthEmail(email),
-                                  password: AuthPassword(password)));
-                        },
-                      ),
-                      SizedBox(height: 80.h),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "Don't have an account?",
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Theme.of(context).colorScheme.onSurface
-                            ),
-                          ),
-                          TextButton(
-                            child: Text(
-                              "Sign Up!",
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  color: Theme.of(context).colorScheme.primary
-                              ),
-                            ),
-                            onPressed: (){
-
-                            },
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-              ),
+              body: LayoutBuilder(builder: (context, constraints) {
+                /// Responsive
+                print('Layout Changed');
+                if (constraints.maxHeight < 1.2 * constraints.maxWidth) {
+                  ///LandScape
+                  return TempError(pageName: 'Login Screen');
+                }
+                return _buildLoginPortrait(context, state);
+              }),
             ),
           );
         },
+      ),
+    );
+  }
+
+  Container _buildLoginPortrait(BuildContext context, LoginState state) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 20.w),
+      child: Form(
+        key: _formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            SizedBox(height: 25.h),
+            CustomBackButton(),
+            SizedBox(height: 50.h),
+            Text(
+              'Welcome to,',
+              style: TextStyle(
+                fontSize: 32.5,
+                fontWeight: FontWeight.normal,
+                color: Theme.of(context).colorScheme.onBackground,
+                height: 0.9,
+              ),
+            ),
+            Text(
+              'PassMate',
+              style: TextStyle(
+                height: 1.25,
+                fontSize: 43.5,
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).colorScheme.onBackground,
+              ),
+            ),
+            SizedBox(height: 50.h),
+            Text(
+              'Login to continue',
+              style: TextStyle(
+                height: 1.25.w,
+                fontSize: 25,
+                fontWeight: FontWeight.w600,
+                color: Theme.of(context).colorScheme.onBackground,
+              ),
+            ),
+            SizedBox(height: 25.h),
+            TextFormField(
+              decoration:
+                  customInputDecoration(context: context, labelText: 'Email'),
+              style: formTextStyle(context),
+              onSaved: (value) {
+                email = value ?? '';
+              },
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter your email';
+                }
+              },
+            ),
+            SizedBox(height: 20.w),
+            TextFormField(
+              decoration: customInputDecoration(
+                  context: context, labelText: 'Password'),
+              style: formTextStyle(context),
+              onSaved: (value) {
+                password = value ?? '';
+              },
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter your password';
+                }
+              },
+            ),
+            SizedBox(height: 25.w),
+            CustomElevatedButton(
+              text: 'Login',
+              onPressed: () async {
+                if (!_formKey.currentState!.validate()) {
+                  return;
+                }
+                _formKey.currentState?.save();
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(showCustomSnackBar(context, state.message));
+                BlocProvider.of<LoginBloc>(context).add(LoginUsingCredentials(
+                    email: AuthEmail(email), password: AuthPassword(password)));
+              },
+            ),
+            SizedBox(height: 80.h),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "Don't have an account?",
+                  style: TextStyle(
+                      fontSize: 15,
+                      color: Theme.of(context).colorScheme.onSurface),
+                ),
+                TextButton(
+                  child: Text(
+                    "Sign Up!",
+                    style: TextStyle(
+                        fontSize: 15,
+                        color: Theme.of(context).colorScheme.primary),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(builder: (context) => SignUpPage())
+                    );
+                  },
+                ),
+              ],
+            )
+          ],
+        ),
       ),
     );
   }

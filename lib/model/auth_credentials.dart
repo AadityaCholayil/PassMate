@@ -29,10 +29,10 @@ class PasswordStrength{
 
   List<String> list = [
     'Minimum 8 characters',
-    'Must contain one uppercase character',
-    'Must contain one lowercase character',
-    'Must contain one number',
-    'Must contain one special character (!@#\$&*~)'
+    'Atleast one uppercase character',
+    'Atleast one lowercase character',
+    'Atleast one number',
+    'Atleast one special character (!@#\$&*~)'
   ];
   int strength = 0;
 
@@ -44,22 +44,22 @@ class PasswordStrength{
     bool containsNumber = RegExp(r'(?=.*[0-9])').hasMatch(password);
     bool containsSpecialChar = RegExp(r'(?=.*[!@#\$&*~])').hasMatch(password);
     bool isLong = password.length>=8;
-    bool isVeryLong = password.length>=14;
+    bool isVeryLong = password.length>=11;
     if (containsUpper) {
       strength++;
-      list.remove('Must contain one uppercase character');
+      list.remove('Atleast one uppercase character');
     }
     if (containsLower) {
       strength++;
-      list.remove('Must contain one lowercase character');
+      list.remove('Atleast one lowercase character');
     }
     if (containsNumber) {
       strength++;
-      list.remove('Must contain one number');
+      list.remove('Atleast one number');
     }
     if (containsSpecialChar) {
       strength++;
-      list.remove('Must contain one special character (!@#\$&*~)');
+      list.remove('Atleast one special character (!@#\$&*~)');
     }
     if (isLong) {
       strength++;

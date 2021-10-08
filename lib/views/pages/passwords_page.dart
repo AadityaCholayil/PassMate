@@ -236,7 +236,7 @@ class _PasswordPageState extends State<PasswordPage> {
                         width: 2)
                     : null,
                 avatar: Icon(
-                  Icons.favorite_border_rounded,
+                  passwordCategoryIcon[index],
                   size: 23.w,
                   color: Theme.of(context).colorScheme.secondary,
                 ),
@@ -367,6 +367,7 @@ class PasswordCard extends StatelessWidget {
         child: InkWell(
           onTap: () {
             if (!ZoomDrawer.of(context)!.isOpen()) {
+              password.printDetails();
               password.lastUsed = Timestamp.now();
               password.usage++;
               context
@@ -459,10 +460,10 @@ class PasswordDetailCard extends StatelessWidget {
     return Container(
       height: 450.w,
       child: Card(
-        margin: EdgeInsets.all(10),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+        margin: EdgeInsets.all(10.w),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.w)),
         child: Container(
-          padding: EdgeInsets.all(15),
+          padding: EdgeInsets.all(15.w),
           child: Column(
             children: [
               Spacer(),

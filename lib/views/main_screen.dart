@@ -28,7 +28,7 @@ class _MainScreenState extends State<MainScreen> {
   final GlobalKey<FabCircularMenuState> fabKey = GlobalKey();
   late final String fName;
 
-  Widget _buildButton({required IconData icon, void Function()? onPressed}) {
+  Widget _buildSubFAB({required IconData icon, void Function()? onPressed}) {
     return Container(
       decoration: BoxDecoration(color: Colors.white, shape: BoxShape.circle),
       padding: EdgeInsets.all(7.w),
@@ -70,7 +70,7 @@ class _MainScreenState extends State<MainScreen> {
         fabCloseIcon: Icon(Icons.close, color: Colors.white, size: 37),
         ringColor: Theme.of(context).colorScheme.secondary.withOpacity(0.3),
         children: [
-          _buildButton(
+          _buildSubFAB(
             icon: Icons.sticky_note_2_rounded,
             onPressed: () {
               Navigator.push(
@@ -82,7 +82,7 @@ class _MainScreenState extends State<MainScreen> {
               fabKey.currentState!.close();
             },
           ),
-          _buildButton(
+          _buildSubFAB(
             icon: Icons.credit_card_rounded,
             onPressed: () {
               Navigator.push(
@@ -94,7 +94,7 @@ class _MainScreenState extends State<MainScreen> {
               fabKey.currentState!.close();
             },
           ),
-          _buildButton(
+          _buildSubFAB(
             icon: Icons.password_rounded,
             onPressed: () {
               Navigator.push(

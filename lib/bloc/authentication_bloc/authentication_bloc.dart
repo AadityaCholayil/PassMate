@@ -10,16 +10,17 @@ import 'package:passmate/repositories/database_repository.dart';
 import 'package:passmate/repositories/encryption_repository.dart';
 import 'auth_bloc_files.dart';
 
-class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState>{
-
+class AuthenticationBloc
+    extends Bloc<AuthenticationEvent, AuthenticationState> {
   final AuthenticationRepository _authenticationRepository;
   late DatabaseRepository databaseRepository;
   EncryptionRepository encryptionRepository = EncryptionRepository();
   late UserData userData;
   late DatabaseBloc databaseBloc;
 
-  AuthenticationBloc({required authenticationRepository}):
-    _authenticationRepository=authenticationRepository, super(Uninitialized(userData: UserData.empty)){
+  AuthenticationBloc({required authenticationRepository})
+      : _authenticationRepository = authenticationRepository,
+        super(Uninitialized(userData: UserData.empty)) {
     userData = _authenticationRepository.getUserData();
     databaseRepository = DatabaseRepository(uid: userData.uid);
     databaseBloc = DatabaseBloc(
@@ -29,13 +30,14 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState>{
     );
   }
 
-  void updateBloc(){
+  void updateBloc() {
     print('isSame?');
-    print(databaseBloc == DatabaseBloc(
-      userData: userData,
-      databaseRepository: databaseRepository,
-      encryptionRepository: encryptionRepository,
-    ));
+    print(databaseBloc ==
+        DatabaseBloc(
+          userData: userData,
+          databaseRepository: databaseRepository,
+          encryptionRepository: encryptionRepository,
+        ));
     databaseBloc = DatabaseBloc(
       userData: userData,
       databaseRepository: databaseRepository,
@@ -43,10 +45,12 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState>{
     );
   }
 
-  AuthenticationState get initialState => Uninitialized(userData: UserData.empty);
+  AuthenticationState get initialState =>
+      Uninitialized(userData: UserData.empty);
 
   @override
-  Stream<AuthenticationState> mapEventToState(AuthenticationEvent event) async* {
+  Stream<AuthenticationState> mapEventToState(
+      AuthenticationEvent event) async* {
     if (event is AppStarted) {
       yield* _mapAppStartedToState();
     } else if (event is AuthenticateUser) {
@@ -59,25 +63,25 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState>{
   }
 
   Stream<AuthenticationState> _mapAppStartedToState() async* {
-    if(kIsWeb){
+    if (kIsWeb) {
       final isSignedIn = _authenticationRepository.isSignedIn();
-      if(isSignedIn){
+      if (isSignedIn) {
         await _authenticationRepository.signOut();
       }
       yield Unauthenticated(userData: userData);
     } else {
       try {
         userData = _authenticationRepository.getUserData();
-        if(userData!=UserData.empty){
+        if (userData != UserData.empty) {
           databaseRepository = DatabaseRepository(uid: userData.uid);
           UserData userData2 = await databaseRepository.completeUserData;
           final storage = FlutterSecureStorage();
-          String key = await storage.read(key: 'key')??'KeyNotFound';
+          String key = await storage.read(key: 'key') ?? 'KeyNotFound';
           encryptionRepository.updateKey(key);
-          if(userData2==UserData.empty){
+          if (userData2 == UserData.empty) {
             yield PartiallyAuthenticated(userData: userData);
           } else {
-            userData=userData2;
+            userData = userData2;
             yield FullyAuthenticated(userData: userData);
           }
         } else {
@@ -98,10 +102,10 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState>{
     updateBloc();
     if (!kIsWeb) {
       final storage = FlutterSecureStorage();
-      String key = await storage.read(key: 'key')??'KeyNotFound';
+      String key = await storage.read(key: 'key') ?? 'KeyNotFound';
       encryptionRepository.updateKey(key);
     }
-    if(userData2==UserData.empty){
+    if (userData2 == UserData.empty) {
       yield PartiallyAuthenticated(userData: userData);
     } else {
       userData = userData2;
@@ -109,25 +113,25 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState>{
     }
   }
 
-  Stream<AuthenticationState> _mapUpdateUserDataToState(UpdateUserData event) async* {
+  Stream<AuthenticationState> _mapUpdateUserDataToState(
+      UpdateUserData event) async* {
     yield Uninitialized(userData: UserData.empty);
     userData = _authenticationRepository.getUserData();
     UserData newUserData = UserData(
-      uid: userData.uid,
-      email: userData.email,
-      firstName: event.firstName,
-      lastName: event.lastName,
-      photoUrl: event.photoUrl,
-      pinSet: false,
-      sortMethod: SortMethod.recentlyAdded
-    );
-    try{
+        uid: userData.uid,
+        email: userData.email,
+        firstName: event.firstName,
+        lastName: event.lastName,
+        photoUrl: event.photoUrl,
+        pinSet: false,
+        sortMethod: SortMethod.recentlyAdded);
+    try {
       databaseRepository = DatabaseRepository(uid: userData.uid);
       databaseRepository.updateUserData(newUserData);
       databaseRepository.addFolder(folderName: 'root/default');
       userData = newUserData;
       add(AuthenticateUser());
-    } on Exception catch (_){
+    } on Exception catch (_) {
       //TODO add exception
       print('Something Went Wrong');
     }

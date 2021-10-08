@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:passmate/model/auth_credentials.dart';
 import 'package:passmate/repositories/encryption_repository.dart';
 
@@ -88,6 +89,11 @@ class Password {
     note = await encryptionRepository.decrypt(note);
   }
 
+  void printDetails(){
+    print('$id, $path, $siteName, $siteUrl, $email, $password, $imageUrl, $note,'
+        ' $category, $favourite, $usage, $lastUsed, $timeAdded');
+  }
+
   @override
   String toString() {
     return '$path - $siteName: $email, $password Category: $category, isFav: $favourite';
@@ -104,3 +110,14 @@ enum PasswordCategory {
   ecommerce,
   others,
 }
+
+List<IconData> passwordCategoryIcon = [
+  Icons.favorite_border_rounded,
+  Icons.people_alt_outlined,
+  Icons.work_outline,
+  Icons.movie_creation_outlined,
+  Icons.attach_money,
+  Icons.school_outlined,
+  Icons.shopping_cart_outlined,
+  Icons.more_horiz
+];
