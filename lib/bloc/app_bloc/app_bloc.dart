@@ -30,13 +30,13 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     );
     on<AppStarted>(_onAppStarted);
     on<AuthenticateUser>(_onAuthenticateUser);
-    // on<LoginUser>(_onLoginUser);
+    on<LoginUser>(_onLoginUser);
     // on<SignupUser>(_onSignupUser);
     on<UpdateUserData>(_onUpdateUserData);
     on<LoggedOut>(_onLoggedOut);
   }
 
-  void updateBloc() {
+  void updateDatabaseBloc() {
     print('isSame?');
     print(databaseBloc ==
         DatabaseBloc(
@@ -53,9 +53,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
 
   AppState get initialState => Uninitialized(userData: UserData.empty);
 
-  FutureOr<void> _onAppStarted(
-      AppStarted event, Emitter<AppState> emit) async {
-    print('hi');
+  FutureOr<void> _onAppStarted(AppStarted event, Emitter<AppState> emit) async {
     if (kIsWeb) {
       final isSignedIn = _authRepository.isSignedIn();
       if (isSignedIn) {
@@ -87,36 +85,52 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     }
   }
 
-  // // When the User Logs in
-  // FutureOr<void> _onLoginUser(LoginUser event, Emitter<AppState> emit) async {
-  //   emit(LoginNewState.loading);
-  //   try {
-  //     // Login using email and password
-  //     userData = await _authRepository.logInWithCredentials(
-  //         event.email, event.password);
-  //     // Update DatabaseRepository
-  //     _databaseRepository = DatabaseRepository(uid: userData.uid);
-  //     // After login fetch rest of the user details from database
-  //     UserData completeUserData = await _databaseRepository.completeUserData;
-  //     if (completeUserData != UserData.empty) {
-  //       // if db fetch is successful
-  //       userData = completeUserData;
-  //       emit(Authenticated(userData: userData));
-  //     } else {
-  //       // if db fetch fails
-  //       emit(const ErrorOccurred(error: 'Failed to fetch details!'));
-  //     }
-  //   } on Exception catch (e) {
-  //     if (e is UserNotFoundException) {
-  //       emit(LoginNewState.noUserFound);
-  //     } else if (e is WrongPasswordException) {
-  //       emit(LoginNewState.wrongPassword);
-  //     } else {
-  //       emit(LoginNewState.somethingWentWrong);
-  //     }
-  //   }
-  // }
-  //
+  // When the User Logs in
+  FutureOr<void> _onLoginUser(LoginUser event, Emitter<AppState> emit) async {
+    emit(LoginNewState.loading);
+    try {
+      // Login using email and password
+      userData = await _authRepository.logInWithCredentials(
+          event.email, event.password);
+
+      // Update DatabaseRepository
+      databaseRepository = DatabaseRepository(uid: userData.uid);
+      // After login fetch rest of the user details from database
+      UserData completeUserData = await databaseRepository.completeUserData;
+
+      if (completeUserData != UserData.empty) {
+        // if db fetch is successful
+        userData = completeUserData;
+        // Compute Password Hash
+        await compute(EncryptionRepository.scryptHash, event.password)
+            .then((passwordHash) {
+          // Update key in encryption repo
+          encryptionRepository.updateKey(passwordHash);
+          // Storing password hash in Android
+          if (!kIsWeb) {
+            const storage = FlutterSecureStorage();
+            storage.write(key: 'key', value: passwordHash);
+          }
+        });
+        // Update DatabaseBloc after updating DatabaseRepository
+        // and EncryptionRepository
+        updateDatabaseBloc();
+        emit(Authenticated(userData: userData));
+      } else {
+        // if db fetch fails
+        emit(const ErrorOccurred(error: 'Failed to fetch details!'));
+      }
+    } on Exception catch (e) {
+      if (e is UserNotFoundException) {
+        emit(LoginNewState.noUserFound);
+      } else if (e is WrongPasswordException) {
+        emit(LoginNewState.wrongPassword);
+      } else {
+        emit(LoginNewState.somethingWentWrong);
+      }
+    }
+  }
+
   // // When the User Signs up
   // FutureOr<void> _onSignupUser(SignupUser event, Emitter<AppState> emit) async {
   //   emit(SignupNewState.loading);
@@ -150,7 +164,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     userData = _authRepository.getUserData();
     databaseRepository = DatabaseRepository(uid: userData.uid);
     UserData userData2 = await databaseRepository.completeUserData;
-    updateBloc();
+    updateDatabaseBloc();
     if (!kIsWeb) {
       const storage = FlutterSecureStorage();
       String key = await storage.read(key: 'key') ?? 'KeyNotFound';
@@ -191,7 +205,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
   FutureOr<void> _onLoggedOut(LoggedOut event, Emitter<AppState> emit) async {
     userData = UserData.empty;
     databaseRepository = DatabaseRepository(uid: userData.uid);
-    updateBloc();
+    updateDatabaseBloc();
     await _authRepository.signOut();
     emit(Unauthenticated(userData: userData));
   }

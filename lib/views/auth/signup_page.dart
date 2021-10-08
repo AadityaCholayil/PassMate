@@ -31,8 +31,8 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<SignupBloc>(
-      create: (context) => SignupBloc(
-          authenticationRepository: context.read<AuthRepository>()),
+      create: (context) =>
+          SignupBloc(authenticationRepository: context.read<AuthRepository>()),
       child: BlocConsumer<SignupBloc, SignupState>(
           listener: (context, state) async {
         if (state == SignupState.success) {
@@ -40,10 +40,7 @@ class _SignUpPageState extends State<SignUpPage> {
           await compute(EncryptionRepository.scryptHash, password.password)
               .then((value) {
             /// Update Key in Encryption Repository
-            context
-                .read<AppBloc>()
-                .encryptionRepository
-                .updateKey(value);
+            context.read<AppBloc>().encryptionRepository.updateKey(value);
 
             /// Storing password hash on Android
             if (!kIsWeb) {
@@ -104,7 +101,9 @@ class _SignUpPageState extends State<SignUpPage> {
                 children: [
                   Expanded(
                     flex: 1,
-                    child: SizedBox(height: 1.w,),
+                    child: SizedBox(
+                      height: 1.w,
+                    ),
                   ),
                   Text(
                     'Sign Up',
@@ -128,6 +127,9 @@ class _SignUpPageState extends State<SignUpPage> {
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter your email';
+                      }
+                      if (!AuthEmail(value).isValid) {
+                        return 'Invalid email format';
                       }
                     },
                   ),

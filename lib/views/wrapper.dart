@@ -18,6 +18,8 @@ class Wrapper extends StatelessWidget {
       return const WelcomeScreen();
     } else if (state is PartiallyAuthenticated) {
       return const AdditionalDetailsPage();
+    } else if (state is Authenticated) {
+      return const HomeScreen();
     } else if (state is FullyAuthenticated) {
       return const HomeScreen();
     } else {

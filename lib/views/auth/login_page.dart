@@ -1,12 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:passmate/bloc/app_bloc/app_bloc_files.dart';
-import 'package:passmate/repositories/authentication_repository.dart';
-import 'package:passmate/bloc/login_bloc/login_barrel.dart';
 import 'package:passmate/model/auth_credentials.dart';
-import 'package:passmate/repositories/encryption_repository.dart';
 import 'package:passmate/routes/routes_name.dart';
 import 'package:passmate/shared/custom_snackbar.dart';
 import 'package:passmate/shared/custom_widgets.dart';
@@ -24,63 +20,48 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   String email = '';
   String password = '';
+  String stateMessage = '';
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<LoginBloc>(
-      create: (context) =>
-          LoginBloc(authenticationRepository: context.read<AuthRepository>()),
-      child: BlocConsumer<LoginBloc, LoginState>(
-        listener: (context, state) async {
-          if (state == LoginState.success) {
-            /// Compute Password Hash
-            await compute(EncryptionRepository.scryptHash, password)
-                .then((value) {
-              /// Update Key in Encryption Repository
-              context.read<AppBloc>().encryptionRepository.updateKey(value);
-
-              /// Storing password hash on Android
-              if (!kIsWeb) {
-                const storage = FlutterSecureStorage();
-                storage.write(key: 'key', value: value);
+    return BlocConsumer<AppBloc, AppState>(
+      listenWhen: (previous, current) => previous != current,
+      buildWhen: (previous, current) => previous != current,
+      listener: (context, state) async {
+        if (state is LoginNewState) {
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          ScaffoldMessenger.of(context)
+              .showSnackBar(showCustomSnackBar(context, state.message));
+        }
+        if (state is Authenticated) {
+          stateMessage = 'Success!';
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          print('Navigating..');
+          Navigator.popUntil(context, ModalRoute.withName(RoutesName.wrapper));
+        }
+      },
+      builder: (context, state) {
+        return SafeArea(
+          child: Scaffold(
+            resizeToAvoidBottomInset: false,
+            body: LayoutBuilder(builder: (context, constraints) {
+              // Responsive
+              print('Layout Changed');
+              if (constraints.maxHeight < 1.2 * constraints.maxWidth) {
+                // LandScape
+                return const TempError(pageName: 'Login Screen');
               }
-
-              /// Start Authentication
-              context.read<AppBloc>().add(AuthenticateUser());
-              ScaffoldMessenger.of(context).hideCurrentSnackBar();
-              print('Navigating..');
-              Navigator.popUntil(
-                  context, ModalRoute.withName(RoutesName.wrapper));
-            });
-          } else {
-            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-            ScaffoldMessenger.of(context)
-                .showSnackBar(showCustomSnackBar(context, state.message));
-          }
-        },
-        builder: (context, state) {
-          return SafeArea(
-            child: Scaffold(
-              resizeToAvoidBottomInset: false,
-              body: LayoutBuilder(builder: (context, constraints) {
-                /// Responsive
-                print('Layout Changed');
-                if (constraints.maxHeight < 1.2 * constraints.maxWidth) {
-                  ///LandScape
-                  return const TempError(pageName: 'Login Screen');
-                }
-                return _buildLoginPortrait(context, state);
-              }),
-            ),
-          );
-        },
-      ),
+              return _buildLoginPortrait(context);
+            }),
+          ),
+        );
+      },
     );
   }
 
-  Container _buildLoginPortrait(BuildContext context, LoginState state) {
+  Container _buildLoginPortrait(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20.w),
       child: Form(
@@ -132,6 +113,9 @@ class _LoginPageState extends State<LoginPage> {
                 if (value == null || value.isEmpty) {
                   return 'Please enter your email';
                 }
+                if (!AuthEmail(value).isValid) {
+                  return 'Invalid email format';
+                }
               },
             ),
             SizedBox(height: 20.w),
@@ -157,9 +141,9 @@ class _LoginPageState extends State<LoginPage> {
                 }
                 _formKey.currentState?.save();
                 ScaffoldMessenger.of(context)
-                    .showSnackBar(showCustomSnackBar(context, state.message));
-                BlocProvider.of<LoginBloc>(context).add(LoginUsingCredentials(
-                    email: AuthEmail(email), password: AuthPassword(password)));
+                    .showSnackBar(showCustomSnackBar(context, stateMessage));
+                BlocProvider.of<AppBloc>(context)
+                    .add(LoginUser(email: email, password: password));
               },
             ),
             SizedBox(height: 80.h),

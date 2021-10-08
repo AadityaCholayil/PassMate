@@ -55,6 +55,18 @@ class FullyAuthenticated extends AppState {
   List<Object?> get props => [toString()];
 }
 
+class Authenticated extends AppState {
+  final UserData userData;
+
+  const Authenticated({required this.userData});
+
+  @override
+  String toString() => 'Authenticated';
+
+  @override
+  List<Object?> get props => [toString()];
+}
+
 class LoginNewState extends AppState {
   final String message;
 

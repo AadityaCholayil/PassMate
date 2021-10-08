@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
+import 'package:passmate/model/auth_credentials.dart';
 
 @immutable
 abstract class AppEvent extends Equatable {
@@ -44,6 +45,19 @@ class UpdateUserData extends AppEvent{
 class LoggedOut extends AppEvent{
   @override
   String toString() => 'LoggedOut';
+
+  @override
+  List<Object?> get props => [toString()];
+}
+
+class LoginUser extends AppEvent {
+  final String email;
+  final String password;
+
+  const LoginUser({required this.email, required this.password});
+
+  @override
+  String toString() => 'LoginUser';
 
   @override
   List<Object?> get props => [toString()];

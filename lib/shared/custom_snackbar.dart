@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:passmate/bloc/login_bloc/login_barrel.dart';
+import 'package:passmate/bloc/app_bloc/app_states.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 SnackBar showCustomSnackBar(BuildContext context, String message) {
@@ -17,7 +17,7 @@ SnackBar showCustomSnackBar(BuildContext context, String message) {
           ),
         ),
         const Spacer(),
-        message == LoginState.loading.message
+        message == LoginNewState.loading.message
             ? const SizedBox(
             height: 25,
             width: 25,
@@ -28,7 +28,7 @@ SnackBar showCustomSnackBar(BuildContext context, String message) {
             : const SizedBox.shrink(),
       ],
     ),
-    action: message == LoginState.loading.message
+    action: message == LoginNewState.loading.message
         ? null
         : SnackBarAction(
       label: 'OK',
