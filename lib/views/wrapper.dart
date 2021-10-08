@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:passmate/views/auth/additional_details.dart';
 import 'package:passmate/views/auth/welcome_screen.dart';
-import 'package:passmate/bloc/authentication_bloc/auth_bloc_files.dart';
+import 'package:passmate/bloc/app_bloc/app_bloc_files.dart';
 import 'package:passmate/views/home_screen.dart';
 import 'package:passmate/shared/loading.dart';
 
 class Wrapper extends StatelessWidget {
-  final AuthenticationState state;
+  final AppState state;
 
   const Wrapper({Key? key, required this.state}) : super(key: key);
 

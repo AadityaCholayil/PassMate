@@ -4,7 +4,7 @@ import 'package:passmate/model/custom_exceptions.dart';
 import 'signup_barrel.dart';
 
 class SignupBloc extends Bloc<SignupEvent, SignupState>{
-  final AuthenticationRepository _authenticationRepository;
+  final AuthRepository _authenticationRepository;
 
   SignupBloc({required authenticationRepository}):
         _authenticationRepository=authenticationRepository, super(SignupState.loading);

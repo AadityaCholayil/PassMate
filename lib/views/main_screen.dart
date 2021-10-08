@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
-import 'package:passmate/bloc/authentication_bloc/auth_bloc_files.dart';
+import 'package:passmate/bloc/app_bloc/app_bloc_files.dart';
 import 'package:passmate/bloc/database_bloc/database_barrel.dart';
 import 'package:passmate/model/main_screen_provider.dart';
 import 'package:passmate/views/formpages/password_form.dart';
@@ -47,7 +47,7 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     super.initState();
-    fName = context.read<AuthenticationBloc>().userData.firstName ?? '';
+    fName = context.read<AppBloc>().userData.firstName ?? '';
   }
 
   @override

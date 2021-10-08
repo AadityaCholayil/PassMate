@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:passmate/bloc/authentication_bloc/auth_bloc_files.dart';
+import 'package:passmate/bloc/app_bloc/app_bloc_files.dart';
 import 'package:passmate/routes/routes_name.dart';
 import 'package:passmate/shared/custom_snackbar.dart';
 import 'package:passmate/shared/custom_widgets.dart';
@@ -25,7 +25,7 @@ class _AdditionalDetailsPageState extends State<AdditionalDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<AuthenticationBloc, AuthenticationState>(
+    return BlocConsumer<AppBloc, AppState>(
       listener: (context, state) {
         if (state is FullyAuthenticated) {
           ScaffoldMessenger.of(context).hideCurrentSnackBar();
@@ -110,7 +110,7 @@ class _AdditionalDetailsPageState extends State<AdditionalDetailsPage> {
                       _formKey.currentState?.save();
                       ScaffoldMessenger.of(context)
                           .showSnackBar(showCustomSnackBar(context, ''));
-                      BlocProvider.of<AuthenticationBloc>(context)
+                      BlocProvider.of<AppBloc>(context)
                           .add(UpdateUserData(firstName, lastName, photoUrl));
                     },
                   ),

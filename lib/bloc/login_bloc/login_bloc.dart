@@ -4,7 +4,7 @@ import 'package:passmate/model/custom_exceptions.dart';
 import 'login_barrel.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState>{
-  final AuthenticationRepository _authenticationRepository;
+  final AuthRepository _authenticationRepository;
 
   LoginBloc({required authenticationRepository}):
         _authenticationRepository=authenticationRepository, super(LoginState.loading);

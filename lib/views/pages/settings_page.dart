@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:passmate/bloc/authentication_bloc/auth_bloc_files.dart';
+import 'package:passmate/bloc/app_bloc/app_bloc_files.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);
@@ -21,7 +21,7 @@ class _SettingsPageState extends State<SettingsPage> {
               TextButton(
                 child: Text('Logout'),
                 onPressed: (){
-                  context.read<AuthenticationBloc>().add(LoggedOut());
+                  context.read<AppBloc>().add(LoggedOut());
                   Navigator.pop(context);
                 },
               ),

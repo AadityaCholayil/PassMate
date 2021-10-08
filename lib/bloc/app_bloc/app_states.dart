@@ -3,13 +3,13 @@ import 'package:meta/meta.dart';
 import 'package:passmate/model/user.dart';
 
 @immutable
-abstract class AuthenticationState extends Equatable {
+abstract class AppState extends Equatable {
 
   final UserData userData;
-  AuthenticationState(this.userData, [List props = const []]) : super();
+  AppState(this.userData, [List props = const []]) : super();
 }
 
-class Uninitialized extends AuthenticationState{
+class Uninitialized extends AppState{
   final UserData userData;
 
   Uninitialized({required this.userData}) : super(userData);
@@ -21,7 +21,7 @@ class Uninitialized extends AuthenticationState{
   List<Object?> get props => [this.toString()];
 }
 
-class Unauthenticated extends AuthenticationState{
+class Unauthenticated extends AppState{
   final UserData userData;
 
   Unauthenticated({required this.userData}) : super(userData);
@@ -33,7 +33,7 @@ class Unauthenticated extends AuthenticationState{
   List<Object?> get props => [this.toString()];
 }
 
-class PartiallyAuthenticated extends AuthenticationState{
+class PartiallyAuthenticated extends AppState{
   final UserData userData;
 
   PartiallyAuthenticated({required this.userData}) : super(userData);
@@ -45,7 +45,7 @@ class PartiallyAuthenticated extends AuthenticationState{
   List<Object?> get props => [this.toString()];
 }
 
-class FullyAuthenticated extends AuthenticationState{
+class FullyAuthenticated extends AppState{
   final UserData userData;
 
   FullyAuthenticated({required this.userData}) : super(userData);

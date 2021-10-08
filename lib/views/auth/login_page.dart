@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:passmate/bloc/authentication_bloc/auth_bloc_files.dart';
+import 'package:passmate/bloc/app_bloc/app_bloc_files.dart';
 import 'package:passmate/repositories/authentication_repository.dart';
 import 'package:passmate/bloc/login_bloc/login_barrel.dart';
 import 'package:passmate/model/auth_credentials.dart';
@@ -31,7 +31,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return BlocProvider<LoginBloc>(
       create: (context) => LoginBloc(
-          authenticationRepository: context.read<AuthenticationRepository>()),
+          authenticationRepository: context.read<AuthRepository>()),
       child: BlocConsumer<LoginBloc, LoginState>(
         listener: (context, state) async {
           if (state == LoginState.success) {
@@ -40,7 +40,7 @@ class _LoginPageState extends State<LoginPage> {
                 .then((value) {
               /// Update Key in Encryption Repository
               context
-                  .read<AuthenticationBloc>()
+                  .read<AppBloc>()
                   .encryptionRepository
                   .updateKey(value);
 
@@ -51,7 +51,7 @@ class _LoginPageState extends State<LoginPage> {
               }
 
               /// Start Authentication
-              context.read<AuthenticationBloc>().add(AuthenticateUser());
+              context.read<AppBloc>().add(AuthenticateUser());
               ScaffoldMessenger.of(context).hideCurrentSnackBar();
               print('Navigating..');
               Navigator.popUntil(

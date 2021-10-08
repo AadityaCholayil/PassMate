@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
-import 'package:passmate/bloc/authentication_bloc/auth_bloc_files.dart';
+import 'package:passmate/bloc/app_bloc/app_bloc_files.dart';
 import 'package:passmate/bloc/database_bloc/database_barrel.dart';
 import 'package:passmate/model/password.dart';
 import 'package:passmate/model/sort_methods.dart';
@@ -31,7 +31,7 @@ class _PasswordPageState extends State<PasswordPage> {
   @override
   void initState() {
     super.initState();
-    sortMethod = context.read<AuthenticationBloc>().userData.sortMethod ??
+    sortMethod = context.read<AppBloc>().userData.sortMethod ??
         SortMethod.recentlyAdded;
     sortLabel = sortMethodMessages[sortMethod.index];
     context.read<DatabaseBloc>().add(GetPasswords(

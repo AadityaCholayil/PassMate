@@ -8,20 +8,20 @@ import 'package:passmate/repositories/authentication_repository.dart';
 import 'package:passmate/model/user.dart';
 import 'package:passmate/repositories/database_repository.dart';
 import 'package:passmate/repositories/encryption_repository.dart';
-import 'auth_bloc_files.dart';
+import 'app_bloc_files.dart';
 
-class AuthenticationBloc
-    extends Bloc<AuthenticationEvent, AuthenticationState> {
-  final AuthenticationRepository _authenticationRepository;
+class AppBloc
+    extends Bloc<AppEvent, AppState> {
+  final AuthRepository _authRepository;
   late DatabaseRepository databaseRepository;
   EncryptionRepository encryptionRepository = EncryptionRepository();
   late UserData userData;
   late DatabaseBloc databaseBloc;
 
-  AuthenticationBloc({required authenticationRepository})
-      : _authenticationRepository = authenticationRepository,
+  AppBloc({required authRepository})
+      : _authRepository = authRepository,
         super(Uninitialized(userData: UserData.empty)) {
-    userData = _authenticationRepository.getUserData();
+    userData = _authRepository.getUserData();
     databaseRepository = DatabaseRepository(uid: userData.uid);
     databaseBloc = DatabaseBloc(
       userData: userData,
@@ -45,12 +45,12 @@ class AuthenticationBloc
     );
   }
 
-  AuthenticationState get initialState =>
+  AppState get initialState =>
       Uninitialized(userData: UserData.empty);
 
   @override
-  Stream<AuthenticationState> mapEventToState(
-      AuthenticationEvent event) async* {
+  Stream<AppState> mapEventToState(
+      AppEvent event) async* {
     if (event is AppStarted) {
       yield* _mapAppStartedToState();
     } else if (event is AuthenticateUser) {
@@ -62,16 +62,16 @@ class AuthenticationBloc
     }
   }
 
-  Stream<AuthenticationState> _mapAppStartedToState() async* {
+  Stream<AppState> _mapAppStartedToState() async* {
     if (kIsWeb) {
-      final isSignedIn = _authenticationRepository.isSignedIn();
+      final isSignedIn = _authRepository.isSignedIn();
       if (isSignedIn) {
-        await _authenticationRepository.signOut();
+        await _authRepository.signOut();
       }
       yield Unauthenticated(userData: userData);
     } else {
       try {
-        userData = _authenticationRepository.getUserData();
+        userData = _authRepository.getUserData();
         if (userData != UserData.empty) {
           databaseRepository = DatabaseRepository(uid: userData.uid);
           UserData userData2 = await databaseRepository.completeUserData;
@@ -94,9 +94,9 @@ class AuthenticationBloc
     }
   }
 
-  Stream<AuthenticationState> _mapAuthenticateUserToState() async* {
+  Stream<AppState> _mapAuthenticateUserToState() async* {
     yield Uninitialized(userData: userData);
-    userData = _authenticationRepository.getUserData();
+    userData = _authRepository.getUserData();
     databaseRepository = DatabaseRepository(uid: userData.uid);
     UserData userData2 = await databaseRepository.completeUserData;
     updateBloc();
@@ -113,10 +113,10 @@ class AuthenticationBloc
     }
   }
 
-  Stream<AuthenticationState> _mapUpdateUserDataToState(
+  Stream<AppState> _mapUpdateUserDataToState(
       UpdateUserData event) async* {
     yield Uninitialized(userData: UserData.empty);
-    userData = _authenticationRepository.getUserData();
+    userData = _authRepository.getUserData();
     UserData newUserData = UserData(
         uid: userData.uid,
         email: userData.email,
@@ -137,11 +137,11 @@ class AuthenticationBloc
     }
   }
 
-  Stream<AuthenticationState> _mapLoggedOutToState() async* {
+  Stream<AppState> _mapLoggedOutToState() async* {
     userData = UserData.empty;
     databaseRepository = DatabaseRepository(uid: userData.uid);
     updateBloc();
-    await _authenticationRepository.signOut();
+    await _authRepository.signOut();
     yield Unauthenticated(userData: userData);
   }
 

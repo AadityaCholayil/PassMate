@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:passmate/repositories/authentication_repository.dart';
-import 'package:passmate/bloc/authentication_bloc/auth_bloc_files.dart';
+import 'package:passmate/bloc/app_bloc/app_bloc_files.dart';
 import 'package:passmate/routes/route_generator.dart';
 import 'package:passmate/theme/theme.dart';
 import 'package:passmate/views/wrapper.dart';
@@ -15,21 +15,21 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RepositoryProvider<AuthenticationRepository>(
-      create: (context) => AuthenticationRepository(),
-      child: BlocProvider<AuthenticationBloc>(
+    return RepositoryProvider<AuthRepository>(
+      create: (context) => AuthRepository(),
+      child: BlocProvider<AppBloc>(
         create: (context) {
-          AuthenticationBloc authenticationBloc = AuthenticationBloc(
-              authenticationRepository:
-              context.read<AuthenticationRepository>());
-          authenticationBloc.add(AppStarted());
-          return authenticationBloc;
+          AppBloc appBloc = AppBloc(
+              authRepository:
+              context.read<AuthRepository>());
+          appBloc.add(AppStarted());
+          return appBloc;
         },
         child: Builder(
           builder: (context) {
-            return BlocBuilder<AuthenticationBloc, AuthenticationState>(
+            return BlocBuilder<AppBloc, AppState>(
               builder: (context, state) => BlocProvider<DatabaseBloc>.value(
-                value: context.read<AuthenticationBloc>().databaseBloc,
+                value: context.read<AppBloc>().databaseBloc,
                 child: ScreenUtilInit(
                   designSize: Size(375, 812),
                   builder: () {

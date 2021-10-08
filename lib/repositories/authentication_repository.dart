@@ -3,12 +3,12 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:passmate/model/custom_exceptions.dart';
 import 'package:passmate/model/user.dart';
 
-class AuthenticationRepository{
+class AuthRepository{
 
   final FirebaseAuth _firebaseAuth;
   final GoogleSignIn _googleSignIn;
 
-  AuthenticationRepository({FirebaseAuth? firebaseAuth , GoogleSignIn? googleSignin})
+  AuthRepository({FirebaseAuth? firebaseAuth , GoogleSignIn? googleSignin})
       : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
         _googleSignIn = googleSignin ?? GoogleSignIn();
 
