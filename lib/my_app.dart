@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
               builder: (context, state) => BlocProvider<DatabaseBloc>.value(
                 value: context.read<AppBloc>().databaseBloc,
                 child: ScreenUtilInit(
-                  designSize: Size(375, 812),
+                  designSize: const Size(375, 812),
                   builder: () {
                     return MaterialApp(
                       debugShowCheckedModeBanner: false,

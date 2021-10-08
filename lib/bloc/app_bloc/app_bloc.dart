@@ -13,7 +13,7 @@ import 'app_bloc_files.dart';
 
 class AppBloc extends Bloc<AppEvent, AppState> {
   final AuthRepository _authRepository;
-  late DatabaseRepository _databaseRepository;
+  late DatabaseRepository databaseRepository;
   EncryptionRepository encryptionRepository = EncryptionRepository();
   late UserData userData;
   late DatabaseBloc databaseBloc;
@@ -22,12 +22,18 @@ class AppBloc extends Bloc<AppEvent, AppState> {
       : _authRepository = authRepository,
         super(Uninitialized(userData: UserData.empty)) {
     userData = _authRepository.getUserData();
-    _databaseRepository = DatabaseRepository(uid: userData.uid);
+    databaseRepository = DatabaseRepository(uid: userData.uid);
     databaseBloc = DatabaseBloc(
       userData: userData,
-      databaseRepository: _databaseRepository,
+      databaseRepository: databaseRepository,
       encryptionRepository: encryptionRepository,
     );
+    on<AppStarted>(_onAppStarted);
+    on<AuthenticateUser>(_onAuthenticateUser);
+    // on<LoginUser>(_onLoginUser);
+    // on<SignupUser>(_onSignupUser);
+    on<UpdateUserData>(_onUpdateUserData);
+    on<LoggedOut>(_onLoggedOut);
   }
 
   void updateBloc() {
@@ -35,59 +41,48 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     print(databaseBloc ==
         DatabaseBloc(
           userData: userData,
-          databaseRepository: _databaseRepository,
+          databaseRepository: databaseRepository,
           encryptionRepository: encryptionRepository,
         ));
     databaseBloc = DatabaseBloc(
       userData: userData,
-      databaseRepository: _databaseRepository,
+      databaseRepository: databaseRepository,
       encryptionRepository: encryptionRepository,
     );
   }
 
   AppState get initialState => Uninitialized(userData: UserData.empty);
 
-  @override
-  Stream<AppState> mapEventToState(AppEvent event) async* {
-    if (event is AppStarted) {
-      yield* _mapAppStartedToState();
-    } else if (event is AuthenticateUser) {
-      yield* _mapAuthenticateUserToState();
-    } else if (event is UpdateUserData) {
-      yield* _mapUpdateUserDataToState(event);
-    } else if (event is LoggedOut) {
-      yield* _mapLoggedOutToState();
-    }
-  }
-
-  Stream<AppState> _mapAppStartedToState() async* {
+  FutureOr<void> _onAppStarted(
+      AppStarted event, Emitter<AppState> emit) async {
+    print('hi');
     if (kIsWeb) {
       final isSignedIn = _authRepository.isSignedIn();
       if (isSignedIn) {
         await _authRepository.signOut();
       }
-      yield Unauthenticated(userData: userData);
+      emit(Unauthenticated(userData: userData));
     } else {
       try {
         userData = _authRepository.getUserData();
         if (userData != UserData.empty) {
-          _databaseRepository = DatabaseRepository(uid: userData.uid);
-          UserData userData2 = await _databaseRepository.completeUserData;
+          databaseRepository = DatabaseRepository(uid: userData.uid);
+          UserData userData2 = await databaseRepository.completeUserData;
           const storage = FlutterSecureStorage();
           String key = await storage.read(key: 'key') ?? 'KeyNotFound';
           encryptionRepository.updateKey(key);
           if (userData2 == UserData.empty) {
-            yield PartiallyAuthenticated(userData: userData);
+            emit(PartiallyAuthenticated(userData: userData));
           } else {
             userData = userData2;
-            yield FullyAuthenticated(userData: userData);
+            emit(FullyAuthenticated(userData: userData));
           }
         } else {
-          yield Unauthenticated(userData: userData);
+          emit(Unauthenticated(userData: userData));
         }
       } on Exception catch (_) {
         print('error');
-        yield Unauthenticated(userData: UserData.empty);
+        emit(Unauthenticated(userData: UserData.empty));
       }
     }
   }
@@ -149,12 +144,12 @@ class AppBloc extends Bloc<AppEvent, AppState> {
   //   }
   // }
 
-
-  Stream<AppState> _mapAuthenticateUserToState() async* {
-    yield Uninitialized(userData: userData);
+  FutureOr<void> _onAuthenticateUser(
+      AuthenticateUser event, Emitter<AppState> emit) async {
+    emit(Uninitialized(userData: userData));
     userData = _authRepository.getUserData();
-    _databaseRepository = DatabaseRepository(uid: userData.uid);
-    UserData userData2 = await _databaseRepository.completeUserData;
+    databaseRepository = DatabaseRepository(uid: userData.uid);
+    UserData userData2 = await databaseRepository.completeUserData;
     updateBloc();
     if (!kIsWeb) {
       const storage = FlutterSecureStorage();
@@ -162,15 +157,16 @@ class AppBloc extends Bloc<AppEvent, AppState> {
       encryptionRepository.updateKey(key);
     }
     if (userData2 == UserData.empty) {
-      yield PartiallyAuthenticated(userData: userData);
+      emit(PartiallyAuthenticated(userData: userData));
     } else {
       userData = userData2;
-      yield FullyAuthenticated(userData: userData);
+      emit(FullyAuthenticated(userData: userData));
     }
   }
 
-  Stream<AppState> _mapUpdateUserDataToState(UpdateUserData event) async* {
-    yield Uninitialized(userData: UserData.empty);
+  FutureOr<void> _onUpdateUserData(
+      UpdateUserData event, Emitter<AppState> emit) async {
+    emit(Uninitialized(userData: UserData.empty));
     userData = _authRepository.getUserData();
     UserData newUserData = UserData(
         uid: userData.uid,
@@ -181,9 +177,9 @@ class AppBloc extends Bloc<AppEvent, AppState> {
         pinSet: false,
         sortMethod: SortMethod.recentlyAdded);
     try {
-      _databaseRepository = DatabaseRepository(uid: userData.uid);
-      _databaseRepository.updateUserData(newUserData);
-      _databaseRepository.addFolder(folderName: 'root/default');
+      databaseRepository = DatabaseRepository(uid: userData.uid);
+      databaseRepository.updateUserData(newUserData);
+      databaseRepository.addFolder(folderName: 'root/default');
       userData = newUserData;
       add(AuthenticateUser());
     } on Exception catch (_) {
@@ -192,12 +188,12 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     }
   }
 
-  Stream<AppState> _mapLoggedOutToState() async* {
+  FutureOr<void> _onLoggedOut(LoggedOut event, Emitter<AppState> emit) async {
     userData = UserData.empty;
-    _databaseRepository = DatabaseRepository(uid: userData.uid);
+    databaseRepository = DatabaseRepository(uid: userData.uid);
     updateBloc();
     await _authRepository.signOut();
-    yield Unauthenticated(userData: userData);
+    emit(Unauthenticated(userData: userData));
   }
 
   @override

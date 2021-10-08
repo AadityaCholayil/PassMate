@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:passmate/bloc/login_bloc/login_barrel.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 SnackBar showCustomSnackBar(BuildContext context, String message) {
   return SnackBar(
-    margin: EdgeInsets.all(15),
+    margin: EdgeInsets.all(15.w),
     behavior: SnackBarBehavior.floating,
     backgroundColor: Colors.white,
     content: Row(

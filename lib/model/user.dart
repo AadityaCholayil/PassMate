@@ -24,7 +24,7 @@ class UserData extends Equatable {
     return UserData(uid: user.uid, email: user.email);
   }
 
-  static UserData empty = UserData(uid: '');
+  static UserData empty = const UserData(uid: '');
 
   UserData.fromJson(Map<String, Object?> json)
       : this(
