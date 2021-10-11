@@ -1,11 +1,8 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:passmate/bloc/app_bloc/app_bloc_files.dart';
-import 'package:passmate/routes/routes_name.dart';
-import 'package:passmate/shared/custom_snackbar.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:passmate/shared/custom_widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:passmate/views/auth/signup_page.dart';
 import 'package:passmate/views/pages/temp_error.dart';
 
 class AdditionalDetailsPage extends StatefulWidget {
@@ -19,32 +16,22 @@ class _AdditionalDetailsPageState extends State<AdditionalDetailsPage> {
   String firstName = '';
   String lastName = '';
   String photoUrl = 'https://www.mgretails.com/assets/img/default.png';
-  File file = File('');
+  XFile? file;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<AppBloc, AppState>(
-      listener: (context, state) {
-        if (state is FullyAuthenticated) {
-          ScaffoldMessenger.of(context).hideCurrentSnackBar();
-          Navigator.pushReplacementNamed(context, RoutesName.wrapper);
+    return Scaffold(
+      body: LayoutBuilder(builder: (context, constraints) {
+        /// Responsive
+        print('Layout Changed');
+        if (constraints.maxHeight < 1.2 * constraints.maxWidth) {
+          ///LandScape
+          return const TempError(pageName: 'Additional Details Screen');
         }
-      },
-      builder: (context, state) {
-        return Scaffold(
-          body: LayoutBuilder(builder: (context, constraints) {
-            /// Responsive
-            print('Layout Changed');
-            if (constraints.maxHeight < 1.2 * constraints.maxWidth) {
-              ///LandScape
-              return const TempError(pageName: 'Additional Details Screen');
-            }
-            return _buildAdditionalDetailsPortrait(context);
-          }),
-        );
-      },
+        return _buildAdditionalDetailsPortrait(context);
+      }),
     );
   }
 
@@ -63,7 +50,10 @@ class _AdditionalDetailsPageState extends State<AdditionalDetailsPage> {
                 height: 1.25,
                 fontSize: 43,
                 fontWeight: FontWeight.w700,
-                color: Theme.of(context).colorScheme.onBackground,
+                color: Theme
+                    .of(context)
+                    .colorScheme
+                    .onBackground,
               ),
             ),
             SizedBox(
@@ -106,10 +96,9 @@ class _AdditionalDetailsPageState extends State<AdditionalDetailsPage> {
                     return;
                   }
                   _formKey.currentState?.save();
-                  ScaffoldMessenger.of(context)
-                      .showSnackBar(showCustomSnackBar(context, ''));
-                  BlocProvider.of<AppBloc>(context)
-                      .add(UpdateUserData(firstName, lastName, photoUrl));
+                  Navigator.push(context, MaterialPageRoute(
+                      builder: (context) =>
+                          SignUpPage(firstName: firstName, lastName: lastName)));
                 },
               ),
             ),

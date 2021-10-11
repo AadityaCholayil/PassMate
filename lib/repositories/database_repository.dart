@@ -6,6 +6,7 @@ import 'package:passmate/model/password.dart';
 import 'package:passmate/model/payment_card.dart';
 import 'package:passmate/model/secure_note.dart';
 import 'package:passmate/model/user.dart';
+import 'package:passmate/shared/error_screen.dart';
 
 class DatabaseRepository {
   final String uid;
@@ -21,20 +22,31 @@ class DatabaseRepository {
           );
 
   Future<UserData> get completeUserData async {
-    //TODO ADD SAFETY
-    UserData userDataNew = await usersRef
-        .doc(uid)
-        .get()
-        .then((value) => value.data() ?? UserData.empty);
-    return userDataNew;
+    try {
+      UserData userDataNew = await usersRef
+          .doc(uid)
+          .get()
+          .then((value) => value.data() ?? UserData.empty);
+      return userDataNew;
+    } on Exception catch (_) {
+      throw const SomethingWentWrong();
+    }
   }
 
   Future<void> updateUserData(UserData userData) async {
-    await usersRef.doc(uid).set(userData);
+    try {
+      await usersRef.doc(uid).set(userData);
+    } on Exception catch (_) {
+      throw const SomethingWentWrong();
+    }
   }
 
   Future<void> deleteUser() async {
-    await usersRef.doc(uid).delete();
+    try {
+      await usersRef.doc(uid).delete();
+    } on Exception catch (_) {
+      throw const SomethingWentWrong();
+    }
   }
 
   Future<String?> uploadFile(File _image) async {
@@ -230,10 +242,14 @@ class DatabaseRepository {
   }
 
   Future addFolder({String folderName = '/'}) async {
-    FolderData data = await foldersRef
-        .get()
-        .then((value) => value.data() ?? FolderData());
-    data.folderList.add(folderName);
-    await foldersRef.set(data);
+    try {
+      FolderData data = await foldersRef
+          .get()
+          .then((value) => value.data() ?? FolderData());
+      data.folderList.add(folderName);
+      await foldersRef.set(data);
+    } on Exception catch (_) {
+      throw const SomethingWentWrong();
+    }
   }
 }

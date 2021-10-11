@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:passmate/bloc/app_bloc/app_bloc_files.dart';
+import 'package:passmate/views/auth/additional_details.dart';
 import 'package:passmate/views/auth/login_page.dart';
-import 'package:passmate/views/auth/signup_page.dart';
 import 'package:passmate/routes/routes_name.dart';
 import 'package:passmate/views/wrapper.dart';
 
 class RouteGenerator{
-
   static Route<dynamic> generateRoute(RouteSettings settings, AppState state) {
     switch(settings.name){
       case '/':
@@ -19,7 +18,7 @@ class RouteGenerator{
         );
       case RoutesName.signupPage:
         return _GeneratePageRoute(
-            widget: const SignUpPage(), routeName: settings.name
+            widget: const AdditionalDetailsPage(), routeName: settings.name
         );
       default:
         return _GeneratePageRoute(
@@ -27,7 +26,6 @@ class RouteGenerator{
         );
     }
   }
-
 }
 
 class _GeneratePageRoute extends PageRouteBuilder {

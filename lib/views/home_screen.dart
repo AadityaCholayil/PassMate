@@ -27,25 +27,31 @@ class _HomeScreenState extends State<HomeScreen> {
       },
       child: SafeArea(
         child: GestureDetector(
-          child: Consumer<MenuProvider>(
-            builder: (context, provider, child) {
-              return LayoutBuilder(
-                builder: (context, constraints) {
-                  /// Responsive
-                  print('Layout Changed');
-                  if (constraints.maxHeight < 1.5 * constraints.maxWidth) {
-                    return const TempError(pageName: 'HomeScreen');
-                  }
-                  return ZoomDrawer(
-                    controller: _zoomController,
-                    borderRadius: 35.w,
-                    slideWidth: MediaQuery.of(context).size.width * .60,
-                    menuScreen: const MenuScreen(),
-                    mainScreen: const MainScreen(),
+          child: Builder(
+            builder: (context) {
+              return Consumer<MenuProvider>(
+                builder: (context, provider, child) {
+                  return LayoutBuilder(
+                    builder: (context, constraints) {
+                      // Responsive
+                      print('Layout Changed');
+                      if (constraints.maxHeight < 1.5 * constraints.maxWidth) {
+                        return const TempError(pageName: 'HomeScreen');
+                      }
+                      return ZoomDrawer(
+                        controller: _zoomController,
+                        borderRadius: 35.w,
+                        slideWidth: MediaQuery.of(context).size.width * .60,
+                        // ignore: prefer_const_constructors
+                        menuScreen: MenuScreen(),
+                        // ignore: prefer_const_constructors
+                        mainScreen: MainScreen(),
+                      );
+                    },
                   );
                 },
               );
-            },
+            }
           ),
           onHorizontalDragUpdate: (details) {
             int sensitivity = 8;

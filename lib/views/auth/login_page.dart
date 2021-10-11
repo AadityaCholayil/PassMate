@@ -7,8 +7,9 @@ import 'package:passmate/routes/routes_name.dart';
 import 'package:passmate/shared/custom_snackbar.dart';
 import 'package:passmate/shared/custom_widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:passmate/views/auth/signup_page.dart';
 import 'package:passmate/views/pages/temp_error.dart';
+
+import 'additional_details.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -165,7 +166,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   onPressed: () {
                     Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        builder: (context) => const SignUpPage()));
+                        builder: (context) => const AdditionalDetailsPage()));
                   },
                 ),
               ],

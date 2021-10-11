@@ -13,10 +13,10 @@ class WelcomeScreen extends StatelessWidget {
       child: Scaffold(
         body: LayoutBuilder(
           builder: (context, constraints) {
-            /// Responsive
+            // Responsive
             print('Layout Changed');
             if (constraints.maxHeight < 1.2 * constraints.maxWidth) {
-              ///LandScape
+              // LandScape
               return const TempError(pageName: 'Welcome to PassMate');
             }
             return const WelcomeScreenPortrait();

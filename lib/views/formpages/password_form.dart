@@ -24,7 +24,7 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
   String _email = '';
   String _password = '';
   String? _imageUrl;
-  String _note = 'null';
+  String _note = '';
   PasswordCategory _category = PasswordCategory.others;
   bool _favourite = false;
   int _usage = 0;
@@ -195,7 +195,7 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
     return Padding(
       padding: EdgeInsets.only(top: 7.w, bottom: 5.w),
       child: TextFormField(
-          initialValue: _email,
+        initialValue: _email,
         style: formTextStyle2(context),
         decoration: customInputDecoration(
           context: context,
@@ -213,7 +213,7 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
     return Padding(
       padding: EdgeInsets.only(top: 7.w, bottom: 5.w),
       child: TextFormField(
-          initialValue: _password,
+        initialValue: _password,
         style: formTextStyle2(context),
         decoration: customInputDecoration(
           context: context,
@@ -308,93 +308,97 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
   }
 
   Widget _buildCategoryCard() {
-    PasswordCategory category = _category;
-    return StatefulBuilder(builder: (context, setState) {
-      return Card(
-        margin: EdgeInsets.all(10.w),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-        child: Container(
-          padding: EdgeInsets.all(15.w),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(left: 5.w),
-                child: Text(
-                  'Categories',
-                  style: TextStyle(
-                      fontSize: 25,
-                      fontWeight: FontWeight.w600,
-                      color: Theme.of(context).colorScheme.primary),
+    return StatefulBuilder(
+      builder: (context, setState) {
+        PasswordCategory category = _category;
+        return Card(
+          margin: EdgeInsets.all(10.w),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+          child: Container(
+            padding: EdgeInsets.all(15.w),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(left: 5.w),
+                  child: Text(
+                    'Categories',
+                    style: TextStyle(
+                        fontSize: 25,
+                        fontWeight: FontWeight.w600,
+                        color: Theme.of(context).colorScheme.primary),
+                  ),
                 ),
-              ),
-              // Divider(thickness: 1,),
-              SizedBox(height: 17.w),
-              Wrap(
-                runSpacing: 8.w,
-                spacing: 8.w,
-                children: [
-                  for (int index = 1;
-                      index < PasswordCategory.values.length;
-                      index++)
-                    Builder(
-                      builder: (context) {
-                        String label = PasswordCategory.values[index]
-                            .toString()
-                            .substring(17);
-                        label =
-                            label.replaceRange(0, 1, label[0].toUpperCase());
-                        bool selected =
-                            category == PasswordCategory.values[index];
-                        return InkWell(
-                          onTap: () {
-                            setState(() {
-                              category = PasswordCategory.values[index];
-                            });
-                            Future.delayed(const Duration(milliseconds: 50), () {
-                              Navigator.pop(context, category);
-                            });
-                          },
-                          child: Chip(
-                            side: BorderSide(
-                                color: Theme.of(context).colorScheme.primary,
-                                width: 0.8),
-                            avatar: Icon(
-                              passwordCategoryIcon[index],
-                              size: 23.w,
-                              color: !selected
-                                  ? Theme.of(context).colorScheme.primary
-                                  : Theme.of(context).cardColor,
-                            ),
-                            backgroundColor: selected
-                                ? Theme.of(context).colorScheme.primary
-                                : Theme.of(context).cardColor,
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 11.w, vertical: 7.w),
-                            // padding: EdgeInsets.fromLTRB(12.w, 7.w, 12.w, 7.w),
-                            labelPadding: EdgeInsets.fromLTRB(8.w, 0, 6.w, 0),
-                            label: Text(
-                              label,
-                              style: TextStyle(
+                // Divider(thickness: 1,),
+                SizedBox(height: 17.w),
+                Wrap(
+                  runSpacing: 8.w,
+                  spacing: 8.w,
+                  children: [
+                    for (int index = 1;
+                        index < PasswordCategory.values.length;
+                        index++)
+                      Builder(
+                        builder: (context) {
+                          String label = PasswordCategory.values[index]
+                              .toString()
+                              .substring(17);
+                          label =
+                              label.replaceRange(0, 1, label[0].toUpperCase());
+                          bool selected =
+                              category == PasswordCategory.values[index];
+                          return InkWell(
+                            onTap: () {
+                              setState(() {
+                                category = PasswordCategory.values[index];
+                              });
+                              Future.delayed(const Duration(milliseconds: 50),
+                                  () {
+                                Navigator.pop(context, category);
+                              });
+                            },
+                            child: Chip(
+                              side: BorderSide(
+                                  color: Theme.of(context).colorScheme.primary,
+                                  width: 0.8),
+                              avatar: Icon(
+                                passwordCategoryIcon[index],
+                                size: 23.w,
                                 color: !selected
                                     ? Theme.of(context).colorScheme.primary
                                     : Theme.of(context).cardColor,
-                                fontSize: 15,
+                              ),
+                              backgroundColor: selected
+                                  ? Theme.of(context).colorScheme.primary
+                                  : Theme.of(context).cardColor,
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 11.w, vertical: 7.w),
+                              // padding: EdgeInsets.fromLTRB(12.w, 7.w, 12.w, 7.w),
+                              labelPadding: EdgeInsets.fromLTRB(8.w, 0, 6.w, 0),
+                              label: Text(
+                                label,
+                                style: TextStyle(
+                                  color: !selected
+                                      ? Theme.of(context).colorScheme.primary
+                                      : Theme.of(context).cardColor,
+                                  fontSize: 15,
+                                ),
                               ),
                             ),
-                          ),
-                        );
-                      },
-                    ),
-                ],
-              ),
-              SizedBox(height: 5.w),
-            ],
+                          );
+                        },
+                      ),
+                  ],
+                ),
+                SizedBox(height: 5.w),
+              ],
+            ),
           ),
-        ),
-      );
-    });
+        );
+      },
+    );
   }
 
   Widget _buildFolderPath() {
@@ -498,7 +502,7 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
           email: _email,
           password: _password,
           imageUrl: 'https://api.faviconkit.com/$_siteUrl/144',
-          note: _note,
+          note: _note == '' ? 'null' : _note,
           category: _category,
           favourite: _favourite,
           usage: _usage,

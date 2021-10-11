@@ -1,12 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:passmate/bloc/app_bloc/app_bloc_files.dart';
-import 'package:passmate/repositories/authentication_repository.dart';
-import 'package:passmate/bloc/signup_bloc/signup_barrel.dart';
 import 'package:passmate/model/auth_credentials.dart';
-import 'package:passmate/repositories/encryption_repository.dart';
 import 'package:passmate/routes/routes_name.dart';
 import 'package:passmate/shared/custom_snackbar.dart';
 import 'package:passmate/shared/custom_widgets.dart';
@@ -15,7 +12,13 @@ import 'package:passmate/views/pages/temp_error.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SignUpPage extends StatefulWidget {
-  const SignUpPage({Key? key}) : super(key: key);
+  final XFile? image;
+  final String firstName;
+  final String lastName;
+
+  const SignUpPage(
+      {required this.firstName, required this.lastName, this.image, Key? key})
+      : super(key: key);
 
   @override
   _SignUpPageState createState() => _SignUpPageState();
@@ -25,63 +28,50 @@ class _SignUpPageState extends State<SignUpPage> {
   AuthEmail email = AuthEmail('');
   AuthPassword password = AuthPassword('');
   PasswordStrength passwordStrength = PasswordStrength.fromPassword('');
+  String stateMessage = '';
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<SignupBloc>(
-      create: (context) =>
-          SignupBloc(authenticationRepository: context.read<AuthRepository>()),
-      child: BlocConsumer<SignupBloc, SignupState>(
-          listener: (context, state) async {
-        if (state == SignupState.success) {
-          /// Compute Password Hash
-          await compute(EncryptionRepository.scryptHash, password.password)
-              .then((value) {
-            /// Update Key in Encryption Repository
-            context.read<AppBloc>().encryptionRepository.updateKey(value);
-
-            /// Storing password hash on Android
-            if (!kIsWeb) {
-              const storage = FlutterSecureStorage();
-              storage.write(key: 'key', value: value);
-            }
-
-            /// Start Authentication
-            context.read<AppBloc>().add(AuthenticateUser());
-            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-            print('Navigating..');
-            Navigator.popUntil(
-                context, ModalRoute.withName(RoutesName.wrapper));
-          });
-        } else {
+    return BlocConsumer<AppBloc, AppState>(
+      listenWhen: (previous, current) => previous != current,
+      buildWhen: (previous, current) => previous != current,
+      listener: (context, state) async {
+        if (state is SignupNewState) {
           ScaffoldMessenger.of(context).hideCurrentSnackBar();
           ScaffoldMessenger.of(context)
               .showSnackBar(showCustomSnackBar(context, state.message));
         }
-      }, builder: (context, state) {
+        if (state is Authenticated) {
+          stateMessage = 'Success!';
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          print('Navigating..');
+          Navigator.popUntil(context, ModalRoute.withName(RoutesName.wrapper));
+        }
+      },
+      builder: (context, state) {
         return SafeArea(
           child: Scaffold(
             resizeToAvoidBottomInset: false,
             body: LayoutBuilder(
               builder: (context, constraints) {
-                /// Responsive
+                // Responsive
                 print('Layout Changed');
                 if (constraints.maxHeight < 1.2 * constraints.maxWidth) {
-                  ///LandScape
+                  // LandScape
                   return const TempError(pageName: 'SignUp Screen');
                 }
-                return _buildSignUpPortrait(context, state);
+                return _buildSignUpPortrait(context);
               },
             ),
           ),
         );
-      }),
+      },
     );
   }
 
-  Widget _buildSignUpPortrait(BuildContext context, SignupState state) {
+  Widget _buildSignUpPortrait(BuildContext context) {
     return Container(
       height: MediaQuery.of(context).size.height,
       padding: EdgeInsets.symmetric(horizontal: 20.w),
@@ -182,10 +172,13 @@ class _SignUpPageState extends State<SignUpPage> {
                       }
                       _formKey.currentState?.save();
                       ScaffoldMessenger.of(context).showSnackBar(
-                          showCustomSnackBar(context, state.message));
-                      BlocProvider.of<SignupBloc>(context).add(
-                          SignupUsingCredentials(
-                              email: email, password: password));
+                          showCustomSnackBar(context, stateMessage));
+                      BlocProvider.of<AppBloc>(context).add(SignupUser(
+                        email: email.email,
+                        password: password.password,
+                        firstName: widget.firstName,
+                        lastName: widget.lastName,
+                      ));
                     },
                   ),
                   // SizedBox(height: password.password != '' ? 20.h : 80.h),

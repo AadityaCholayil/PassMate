@@ -29,9 +29,8 @@ class AppBloc extends Bloc<AppEvent, AppState> {
       encryptionRepository: encryptionRepository,
     );
     on<AppStarted>(_onAppStarted);
-    on<AuthenticateUser>(_onAuthenticateUser);
     on<LoginUser>(_onLoginUser);
-    // on<SignupUser>(_onSignupUser);
+    on<SignupUser>(_onSignupUser);
     on<UpdateUserData>(_onUpdateUserData);
     on<LoggedOut>(_onLoggedOut);
   }
@@ -55,8 +54,11 @@ class AppBloc extends Bloc<AppEvent, AppState> {
 
   FutureOr<void> _onAppStarted(AppStarted event, Emitter<AppState> emit) async {
     if (kIsWeb) {
+      // Web Logic
       final isSignedIn = _authRepository.isSignedIn();
       if (isSignedIn) {
+        // As passwordHash is not saved on web, but the auth credentials are,
+        // if the User is Signed in, sign out them.
         await _authRepository.signOut();
       }
       emit(Unauthenticated(userData: userData));
@@ -64,18 +66,25 @@ class AppBloc extends Bloc<AppEvent, AppState> {
       try {
         userData = _authRepository.getUserData();
         if (userData != UserData.empty) {
+          // Update databaseRepo
           databaseRepository = DatabaseRepository(uid: userData.uid);
-          UserData userData2 = await databaseRepository.completeUserData;
+          // Fetch user data from db
+          UserData completeUserData = await databaseRepository.completeUserData;
+          // Get key from secure storage
           const storage = FlutterSecureStorage();
           String key = await storage.read(key: 'key') ?? 'KeyNotFound';
+          // Update key in encryption repo
           encryptionRepository.updateKey(key);
-          if (userData2 == UserData.empty) {
-            emit(PartiallyAuthenticated(userData: userData));
+          if (completeUserData != UserData.empty) {
+            userData = completeUserData;
+            // Update Database bloc
+            updateDatabaseBloc();
+            emit(Authenticated(userData: userData));
           } else {
-            userData = userData2;
-            emit(FullyAuthenticated(userData: userData));
+            emit(const ErrorOccurred(error: 'Failed to fetch from db'));
           }
         } else {
+          // Not logged in, So route to welcome page
           emit(Unauthenticated(userData: userData));
         }
       } on Exception catch (_) {
@@ -131,50 +140,61 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     }
   }
 
-  // // When the User Signs up
-  // FutureOr<void> _onSignupUser(SignupUser event, Emitter<AppState> emit) async {
-  //   emit(SignupNewState.loading);
-  //   try {
-  //     // Signup using email and password
-  //     userData = await _authRepository.signUpUsingCredentials(
-  //         event.email, event.password);
-  //     // Update DatabaseRepository
-  //     _databaseRepository = DatabaseRepository(uid: userData.uid);
-  //     // Add User details to db
-  //     UserData newUserData = UserData(
-  //         uid: userData.uid,
-  //         email: event.email,
-  //         name: event.name,
-  //         age: event.age);
-  //     _databaseRepository.updateUserData(newUserData);
-  //     userData = newUserData;
-  //     emit(Authenticated(userData: userData));
-  //   } on Exception catch (e) {
-  //     if (e is EmailAlreadyInUseException) {
-  //       emit(SignupNewState.userAlreadyExists);
-  //     } else {
-  //       emit(SignupNewState.somethingWentWrong);
-  //     }
-  //   }
-  // }
+  // When the User Signs up
+  FutureOr<void> _onSignupUser(SignupUser event, Emitter<AppState> emit) async {
+    emit(SignupNewState.loading);
+    try {
+      // Signup using email and password
+      userData = await _authRepository.signUpUsingCredentials(
+          event.email, event.password);
 
-  FutureOr<void> _onAuthenticateUser(
-      AuthenticateUser event, Emitter<AppState> emit) async {
-    emit(Uninitialized(userData: userData));
-    userData = _authRepository.getUserData();
-    databaseRepository = DatabaseRepository(uid: userData.uid);
-    UserData userData2 = await databaseRepository.completeUserData;
-    updateDatabaseBloc();
-    if (!kIsWeb) {
-      const storage = FlutterSecureStorage();
-      String key = await storage.read(key: 'key') ?? 'KeyNotFound';
-      encryptionRepository.updateKey(key);
-    }
-    if (userData2 == UserData.empty) {
-      emit(PartiallyAuthenticated(userData: userData));
-    } else {
-      userData = userData2;
-      emit(FullyAuthenticated(userData: userData));
+      // Update DatabaseRepository
+      databaseRepository = DatabaseRepository(uid: userData.uid);
+
+      // Upload Profile Pic
+      String photoUrl = '';
+      if (event.photoUrl != null) {
+        // TODO upload profilePic
+
+      } else {
+        // Default profile pic
+        photoUrl = 'https://www.mgretails.com/assets/img/default.png';
+      }
+      // Add User details to db
+      UserData newUserData = UserData(
+        uid: userData.uid,
+        email: event.email,
+        firstName: event.firstName,
+        lastName: event.lastName,
+        photoUrl: photoUrl,
+        pinSet: false,
+        sortMethod: SortMethod.recentlyAdded,
+      );
+      databaseRepository.updateUserData(newUserData);
+      userData = newUserData;
+      // Add default folder
+      databaseRepository.addFolder(folderName: 'root/default');
+      // Compute Password Hash
+      await compute(EncryptionRepository.scryptHash, event.password)
+          .then((passwordHash) {
+        // Update key in encryption repo
+        encryptionRepository.updateKey(passwordHash);
+        // Storing password hash in Android
+        if (!kIsWeb) {
+          const storage = FlutterSecureStorage();
+          storage.write(key: 'key', value: passwordHash);
+        }
+      });
+      // Update DatabaseBloc after updating DatabaseRepository
+      // and EncryptionRepository
+      updateDatabaseBloc();
+      emit(Authenticated(userData: userData));
+    } on Exception catch (e) {
+      if (e is EmailAlreadyInUseException) {
+        emit(SignupNewState.userAlreadyExists);
+      } else {
+        emit(SignupNewState.somethingWentWrong);
+      }
     }
   }
 
@@ -195,14 +215,23 @@ class AppBloc extends Bloc<AppEvent, AppState> {
       databaseRepository.updateUserData(newUserData);
       databaseRepository.addFolder(folderName: 'root/default');
       userData = newUserData;
-      add(AuthenticateUser());
+      // TODO change UpdateUserData
+
     } on Exception catch (_) {
-      //TODO add exception
+      // TODO add exception
       print('Something Went Wrong');
     }
   }
 
   FutureOr<void> _onLoggedOut(LoggedOut event, Emitter<AppState> emit) async {
+    userData = UserData.empty;
+    databaseRepository = DatabaseRepository(uid: userData.uid);
+    updateDatabaseBloc();
+    await _authRepository.signOut();
+    emit(Unauthenticated(userData: userData));
+  }
+
+  FutureOr<void> _onDeleteUser(LoggedOut event, Emitter<AppState> emit) async {
     userData = UserData.empty;
     databaseRepository = DatabaseRepository(uid: userData.uid);
     updateDatabaseBloc();
