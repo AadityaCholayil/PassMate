@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
+import 'package:like_button/like_button.dart';
 import 'package:passmate/bloc/app_bloc/app_bloc_files.dart';
 import 'package:passmate/bloc/database_bloc/database_barrel.dart';
 import 'package:passmate/model/password.dart';
@@ -31,8 +33,8 @@ class _PasswordPageState extends State<PasswordPage> {
   @override
   void initState() {
     super.initState();
-    sortMethod = context.read<AppBloc>().userData.sortMethod ??
-        SortMethod.recentlyAdded;
+    sortMethod =
+        context.read<AppBloc>().userData.sortMethod ?? SortMethod.recentlyAdded;
     sortLabel = sortMethodMessages[sortMethod.index];
     context.read<DatabaseBloc>().add(GetPasswords(
         sortMethod: sortMethod, passwordCategory: passwordCategory));
@@ -83,11 +85,11 @@ class _PasswordPageState extends State<PasswordPage> {
             completePasswordList.isNotEmpty
                 ? _buildChipRow()
                 : const SizedBox.shrink(),
-            SizedBox(height: 5.w),
+            SizedBox(height: 10.w),
             completePasswordList.isNotEmpty
                 ? _buildSortDropDownBox(context)
                 : const SizedBox.shrink(),
-            SizedBox(height: 5.w),
+            SizedBox(height: 10.w),
             state is Fetching
                 ? Container(
                     height: 180.w,
@@ -135,24 +137,29 @@ class _PasswordPageState extends State<PasswordPage> {
     );
   }
 
-  Padding _buildSearch(BuildContext context) {
+  Widget _buildSearch(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20.w),
-      child: TextFormField(
-        initialValue: searchLabel,
-        decoration: customInputDecoration(
-          context: context,
-          labelText: 'Search',
-          isSearch: true,
+      child: Material(
+        borderRadius: BorderRadius.circular(15.w),
+        clipBehavior: Clip.antiAliasWithSaveLayer,
+        elevation: 3,
+        child: TextFormField(
+          initialValue: searchLabel,
+          decoration: customInputDecoration(
+            context: context,
+            labelText: 'Search',
+            isSearch: true,
+          ),
+          style: formTextStyle(context),
+          onChanged: (val) {
+            context.read<DatabaseBloc>().add(GetPasswords(
+                  search: val,
+                  passwordCategory: passwordCategory,
+                  list: completePasswordList,
+                ));
+          },
         ),
-        style: formTextStyle(context),
-        onChanged: (val) {
-          context.read<DatabaseBloc>().add(GetPasswords(
-                search: val,
-                passwordCategory: passwordCategory,
-                list: completePasswordList,
-              ));
-        },
       ),
     );
   }
@@ -218,7 +225,7 @@ class _PasswordPageState extends State<PasswordPage> {
             }
           }
           return Container(
-            margin: EdgeInsets.only(right: 7.w),
+            margin: EdgeInsets.only(right: 9.w),
             child: InkWell(
               onTap: () {
                 print(category);
@@ -230,6 +237,7 @@ class _PasswordPageState extends State<PasswordPage> {
                     ));
               },
               child: Chip(
+                elevation: 3,
                 side: selected
                     ? BorderSide(
                         color: Theme.of(context).colorScheme.secondary,
@@ -355,25 +363,22 @@ class PasswordCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(bottom: 13.w),
+      margin: EdgeInsets.only(bottom: 15.w),
       height: 87.w,
       child: Card(
-        elevation: 0,
+        elevation: 3,
         margin: EdgeInsets.zero,
         clipBehavior: Clip.antiAliasWithSaveLayer,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(23.w),
         ),
         child: InkWell(
-          onTap: () {
+          onTap: () async {
             if (!ZoomDrawer.of(context)!.isOpen()) {
               password.printDetails();
               password.lastUsed = Timestamp.now();
               password.usage++;
-              context
-                  .read<DatabaseBloc>()
-                  .add(UpdatePassword(password, false, password.path));
-              showModalBottomSheet(
+              dynamic res = await showModalBottomSheet(
                 context: context,
                 barrierColor: Colors.black.withOpacity(0.25),
                 backgroundColor: Colors.transparent,
@@ -381,6 +386,11 @@ class PasswordCard extends StatelessWidget {
                   return PasswordDetailCard(password: password);
                 },
               );
+              if (res != 'Deleted') {
+                context
+                    .read<DatabaseBloc>()
+                    .add(UpdatePassword(password, false, password.path));
+              }
             }
           },
           child: Container(
@@ -415,9 +425,7 @@ class PasswordCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(
-                  width: 19.w,
-                ),
+                SizedBox(width: 19.w),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -447,7 +455,7 @@ class PasswordCard extends StatelessWidget {
   }
 }
 
-class PasswordDetailCard extends StatelessWidget {
+class PasswordDetailCard extends StatefulWidget {
   const PasswordDetailCard({
     Key? key,
     required this.password,
@@ -456,48 +464,232 @@ class PasswordDetailCard extends StatelessWidget {
   final Password password;
 
   @override
+  State<PasswordDetailCard> createState() => _PasswordDetailCardState();
+}
+
+class _PasswordDetailCardState extends State<PasswordDetailCard> {
+  late Password password;
+  bool showPassword = false;
+
+  @override
+  void initState() {
+    super.initState();
+    password = widget.password;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 450.w,
+      height: 700.w,
       child: Card(
         margin: EdgeInsets.all(10.w),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.w)),
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.w)),
         child: Container(
           padding: EdgeInsets.all(15.w),
           child: Column(
+
             children: [
-              const Spacer(),
               Row(
                 children: [
+                  Container(
+                    margin: EdgeInsets.all(5.w),
+                    height: 60.w,
+                    width: 60.w,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Theme.of(context).colorScheme.primary,
+                        width: 2.5.w,
+                      ),
+                      borderRadius: BorderRadius.circular(30.w),
+                    ),
+                    child: Container(
+                      height: 50.w,
+                      width: 50.w,
+                      clipBehavior: Clip.antiAliasWithSaveLayer,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30.w),
+                      ),
+                      child: Image.network(
+                        password.imageUrl,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 10.w),
+                  Text(
+                    password.siteName,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 28,
+                    ),
+                  ),
+                  const Spacer(),
+                  LikeButton(
+                    size: 35.w,
+                    isLiked: password.favourite,
+                    onTap: (value) async {
+                      password.favourite = !value;
+                      print(password.favourite);
+                      context
+                          .read<DatabaseBloc>()
+                          .add(UpdatePassword(password, false, password.path));
+                      return !value;
+                    },
+                  ),
+                  SizedBox(width: 5.w),
+                ],
+              ),
+              SizedBox(height: 13.w),
+              SizedBox(
+                height: 200.w,
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildLabel(context, 'Site URL'),
+                      _buildContent(context, password.email),
+                      SizedBox(height: 13.w),
+                      _buildLabel(context, 'Email/Username'),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          _buildContent(context, password.email),
+                          IconButton(
+                            icon: Icon(Icons.copy, size: 28.w),
+                            onPressed: () {
+                              Clipboard.setData(ClipboardData(text: password.email));
+                            },
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 13.w),
+                      _buildLabel(context, 'Password'),
+                      Row(
+                        children: [
+                          _buildContent(context, password.password),
+                          const Spacer(),
+                          IconButton(
+                            icon: Icon(
+                                showPassword ? Icons.visibility : Icons.visibility_off,
+                                size: 28.w),
+                            onPressed: () {
+                              setState(() {
+                                showPassword = !showPassword;
+                              });
+                            },
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.copy, size: 28.w),
+                            onPressed: () {
+                              Clipboard.setData(ClipboardData(text: password.email));
+                            },
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 13.w),
+                      _buildLabel(context, 'Password'),
+                      Row(
+                        children: [
+                          _buildContent(context, password.password),
+                          const Spacer(),
+                          IconButton(
+                            icon: Icon(
+                                showPassword ? Icons.visibility : Icons.visibility_off,
+                                size: 28.w),
+                            onPressed: () {
+                              setState(() {
+                                showPassword = !showPassword;
+                              });
+                            },
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.copy, size: 28.w),
+                            onPressed: () {
+                              Clipboard.setData(ClipboardData(text: password.email));
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const Spacer(),
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                children: [
                   ElevatedButton(
-                    child: const Text('Delete'),
+                    style: ElevatedButton.styleFrom(
+                      primary: Theme.of(context).colorScheme.secondary,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.w),
+                      ),
+                      padding: EdgeInsets.zero,
+                    ),
+                    child: Container(
+                      alignment: Alignment.center,
+                      height: 55.w,
+                      width: 55.w,
+                      child: Icon(
+                        Icons.delete_outline_rounded,
+                        size: 31.w,
+                        color: Theme.of(context).colorScheme.onSecondary,
+                      ),
+                    ),
                     onPressed: () {
                       BlocProvider.of<DatabaseBloc>(context)
                           .add(DeletePassword(password));
-                      Navigator.pop(context);
+                      Navigator.pop(context, 'Deleted');
                     },
                   ),
-                  ElevatedButton(
-                    child: const Text('Edit Password'),
-                    onPressed: () {
-                      print(password.id);
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                PasswordFormPage(password: password)),
-                      ).then((value) {
-                        BlocProvider.of<DatabaseBloc>(context)
-                            .add(GetPasswords());
-                        Navigator.pop(context);
-                      });
-                    },
+                  SizedBox(width: 10.w),
+                  Expanded(
+                    child: CustomElevatedButton(
+                      style: 0,
+                      text: 'Edit Password',
+                      onPressed: () {
+                        print(password.id);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  PasswordFormPage(password: password)),
+                        ).then((value) {
+                          BlocProvider.of<DatabaseBloc>(context)
+                              .add(GetPasswords());
+                          Navigator.pop(context);
+                        });
+                      },
+                    ),
                   ),
                 ],
               ),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Text _buildLabel(BuildContext context, String text) {
+    return Text(
+      text,
+      style: TextStyle(
+        fontSize: 15,
+        color: Theme.of(context).colorScheme.secondaryVariant,
+        fontWeight: FontWeight.w500,
+      ),
+    );
+  }
+
+  Text _buildContent(BuildContext context, String text) {
+    return Text(
+      text,
+      style: const TextStyle(
+        fontSize: 21,
+        fontWeight: FontWeight.w500,
       ),
     );
   }

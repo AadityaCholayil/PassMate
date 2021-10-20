@@ -28,6 +28,18 @@ class LoginUser extends AppEvent {
   List<Object?> get props => [toString()];
 }
 
+class CheckEmailStatus extends AppEvent {
+  final String email;
+
+  const CheckEmailStatus({required this.email});
+
+  @override
+  String toString() => 'CheckEmailStatus';
+
+  @override
+  List<Object?> get props => [toString()];
+}
+
 class SignupUser extends AppEvent {
   final String email;
   final String password;
@@ -73,6 +85,11 @@ class LoggedOut extends AppEvent {
 }
 
 class DeleteUser extends AppEvent {
+  final String email;
+  final String password;
+
+  const DeleteUser({required this.email, required this.password});
+
   @override
   String toString() => 'DeleteUser';
 

@@ -2,27 +2,26 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:passmate/model/custom_exceptions.dart';
 import 'package:passmate/model/user.dart';
+import 'package:passmate/shared/error_screen.dart';
 
-class AuthRepository{
-
+class AuthRepository {
   final FirebaseAuth _firebaseAuth;
   final GoogleSignIn _googleSignIn;
 
-  AuthRepository({FirebaseAuth? firebaseAuth , GoogleSignIn? googleSignin})
+  AuthRepository({FirebaseAuth? firebaseAuth, GoogleSignIn? googleSignin})
       : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
         _googleSignIn = googleSignin ?? GoogleSignIn();
 
   Future<UserData> logInWithGoogle() async {
     try {
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-      final GoogleSignInAuthentication googleAuth = await googleUser!.authentication;
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser!.authentication;
       final AuthCredential credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken
-      );
+          accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
       await _firebaseAuth.signInWithCredential(credential);
       User? user = _firebaseAuth.currentUser;
-      return user==null?UserData.empty:UserData.fromUser(user);
+      return user == null ? UserData.empty : UserData.fromUser(user);
     } on Exception catch (_) {
       throw SignInWithGoogleFailure();
     }
@@ -30,12 +29,13 @@ class AuthRepository{
 
   Future<UserData> logInWithCredentials(String email, String password) async {
     try {
-      UserCredential userCredential = await _firebaseAuth.signInWithEmailAndPassword(
+      UserCredential userCredential =
+          await _firebaseAuth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
       User? user = userCredential.user;
-      return user==null?UserData.empty:UserData.fromUser(user);
+      return user == null ? UserData.empty : UserData.fromUser(user);
     } on FirebaseAuthException catch (e) {
       switch (e.code) {
         case 'user-not-found':
@@ -52,12 +52,13 @@ class AuthRepository{
 
   Future<UserData> signUpUsingCredentials(String email, String password) async {
     try {
-      UserCredential userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
+      UserCredential userCredential =
+          await _firebaseAuth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
       User? user = userCredential.user;
-      return user==null?UserData.empty:UserData.fromUser(user);
+      return user == null ? UserData.empty : UserData.fromUser(user);
     } on FirebaseAuthException catch (e) {
       print(e);
       switch (e.code) {
@@ -68,6 +69,15 @@ class AuthRepository{
       }
     } catch (_) {
       throw SomethingWentWrongException();
+    }
+  }
+
+  Future<void> deleteUser() async {
+    try {
+      User user = getUser()!;
+      await user.delete();
+    } on Exception catch (_)  {
+      throw const SomethingWentWrong();
     }
   }
 
@@ -87,14 +97,17 @@ class AuthRepository{
 
   UserData getUserData() {
     User? user = _firebaseAuth.currentUser;
-    return user==null?UserData.empty:UserData.fromUser(user);
+    return user == null ? UserData.empty : UserData.fromUser(user);
+  }
+
+  User? getUser() {
+    User? user = _firebaseAuth.currentUser;
+    return user;
   }
 
   Stream<UserData> get user {
     return _firebaseAuth.authStateChanges().map((user) {
-      return user==null?UserData.empty:UserData.fromUser(user);
+      return user == null ? UserData.empty : UserData.fromUser(user);
     });
   }
-
 }
-

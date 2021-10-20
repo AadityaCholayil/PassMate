@@ -9,7 +9,7 @@ import 'package:passmate/shared/custom_widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:passmate/views/pages/temp_error.dart';
 
-import 'additional_details.dart';
+import 'details_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -31,7 +31,7 @@ class _LoginPageState extends State<LoginPage> {
       listenWhen: (previous, current) => previous != current,
       buildWhen: (previous, current) => previous != current,
       listener: (context, state) async {
-        if (state is LoginNewState) {
+        if (state is LoginPageState) {
           ScaffoldMessenger.of(context).hideCurrentSnackBar();
           ScaffoldMessenger.of(context)
               .showSnackBar(showCustomSnackBar(context, state.message));
@@ -62,116 +62,119 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Container _buildLoginPortrait(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20.w),
-      child: Form(
-        key: _formKey,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            SizedBox(height: 25.h),
-            const CustomBackButton(),
-            SizedBox(height: 50.h),
-            Text(
-              'Welcome to,',
-              style: TextStyle(
-                fontSize: 32.5,
-                fontWeight: FontWeight.normal,
-                color: Theme.of(context).colorScheme.onBackground,
-                height: 0.9,
-              ),
-            ),
-            Text(
-              'PassMate',
-              style: TextStyle(
-                height: 1.25,
-                fontSize: 43.5,
-                fontWeight: FontWeight.bold,
-                color: Theme.of(context).colorScheme.onBackground,
-              ),
-            ),
-            SizedBox(height: 50.h),
-            Text(
-              'Login to continue',
-              style: TextStyle(
-                height: 1.25.w,
-                fontSize: 25,
-                fontWeight: FontWeight.w600,
-                color: Theme.of(context).colorScheme.onBackground,
-              ),
-            ),
-            SizedBox(height: 25.h),
-            TextFormField(
-              decoration:
-                  customInputDecoration(context: context, labelText: 'Email'),
-              style: formTextStyle(context),
-              onSaved: (value) {
-                email = value ?? '';
-              },
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter your email';
-                }
-                if (!AuthEmail(value).isValid) {
-                  return 'Invalid email format';
-                }
-              },
-            ),
-            SizedBox(height: 20.w),
-            TextFormField(
-              decoration: customInputDecoration(
-                  context: context, labelText: 'Password'),
-              style: formTextStyle(context),
-              onSaved: (value) {
-                password = value ?? '';
-              },
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter your password';
-                }
-              },
-            ),
-            SizedBox(height: 25.w),
-            CustomElevatedButton(
-              text: 'Login',
-              onPressed: () async {
-                if (!_formKey.currentState!.validate()) {
-                  return;
-                }
-                _formKey.currentState?.save();
-                ScaffoldMessenger.of(context)
-                    .showSnackBar(showCustomSnackBar(context, stateMessage));
-                BlocProvider.of<AppBloc>(context)
-                    .add(LoginUser(email: email, password: password));
-              },
-            ),
-            SizedBox(height: 80.h),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "Don't have an account?",
-                  style: TextStyle(
-                      fontSize: 15,
-                      color: Theme.of(context).colorScheme.onSurface),
+  Widget _buildLoginPortrait(BuildContext context) {
+    return SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 20.w),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              SizedBox(height: 25.w),
+              const CustomBackButton(),
+              SizedBox(height: 50.h),
+              Text(
+                'Welcome to,',
+                style: TextStyle(
+                  fontSize: 32.5,
+                  fontWeight: FontWeight.normal,
+                  color: Theme.of(context).colorScheme.onBackground,
+                  height: 0.9,
                 ),
-                TextButton(
-                  child: Text(
-                    "Sign Up!",
+              ),
+              Text(
+                'PassMate',
+                style: TextStyle(
+                  height: 1.25,
+                  fontSize: 43.5,
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).colorScheme.onBackground,
+                ),
+              ),
+              SizedBox(height: 50.h),
+              Text(
+                'Login to continue',
+                style: TextStyle(
+                  height: 1.25.w,
+                  fontSize: 25,
+                  fontWeight: FontWeight.w600,
+                  color: Theme.of(context).colorScheme.onBackground,
+                ),
+              ),
+              SizedBox(height: 25.h),
+              TextFormField(
+                decoration:
+                    customInputDecoration(context: context, labelText: 'Email'),
+                style: formTextStyle(context),
+                onSaved: (value) {
+                  email = value ?? '';
+                },
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your email';
+                  }
+                  if (!AuthEmail(value).isValid) {
+                    return 'Invalid email format';
+                  }
+                },
+              ),
+              SizedBox(height: 20.w),
+              TextFormField(
+                decoration: customInputDecoration(
+                    context: context, labelText: 'Password'),
+                style: formTextStyle(context),
+                onSaved: (value) {
+                  password = value ?? '';
+                },
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your password';
+                  }
+                },
+              ),
+              SizedBox(height: 25.w),
+              CustomElevatedButton(
+                text: 'Login',
+                onPressed: () async {
+                  if (!_formKey.currentState!.validate()) {
+                    return;
+                  }
+                  _formKey.currentState?.save();
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(showCustomSnackBar(context, stateMessage));
+                  BlocProvider.of<AppBloc>(context)
+                      .add(LoginUser(email: email, password: password));
+                },
+              ),
+              SizedBox(height: 110.h),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Don't have an account?",
                     style: TextStyle(
                         fontSize: 15,
-                        color: Theme.of(context).colorScheme.primary),
+                        color: Theme.of(context).colorScheme.onSurface),
                   ),
-                  onPressed: () {
-                    Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        builder: (context) => const AdditionalDetailsPage()));
-                  },
-                ),
-              ],
-            )
-          ],
+                  TextButton(
+                    child: Text(
+                      "Sign Up!",
+                      style: TextStyle(
+                          fontSize: 15,
+                          color: Theme.of(context).colorScheme.primary),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(
+                          builder: (context) => const DetailsPage()));
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

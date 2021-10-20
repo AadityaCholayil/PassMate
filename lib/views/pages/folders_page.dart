@@ -78,6 +78,7 @@ class _FolderPageState extends State<FolderPage> {
             }
           },
           child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
             child: Column(
               // mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,

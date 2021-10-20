@@ -45,7 +45,7 @@ InputDecoration customInputDecoration(
     ),
     errorStyle: const TextStyle(
       color: Color(0xffd32f2f),
-      fontSize: 16.0,
+      fontSize: 15.0,
       fontWeight: FontWeight.w400,
       fontStyle: FontStyle.normal,
     ),

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -30,9 +31,11 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     );
     on<AppStarted>(_onAppStarted);
     on<LoginUser>(_onLoginUser);
+    on<CheckEmailStatus>(_onCheckEmailStatus);
     on<SignupUser>(_onSignupUser);
     on<UpdateUserData>(_onUpdateUserData);
     on<LoggedOut>(_onLoggedOut);
+    on<DeleteUser>(_onDeleteUser);
   }
 
   void updateDatabaseBloc() {
@@ -96,7 +99,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
 
   // When the User Logs in
   FutureOr<void> _onLoginUser(LoginUser event, Emitter<AppState> emit) async {
-    emit(LoginNewState.loading);
+    emit(LoginPageState.loading);
     try {
       // Login using email and password
       userData = await _authRepository.logInWithCredentials(
@@ -131,18 +134,33 @@ class AppBloc extends Bloc<AppEvent, AppState> {
       }
     } on Exception catch (e) {
       if (e is UserNotFoundException) {
-        emit(LoginNewState.noUserFound);
+        emit(LoginPageState.noUserFound);
       } else if (e is WrongPasswordException) {
-        emit(LoginNewState.wrongPassword);
+        emit(LoginPageState.wrongPassword);
       } else {
-        emit(LoginNewState.somethingWentWrong);
+        emit(LoginPageState.somethingWentWrong);
+      }
+      emit(Unauthenticated(userData: userData));
+    }
+  }
+
+  Future<void> _onCheckEmailStatus(
+      CheckEmailStatus event, Emitter<AppState> emit) async {
+    emit(const EmailInputPageState(emailStatus: EmailStatus.loading));
+    try {
+      await _authRepository.logInWithCredentials(event.email, 'null');
+    } on Exception catch (e) {
+      if (e is UserNotFoundException) {
+        emit(const EmailInputPageState(emailStatus: EmailStatus.valid));
+      } else {
+        emit(const EmailInputPageState(emailStatus: EmailStatus.invalid));
       }
     }
   }
 
   // When the User Signs up
   FutureOr<void> _onSignupUser(SignupUser event, Emitter<AppState> emit) async {
-    emit(SignupNewState.loading);
+    emit(SignupPageState.loading);
     try {
       // Signup using email and password
       userData = await _authRepository.signUpUsingCredentials(
@@ -191,10 +209,11 @@ class AppBloc extends Bloc<AppEvent, AppState> {
       emit(Authenticated(userData: userData));
     } on Exception catch (e) {
       if (e is EmailAlreadyInUseException) {
-        emit(SignupNewState.userAlreadyExists);
+        emit(SignupPageState.userAlreadyExists);
       } else {
-        emit(SignupNewState.somethingWentWrong);
+        emit(SignupPageState.somethingWentWrong);
       }
+      emit(Unauthenticated(userData: userData));
     }
   }
 
@@ -226,17 +245,40 @@ class AppBloc extends Bloc<AppEvent, AppState> {
   FutureOr<void> _onLoggedOut(LoggedOut event, Emitter<AppState> emit) async {
     userData = UserData.empty;
     databaseRepository = DatabaseRepository(uid: userData.uid);
+    encryptionRepository.updateKey('');
     updateDatabaseBloc();
     await _authRepository.signOut();
     emit(Unauthenticated(userData: userData));
   }
 
-  FutureOr<void> _onDeleteUser(LoggedOut event, Emitter<AppState> emit) async {
-    userData = UserData.empty;
-    databaseRepository = DatabaseRepository(uid: userData.uid);
-    updateDatabaseBloc();
-    await _authRepository.signOut();
-    emit(Unauthenticated(userData: userData));
+  FutureOr<void> _onDeleteUser(DeleteUser event, Emitter<AppState> emit) async {
+    emit(DeleteAccountPageState.loading);
+    if (event.email == userData.email) {
+      try {
+        await _authRepository.logInWithCredentials(event.email, event.password);
+      } on Exception catch (_) {
+        emit(DeleteAccountPageState.invalidCredentials);
+      }
+      try {
+        print('Lets goo');
+        await databaseRepository.deleteUserData();
+        await _authRepository.deleteUser();
+        userData = UserData.empty;
+        databaseRepository = DatabaseRepository(uid: userData.uid);
+        encryptionRepository.updateKey('');
+        if (!kIsWeb) {
+          const storage = FlutterSecureStorage();
+          storage.write(key: 'key', value: '');
+        }
+        updateDatabaseBloc();
+        emit(Unauthenticated(userData: userData));
+      } on Exception catch (_) {
+        emit(const ErrorOccurred(
+            error: 'Unable to delete your account, Please try again!'));
+      }
+    } else {
+      emit(DeleteAccountPageState.invalidCredentials);
+    }
   }
 
   @override

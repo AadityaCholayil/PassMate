@@ -53,6 +53,7 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: context.read<MenuProvider>().currentPage < 3
           ? MainListPage(fName: fName)
           : [

@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 SnackBar showCustomSnackBar(BuildContext context, String message) {
   return SnackBar(
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.w)),
     margin: EdgeInsets.all(15.w),
     behavior: SnackBarBehavior.floating,
     backgroundColor: Colors.white,
@@ -14,26 +15,28 @@ SnackBar showCustomSnackBar(BuildContext context, String message) {
           style: TextStyle(
             fontSize: 15,
             color: Theme.of(context).colorScheme.onSurface,
+            fontWeight: FontWeight.w400,
           ),
         ),
         const Spacer(),
-        message == LoginNewState.loading.message
-            ? const SizedBox(
-            height: 25,
-            width: 25,
-            child: CircularProgressIndicator(
-              color: Colors.blue,
-              strokeWidth: 2,
-            ))
+        message == LoginPageState.loading.message
+            ? SizedBox(
+                height: 25,
+                width: 25,
+                child: CircularProgressIndicator(
+                  color: Theme.of(context).colorScheme.primary,
+                  strokeWidth: 2,
+                ),
+              )
             : const SizedBox.shrink(),
       ],
     ),
-    action: message == LoginNewState.loading.message
+    action: message == LoginPageState.loading.message
         ? null
         : SnackBarAction(
-      label: 'OK',
-      textColor: Theme.of(context).colorScheme.secondary,
-      onPressed: () {},
-    ),
+            label: 'OK',
+            textColor: Theme.of(context).colorScheme.primary,
+            onPressed: () {},
+          ),
   );
 }

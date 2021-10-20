@@ -31,30 +31,6 @@ class Unauthenticated extends AppState {
   List<Object?> get props => [toString()];
 }
 
-class PartiallyAuthenticated extends AppState {
-  final UserData userData;
-
-  const PartiallyAuthenticated({required this.userData});
-
-  @override
-  String toString() => 'PartiallyAuthenticated';
-
-  @override
-  List<Object?> get props => [toString()];
-}
-
-class FullyAuthenticated extends AppState {
-  final UserData userData;
-
-  const FullyAuthenticated({required this.userData});
-
-  @override
-  String toString() => 'FullyAuthenticated';
-
-  @override
-  List<Object?> get props => [toString()];
-}
-
 class Authenticated extends AppState {
   final UserData userData;
 
@@ -67,45 +43,81 @@ class Authenticated extends AppState {
   List<Object?> get props => [toString()];
 }
 
-class LoginNewState extends AppState {
+class LoginPageState extends AppState {
   final String message;
 
-  const LoginNewState({required this.message});
+  const LoginPageState({required this.message});
 
-  static LoginNewState loading = const LoginNewState(message: 'Loading');
+  static LoginPageState loading = const LoginPageState(message: 'Loading');
 
-  static LoginNewState success = const LoginNewState(message: 'Successful');
+  static LoginPageState noUserFound =
+      const LoginPageState(message: 'No user found for that email');
 
-  static LoginNewState noUserFound =
-      const LoginNewState(message: 'No user found for that email');
+  static LoginPageState wrongPassword =
+      const LoginPageState(message: 'Wrong Password provided for that user');
 
-  static LoginNewState wrongPassword =
-      const LoginNewState(message: 'Wrong Password provided for that user');
-
-  static LoginNewState somethingWentWrong =
-      const LoginNewState(message: 'Something went wrong, Please try again');
+  static LoginPageState somethingWentWrong =
+      const LoginPageState(message: 'Something went wrong, Please try again');
 
   @override
   List<Object?> get props => [message];
 }
 
-class SignupNewState extends AppState {
+class EmailInputPageState extends AppState {
+  final EmailStatus emailStatus;
+
+  const EmailInputPageState({required this.emailStatus});
+
+  @override
+  List<Object?> get props => [emailStatus];
+}
+
+enum EmailStatus {
+  loading,
+  valid,
+  invalid,
+}
+
+class SignupPageState extends AppState {
   final String message;
 
-  const SignupNewState({required this.message});
+  const SignupPageState({required this.message});
 
-  static SignupNewState loading = const SignupNewState(message: 'Loading');
+  static SignupPageState loading = const SignupPageState(message: 'Loading');
 
-  static SignupNewState success = const SignupNewState(message: 'Successful');
+  static SignupPageState userAlreadyExists =
+      const SignupPageState(message: 'Email is already in use');
 
-  static SignupNewState userAlreadyExists =
-      const SignupNewState(message: 'Email is already in use');
-
-  static SignupNewState somethingWentWrong =
-      const SignupNewState(message: 'Something went wrong, Please try again');
+  static SignupPageState somethingWentWrong =
+      const SignupPageState(message: 'Something went wrong, Please try again');
 
   @override
   List<Object?> get props => [message];
+}
+
+class DeleteAccountPageState extends AppState {
+  final String message;
+
+  const DeleteAccountPageState({required this.message});
+
+  static DeleteAccountPageState loading =
+      const DeleteAccountPageState(message: 'Loading');
+
+  static DeleteAccountPageState invalidCredentials =
+      const DeleteAccountPageState(message: 'Invalid Credentials!');
+
+  static DeleteAccountPageState somethingWentWrong =
+      const DeleteAccountPageState(
+          message: 'Something went wrong, Please try again');
+
+  static DeleteAccountPageState success =
+  const DeleteAccountPageState(message: 'Success!');
+
+  @override
+  String toString() => 'DeleteAccountPageState';
+
+  @override
+  List<Object?> get props => [toString()+message];
 }
 
 class ErrorOccurred extends AppState {
@@ -117,5 +129,5 @@ class ErrorOccurred extends AppState {
   String toString() => 'ErrorOccurred';
 
   @override
-  List<Object?> get props => [toString()];
+  List<Object?> get props => [error];
 }

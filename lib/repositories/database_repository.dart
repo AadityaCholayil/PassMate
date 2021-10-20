@@ -41,7 +41,7 @@ class DatabaseRepository {
     }
   }
 
-  Future<void> deleteUser() async {
+  Future<void> deleteUserData() async {
     try {
       await usersRef.doc(uid).delete();
     } on Exception catch (_) {

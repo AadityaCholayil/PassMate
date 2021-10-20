@@ -87,6 +87,7 @@ class _MenuScreenState extends State<MenuScreen> {
         return Container();
       }
       return Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: Theme.of(context).colorScheme.primary,
         body: Container(
           padding: EdgeInsets.only(left: 20.w),

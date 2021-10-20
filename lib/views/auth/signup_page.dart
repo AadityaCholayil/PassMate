@@ -15,9 +15,14 @@ class SignUpPage extends StatefulWidget {
   final XFile? image;
   final String firstName;
   final String lastName;
+  final String email;
 
   const SignUpPage(
-      {required this.firstName, required this.lastName, this.image, Key? key})
+      {required this.firstName,
+      required this.lastName,
+      required this.email,
+      this.image,
+      Key? key})
       : super(key: key);
 
   @override
@@ -25,7 +30,6 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
-  AuthEmail email = AuthEmail('');
   AuthPassword password = AuthPassword('');
   PasswordStrength passwordStrength = PasswordStrength.fromPassword('');
   String stateMessage = '';
@@ -37,8 +41,8 @@ class _SignUpPageState extends State<SignUpPage> {
     return BlocConsumer<AppBloc, AppState>(
       listenWhen: (previous, current) => previous != current,
       buildWhen: (previous, current) => previous != current,
-      listener: (context, state) async {
-        if (state is SignupNewState) {
+      listener: (context, state) {
+        if (state is SignupPageState) {
           ScaffoldMessenger.of(context).hideCurrentSnackBar();
           ScaffoldMessenger.of(context)
               .showSnackBar(showCustomSnackBar(context, state.message));
@@ -81,141 +85,112 @@ class _SignUpPageState extends State<SignUpPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            SizedBox(height: 25.h),
+            SizedBox(height: 25.w),
             const CustomBackButton(),
-            SizedBox(height: 15.h),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Expanded(
-                    flex: 1,
-                    child: SizedBox(
-                      height: 1.w,
-                    ),
+            SizedBox(height: 15.w),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Set Master Password',
+                  style: TextStyle(
+                    height: 1.25,
+                    fontSize: 43.5,
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.onBackground,
                   ),
-                  Text(
-                    'Sign Up',
-                    style: TextStyle(
-                      height: 1.25,
-                      fontSize: 44,
-                      fontWeight: FontWeight.w700,
-                      color: Theme.of(context).colorScheme.onBackground,
-                    ),
+                ),
+                SizedBox(height: 10.w),
+                Text(
+                  'The only password you’ll have to remember',
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    color: Theme.of(context).colorScheme.secondaryVariant,
                   ),
-                  SizedBox(
-                    height: 25.w,
-                  ),
-                  TextFormField(
-                    decoration: customInputDecoration(
-                        context: context, labelText: 'Email'),
-                    style: formTextStyle(context),
-                    onSaved: (value) {
-                      email.email = value ?? '';
-                    },
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your email';
-                      }
-                      if (!AuthEmail(value).isValid) {
-                        return 'Invalid email format';
-                      }
-                    },
-                  ),
-                  SizedBox(
-                    height: 15.w,
-                  ),
-                  TextFormField(
-                    decoration: customInputDecoration(
-                        context: context, labelText: 'Master Password'),
-                    style: formTextStyle(context),
-                    onChanged: (value) {
-                      setState(() {
-                        password.password = value;
-                        passwordStrength = password.passwordStrength;
-                        print(passwordStrength.list);
-                      });
-                    },
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'This field is required!';
-                      }
-                    },
-                  ),
-                  _buildPasswordStrength(),
-                  TextFormField(
-                    decoration: customInputDecoration(
-                        context: context, labelText: 'Confirm Password'),
-                    style: formTextStyle(context),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'This field is required!';
-                      }
-                      if (value != password.password) {
-                        return 'Passwords do not match!';
-                      }
-                    },
-                  ),
-                  SizedBox(height: 20.w),
-                  CustomElevatedButton(
-                    text: 'Sign Up',
-                    onPressed: () async {
-                      if (!_formKey.currentState!.validate()) {
-                        return;
-                      }
-                      if (passwordStrength.strength < 5) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            showCustomSnackBar(
-                                context, "Password isn't strong enough!"));
-                        return;
-                      }
-                      _formKey.currentState?.save();
+                ),
+                SizedBox(height: 15.w),
+                TextFormField(
+                  decoration: customInputDecoration(
+                      context: context, labelText: 'Master Password'),
+                  style: formTextStyle(context),
+                  onChanged: (value) {
+                    setState(() {
+                      password.password = value;
+                      passwordStrength = password.passwordStrength;
+                      print(passwordStrength.list);
+                    });
+                  },
+                ),
+                _buildPasswordStrength(),
+                passwordStrength.list.isEmpty
+                    ? TextFormField(
+                        decoration: customInputDecoration(
+                            context: context, labelText: 'Confirm Password'),
+                        style: formTextStyle(context),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'This field is required!';
+                          }
+                          if (value != password.password) {
+                            return 'Passwords do not match!';
+                          }
+                        },
+                      )
+                    : const SizedBox.shrink(),
+                SizedBox(height: 20.w),
+                CustomElevatedButton(
+                  text: 'Sign Up',
+                  onPressed: () async {
+                    if (!_formKey.currentState!.validate()) {
+                      return;
+                    }
+                    if (passwordStrength.strength < 5) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                          showCustomSnackBar(context, stateMessage));
-                      BlocProvider.of<AppBloc>(context).add(SignupUser(
-                        email: email.email,
-                        password: password.password,
-                        firstName: widget.firstName,
-                        lastName: widget.lastName,
-                      ));
-                    },
+                          showCustomSnackBar(
+                              context, "Password isn't strong enough!"));
+                      return;
+                    }
+                    _formKey.currentState?.save();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        showCustomSnackBar(context, stateMessage));
+                    BlocProvider.of<AppBloc>(context).add(SignupUser(
+                      email: widget.email,
+                      password: password.password,
+                      firstName: widget.firstName,
+                      lastName: widget.lastName,
+                    ));
+                  },
+                ),
+              ],
+            ),
+            const Spacer(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  "Already have an account?",
+                  style: TextStyle(
+                      fontSize: 15,
+                      color: Theme.of(context).colorScheme.onSurface),
+                ),
+                TextButton(
+                  child: Text(
+                    "Log in!",
+                    style: TextStyle(
+                        fontSize: 15,
+                        color: Theme.of(context).colorScheme.primary),
                   ),
-                  // SizedBox(height: password.password != '' ? 20.h : 80.h),
-                  Expanded(
-                    flex: 3,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Already have an account?",
-                          style: TextStyle(
-                              fontSize: 15,
-                              color: Theme.of(context).colorScheme.onSurface),
-                        ),
-                        TextButton(
-                          child: Text(
-                            "Log in!",
-                            style: TextStyle(
-                                fontSize: 15,
-                                color: Theme.of(context).colorScheme.primary),
-                          ),
-                          onPressed: () {
-                            Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(
-                                    builder: (context) => const LoginPage()));
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                  // SizedBox(
-                  //   height: password.password != '' ? 30.h : 20.h,
-                  // ),
-                ],
-              ),
-            )
+                  onPressed: () {
+                    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
+                        builder: (context) => const LoginPage()), ModalRoute.withName('/'));
+                  },
+                ),
+              ],
+            ),
+            SizedBox(height: 15.w),
           ],
         ),
       ),
@@ -293,7 +268,7 @@ class _SignUpPageState extends State<SignUpPage> {
           ListView.builder(
             padding: passwordStrength.list.isEmpty
                 ? EdgeInsets.only(top: 9.w)
-                : EdgeInsets.only(top: 9.w, bottom: 9.w),
+                : EdgeInsets.only(top: 7.w, bottom: 10.w),
             shrinkWrap: true,
             itemCount: passwordStrength.list.length,
             itemBuilder: (context, index) {
