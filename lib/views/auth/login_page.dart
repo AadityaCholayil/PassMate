@@ -22,6 +22,7 @@ class _LoginPageState extends State<LoginPage> {
   String email = '';
   String password = '';
   String stateMessage = '';
+  bool showPassword = false;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -122,18 +123,40 @@ class _LoginPageState extends State<LoginPage> {
                 },
               ),
               SizedBox(height: 20.w),
-              TextFormField(
-                decoration: customInputDecoration(
-                    context: context, labelText: 'Password'),
-                style: formTextStyle(context),
-                onSaved: (value) {
-                  password = value ?? '';
-                },
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your password';
-                  }
-                },
+              Stack(
+                children: [
+                  TextFormField(
+                    decoration: customInputDecoration(
+                        context: context, labelText: 'Password'),
+                    style: formTextStyle(context),
+                    obscureText: !showPassword,
+                    onSaved: (value) {
+                      password = value ?? '';
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your password';
+                      }
+                    },
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(right: 10.w),
+                    height: 56.w,
+                    alignment: Alignment.centerRight,
+                    child: IconButton(
+                      icon: Icon(
+                          showPassword
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                          size: 28.w),
+                      onPressed: () {
+                        setState(() {
+                          showPassword = !showPassword;
+                        });
+                      },
+                    ),
+                  ),
+                ],
               ),
               SizedBox(height: 25.w),
               CustomElevatedButton(

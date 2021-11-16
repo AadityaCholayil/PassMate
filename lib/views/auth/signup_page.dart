@@ -33,6 +33,8 @@ class _SignUpPageState extends State<SignUpPage> {
   AuthPassword password = AuthPassword('');
   PasswordStrength passwordStrength = PasswordStrength.fromPassword('');
   String stateMessage = '';
+  bool showPassword = false;
+  bool showConfirmPassword = false;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -111,33 +113,77 @@ class _SignUpPageState extends State<SignUpPage> {
                   ),
                 ),
                 SizedBox(height: 15.w),
-                TextFormField(
-                  decoration: customInputDecoration(
-                      context: context, labelText: 'Master Password'),
-                  style: formTextStyle(context),
-                  onChanged: (value) {
-                    setState(() {
-                      password.password = value;
-                      passwordStrength = password.passwordStrength;
-                      print(passwordStrength.list);
-                    });
-                  },
+                Stack(
+                  children: [
+                    TextFormField(
+                      decoration: customInputDecoration(
+                          context: context, labelText: 'Master Password'),
+                      style: formTextStyle(context),
+                      obscureText: !showPassword,
+                      onChanged: (value) {
+                        setState(() {
+                          password.password = value;
+                          passwordStrength = password.passwordStrength;
+                          print(passwordStrength.list);
+                        });
+                      },
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(right: 10.w),
+                      height: 56.w,
+                      alignment: Alignment.centerRight,
+                      child: IconButton(
+                        icon: Icon(
+                            showPassword
+                                ? Icons.visibility
+                                : Icons.visibility_off,
+                            size: 28.w),
+                        onPressed: () {
+                          setState(() {
+                            showPassword = !showPassword;
+                          });
+                        },
+                      ),
+                    ),
+                  ],
                 ),
                 _buildPasswordStrength(),
                 passwordStrength.list.isEmpty
-                    ? TextFormField(
-                        decoration: customInputDecoration(
-                            context: context, labelText: 'Confirm Password'),
-                        style: formTextStyle(context),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'This field is required!';
-                          }
-                          if (value != password.password) {
-                            return 'Passwords do not match!';
-                          }
-                        },
-                      )
+                    ? Stack(
+                      children: [
+                        TextFormField(
+                            decoration: customInputDecoration(
+                                context: context, labelText: 'Confirm Password'),
+                            style: formTextStyle(context),
+                            obscureText: !showConfirmPassword,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'This field is required!';
+                              }
+                              if (value != password.password) {
+                                return 'Passwords do not match!';
+                              }
+                            },
+                          ),
+                        Container(
+                          padding: EdgeInsets.only(right: 10.w),
+                          height: 56.w,
+                          alignment: Alignment.centerRight,
+                          child: IconButton(
+                            icon: Icon(
+                                showConfirmPassword
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                                size: 28.w),
+                            onPressed: () {
+                              setState(() {
+                                showConfirmPassword = !showConfirmPassword;
+                              });
+                            },
+                          ),
+                        ),
+                      ],
+                    )
                     : const SizedBox.shrink(),
                 SizedBox(height: 20.w),
                 CustomElevatedButton(

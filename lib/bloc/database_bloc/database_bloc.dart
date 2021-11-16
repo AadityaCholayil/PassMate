@@ -415,5 +415,8 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState> {
     yield FolderListState(folder);
   }
 
-  Stream<DatabaseState> _mapAddFolderToState(GetFolder event) async* {}
+  Stream<DatabaseState> _mapAddFolderToState(GetFolder event) async* {
+    yield Fetching();
+
+  }
 }

@@ -82,65 +82,70 @@ class _FolderPageState extends State<FolderPage> {
             child: Column(
               // mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: state is Fetching
-                  ? <Widget>[
-                      _buildAppBar(context),
-                      Container(
+              children: [
+                _buildAppBar(context),
+                state is Fetching
+                    ? Container(
                         height: MediaQuery.of(context).size.height * 0.8,
                         alignment: Alignment.center,
                         child: const LoadingSmall(),
-                      ),
-                    ]
-                  : <Widget>[
-                      _buildAppBar(context),
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(22.w, 10.w, 20.w, 0),
-                        child: Text(
-                          _folder.folderName,
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.onBackground,
-                            fontSize: 42,
-                            fontWeight: FontWeight.w700,
+                      )
+                    : Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(22.w, 10.w, 20.w, 0),
+                            child: Text(
+                              _folder.folderName,
+                              style: TextStyle(
+                                color:
+                                    Theme.of(context).colorScheme.onBackground,
+                                fontSize: 42,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
                           ),
-                        ),
+                          _buildFolderPath(),
+                          SizedBox(height: 10.w),
+                          _buildHeader(context, 'Folders'),
+                          FolderList(folder: _folder),
+                          SizedBox(height: 5.w),
+                          _folder.passwordList.isNotEmpty
+                              ? Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    _buildHeader(context, 'Passwords'),
+                                    PasswordCardList(
+                                        passwordList: _folder.passwordList),
+                                  ],
+                                )
+                              : const SizedBox.shrink(),
+                          _folder.paymentCardList.isNotEmpty
+                              ? Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    _buildHeader(context, 'Payment Cards'),
+                                    PaymentCardTileList(
+                                        paymentCardList:
+                                            _folder.paymentCardList),
+                                  ],
+                                )
+                              : const SizedBox.shrink(),
+                          _folder.secureNotesList.isNotEmpty
+                              ? Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    _buildHeader(context, 'Secure Notes'),
+                                    SecureNoteCardList(
+                                        secureNoteList:
+                                            _folder.secureNotesList),
+                                  ],
+                                )
+                              : const SizedBox.shrink(),
+                          SizedBox(height: 100.w),
+                        ],
                       ),
-                      _buildFolderPath(),
-                      SizedBox(height: 10.w),
-                      _buildHeader(context, 'Folders'),
-                      FolderList(folder: _folder),
-                      SizedBox(height: 5.w),
-                      _folder.passwordList.isNotEmpty
-                          ? Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                _buildHeader(context, 'Passwords'),
-                                PasswordCardList(
-                                    passwordList: _folder.passwordList),
-                              ],
-                            )
-                          : const SizedBox.shrink(),
-                      _folder.paymentCardList.isNotEmpty
-                          ? Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                _buildHeader(context, 'Payment Cards'),
-                                PaymentCardTileList(
-                                    paymentCardList: _folder.paymentCardList),
-                              ],
-                            )
-                          : const SizedBox.shrink(),
-                      _folder.secureNotesList.isNotEmpty
-                          ? Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                _buildHeader(context, 'Secure Notes'),
-                                SecureNoteCardList(
-                                    secureNoteList: _folder.secureNotesList),
-                              ],
-                            )
-                          : const SizedBox.shrink(),
-                      SizedBox(height: 100.w),
-                    ],
+              ],
             ),
           ),
         );
@@ -366,7 +371,8 @@ class FolderList extends StatelessWidget {
                       height: 14.w,
                     ),
                     Text(
-                      folderName.replaceRange(0, 1, folderName[0].toUpperCase()),
+                      folderName.replaceRange(
+                          0, 1, folderName[0].toUpperCase()),
                       style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w500,

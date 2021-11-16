@@ -80,16 +80,19 @@ class _PasswordPageState extends State<PasswordPage> {
               ),
             ),
             SizedBox(height: 13.w),
-            _buildSearch(context),
-            SizedBox(height: 15.w),
             completePasswordList.isNotEmpty
-                ? _buildChipRow()
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildSearch(context),
+                      SizedBox(height: 15.w),
+                      _buildChipRow(),
+                      SizedBox(height: 10.w),
+                      _buildSortDropDownBox(context),
+                      SizedBox(height: 10.w),
+                    ],
+                  )
                 : const SizedBox.shrink(),
-            SizedBox(height: 10.w),
-            completePasswordList.isNotEmpty
-                ? _buildSortDropDownBox(context)
-                : const SizedBox.shrink(),
-            SizedBox(height: 10.w),
             state is Fetching
                 ? Container(
                     height: 180.w,
@@ -127,8 +130,8 @@ class _PasswordPageState extends State<PasswordPage> {
             SizedBox(
               height: passwordList.length < 3
                   ? passwordList.isEmpty
-                      ? 12.w
-                      : 200.w
+                      ? 30.h
+                      : 250.h
                   : 0,
             ),
           ],
@@ -143,7 +146,7 @@ class _PasswordPageState extends State<PasswordPage> {
       child: Material(
         borderRadius: BorderRadius.circular(15.w),
         clipBehavior: Clip.antiAliasWithSaveLayer,
-        elevation: 3,
+        elevation: 2,
         child: TextFormField(
           initialValue: searchLabel,
           decoration: customInputDecoration(
@@ -237,7 +240,7 @@ class _PasswordPageState extends State<PasswordPage> {
                     ));
               },
               child: Chip(
-                elevation: 3,
+                elevation: 2,
                 side: selected
                     ? BorderSide(
                         color: Theme.of(context).colorScheme.secondary,
@@ -251,12 +254,12 @@ class _PasswordPageState extends State<PasswordPage> {
                 backgroundColor: Theme.of(context).cardColor,
                 padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 7.w),
                 // padding: EdgeInsets.fromLTRB(12.w, 7.w, 12.w, 7.w),
-                labelPadding: EdgeInsets.fromLTRB(10.w, 0, 10.w, 0),
+                labelPadding: EdgeInsets.fromLTRB(10.w, 0, 6.w, 0),
                 label: Text(
                   label.replaceRange(0, 1, label.substring(0, 1).toUpperCase()),
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.secondary,
-                    fontSize: 16,
+                    fontSize: 15,
                   ),
                 ),
                 deleteIcon: Icon(
@@ -366,7 +369,7 @@ class PasswordCard extends StatelessWidget {
       margin: EdgeInsets.only(bottom: 15.w),
       height: 87.w,
       child: Card(
-        elevation: 3,
+        elevation: 2,
         margin: EdgeInsets.zero,
         clipBehavior: Clip.antiAliasWithSaveLayer,
         shape: RoundedRectangleBorder(
@@ -470,11 +473,14 @@ class PasswordDetailCard extends StatefulWidget {
 class _PasswordDetailCardState extends State<PasswordDetailCard> {
   late Password password;
   bool showPassword = false;
+  late String categoryText;
 
   @override
   void initState() {
     super.initState();
     password = widget.password;
+    categoryText = password.category.toString().substring(17).replaceRange(
+        0, 1, password.category.toString().substring(17)[0].toUpperCase());
   }
 
   @override
@@ -488,7 +494,6 @@ class _PasswordDetailCardState extends State<PasswordDetailCard> {
         child: Container(
           padding: EdgeInsets.all(15.w),
           child: Column(
-
             children: [
               Row(
                 children: [
@@ -543,76 +548,89 @@ class _PasswordDetailCardState extends State<PasswordDetailCard> {
               ),
               SizedBox(height: 13.w),
               SizedBox(
-                height: 200.w,
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _buildLabel(context, 'Site URL'),
-                      _buildContent(context, password.email),
-                      SizedBox(height: 13.w),
-                      _buildLabel(context, 'Email/Username'),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          _buildContent(context, password.email),
-                          IconButton(
-                            icon: Icon(Icons.copy, size: 28.w),
-                            onPressed: () {
-                              Clipboard.setData(ClipboardData(text: password.email));
-                            },
+                height: 195.w,
+                child: Scrollbar(
+                  isAlwaysShown: true,
+                  child: SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildLabel(context, 'Site URL'),
+                        _buildContent(context, password.siteUrl),
+                        SizedBox(height: 10.w),
+                        _buildLabel(context, 'Email/Username'),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            _buildContent(context, password.email),
+                            IconButton(
+                              icon: Icon(Icons.copy, size: 28.w),
+                              onPressed: () {
+                                Clipboard.setData(
+                                    ClipboardData(text: password.email));
+                              },
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 10.w),
+                        _buildLabel(context, 'Password'),
+                        Row(
+                          children: [
+                            _buildContent(
+                                context,
+                                showPassword
+                                    ? password.password
+                                    : '•' * password.password.length),
+                            const Spacer(),
+                            IconButton(
+                              icon: Icon(
+                                  showPassword
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
+                                  size: 28.w),
+                              onPressed: () {
+                                setState(() {
+                                  showPassword = !showPassword;
+                                });
+                              },
+                            ),
+                            IconButton(
+                              icon: Icon(Icons.copy, size: 28.w),
+                              onPressed: () {
+                                Clipboard.setData(
+                                    ClipboardData(text: password.password));
+                              },
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 10.w),
+                        _buildLabel(context, 'Category'),
+                        Padding(
+                          padding: EdgeInsets.symmetric(vertical: 4.w),
+                          child: Row(
+                            children: [
+                              Icon(
+                                passwordCategoryIcon[password.category.index],
+                                size: 28.w,
+                              ),
+                              SizedBox(width: 20.w),
+                              _buildContent(context, categoryText),
+                            ],
                           ),
-                        ],
-                      ),
-                      SizedBox(height: 13.w),
-                      _buildLabel(context, 'Password'),
-                      Row(
-                        children: [
-                          _buildContent(context, password.password),
-                          const Spacer(),
-                          IconButton(
-                            icon: Icon(
-                                showPassword ? Icons.visibility : Icons.visibility_off,
-                                size: 28.w),
-                            onPressed: () {
-                              setState(() {
-                                showPassword = !showPassword;
-                              });
-                            },
-                          ),
-                          IconButton(
-                            icon: Icon(Icons.copy, size: 28.w),
-                            onPressed: () {
-                              Clipboard.setData(ClipboardData(text: password.email));
-                            },
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 13.w),
-                      _buildLabel(context, 'Password'),
-                      Row(
-                        children: [
-                          _buildContent(context, password.password),
-                          const Spacer(),
-                          IconButton(
-                            icon: Icon(
-                                showPassword ? Icons.visibility : Icons.visibility_off,
-                                size: 28.w),
-                            onPressed: () {
-                              setState(() {
-                                showPassword = !showPassword;
-                              });
-                            },
-                          ),
-                          IconButton(
-                            icon: Icon(Icons.copy, size: 28.w),
-                            onPressed: () {
-                              Clipboard.setData(ClipboardData(text: password.email));
-                            },
-                          ),
-                        ],
-                      ),
-                    ],
+                        ),
+                        password.note != 'null'
+                            ? Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(height: 10.w),
+                                  _buildLabel(context, 'Note'),
+                                  _buildContent(context, password.note),
+                                ],
+                              )
+                            : const SizedBox.shrink(),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -677,7 +695,7 @@ class _PasswordDetailCardState extends State<PasswordDetailCard> {
     return Text(
       text,
       style: TextStyle(
-        fontSize: 15,
+        fontSize: 14,
         color: Theme.of(context).colorScheme.secondaryVariant,
         fontWeight: FontWeight.w500,
       ),
@@ -688,7 +706,7 @@ class _PasswordDetailCardState extends State<PasswordDetailCard> {
     return Text(
       text,
       style: const TextStyle(
-        fontSize: 21,
+        fontSize: 19,
         fontWeight: FontWeight.w500,
       ),
     );

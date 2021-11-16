@@ -4,7 +4,6 @@ import 'package:passmate/shared/custom_widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:passmate/views/auth/email_input_page.dart';
 import 'package:passmate/views/auth/login_page.dart';
-import 'package:passmate/views/auth/signup_page.dart';
 import 'package:passmate/views/pages/temp_error.dart';
 
 class DetailsPage extends StatefulWidget {
@@ -81,32 +80,42 @@ class _DetailsPageState extends State<DetailsPage> {
                     ),
                   ),
                   SizedBox(height: 25.w),
-                  TextFormField(
-                    decoration: customInputDecoration(
-                        context: context, labelText: 'First Name'),
-                    style: formTextStyle(context),
-                    onSaved: (value) {
-                      firstName = value ?? '';
-                    },
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your first name';
-                      }
-                    },
+                  Material(
+                    borderRadius: BorderRadius.circular(15.w),
+                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                    elevation: 2,
+                    child: TextFormField(
+                      decoration: customInputDecoration(
+                          context: context, labelText: 'First Name'),
+                      style: formTextStyle(context),
+                      onSaved: (value) {
+                        firstName = value ?? '';
+                      },
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your first name';
+                        }
+                      },
+                    ),
                   ),
                   SizedBox(height: 20.w),
-                  TextFormField(
-                    decoration: customInputDecoration(
-                        context: context, labelText: 'Last Name'),
-                    style: formTextStyle(context),
-                    onSaved: (value) {
-                      lastName = value ?? '';
-                    },
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your last name';
-                      }
-                    },
+                  Material(
+                    borderRadius: BorderRadius.circular(15.w),
+                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                    elevation: 2,
+                    child: TextFormField(
+                      decoration: customInputDecoration(
+                          context: context, labelText: 'Last Name'),
+                      style: formTextStyle(context),
+                      onSaved: (value) {
+                        lastName = value ?? '';
+                      },
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your last name';
+                        }
+                      },
+                    ),
                   ),
                   SizedBox(height: 30.w),
                   CustomElevatedButton(
@@ -125,7 +134,7 @@ class _DetailsPageState extends State<DetailsPage> {
                   ),
                 ],
               ),
-              SizedBox(height: 60.h),
+              SizedBox(height: 50.h),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -149,7 +158,7 @@ class _DetailsPageState extends State<DetailsPage> {
                   ),
                 ],
               ),
-
+              SizedBox(height: 20.w),
             ],
           ),
         ),

@@ -23,7 +23,6 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
   String _siteUrl = '';
   String _email = '';
   String _password = '';
-  String? _imageUrl;
   String _note = '';
   PasswordCategory _category = PasswordCategory.others;
   bool _favourite = false;
@@ -44,8 +43,7 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
       _siteUrl = widget.password!.siteUrl;
       _email = widget.password!.email;
       _password = widget.password!.password;
-      _imageUrl = widget.password!.imageUrl;
-      _note = widget.password!.note;
+      _note = widget.password!.note == 'null' ? '' : widget.password!.note;
       _category = widget.password!.category;
       _favourite = widget.password!.favourite;
       _usage = widget.password!.usage;
@@ -96,19 +94,21 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
                         ),
                       ),
                       SizedBox(height: 8.w),
-                      _buildHeader('Site Name'),
+                      _buildHeader(
+                          'Site Name', Icons.drive_file_rename_outline),
                       _buildSiteName(context),
-                      _buildHeader('Site Url'),
+                      _buildHeader('Site Url', Icons.link),
                       _buildSiteUrl(context),
-                      _buildHeader('Username / Email'),
+                      _buildHeader('Username / Email', Icons.person_outlined),
                       _buildEmail(context),
-                      _buildHeader('Password'),
+                      _buildHeader('Password', Icons.password_outlined),
                       _buildPassword(context),
-                      _buildHeader('Category'),
+                      _buildHeader('Category', Icons.category_outlined),
                       _buildCategory(),
-                      _buildHeader('Path'),
+                      _buildHeader('Path', Icons.folder_outlined),
                       _buildFolderPath(),
-                      _buildHeader('Note (Optional)'),
+                      _buildHeader(
+                          'Note (Optional)', Icons.sticky_note_2_outlined),
                       _buildNote(context),
                       SizedBox(height: 25.w),
                       _buildSubmitButton(),
@@ -124,16 +124,26 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
     );
   }
 
-  Widget _buildHeader(String title) {
+  Widget _buildHeader(String title, IconData iconData) {
     return Container(
       padding: EdgeInsets.only(top: 10.w, left: 5.w),
-      child: Text(
-        title,
-        style: TextStyle(
-          color: Theme.of(context).colorScheme.secondaryVariant,
-          fontSize: 15,
-          fontWeight: FontWeight.w600,
-        ),
+      child: Row(
+        children: [
+          Icon(
+            iconData,
+            size: 16.w,
+            color: Theme.of(context).colorScheme.secondaryVariant,
+          ),
+          SizedBox(width: 10.w),
+          Text(
+            title,
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.secondaryVariant,
+              fontSize: 15,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
       ),
     );
   }

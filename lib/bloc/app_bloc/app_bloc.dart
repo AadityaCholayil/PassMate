@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -146,11 +145,16 @@ class AppBloc extends Bloc<AppEvent, AppState> {
 
   Future<void> _onCheckEmailStatus(
       CheckEmailStatus event, Emitter<AppState> emit) async {
+    // emit loading
     emit(const EmailInputPageState(emailStatus: EmailStatus.loading));
     try {
+      // Try to login with the email provided with null as password
+      // This will throw an exception
       await _authRepository.logInWithCredentials(event.email, 'null');
     } on Exception catch (e) {
       if (e is UserNotFoundException) {
+        // This means there was no existing user found for that email
+        // Hence, the email is valid
         emit(const EmailInputPageState(emailStatus: EmailStatus.valid));
       } else {
         emit(const EmailInputPageState(emailStatus: EmailStatus.invalid));

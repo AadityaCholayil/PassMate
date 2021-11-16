@@ -52,6 +52,7 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: context.read<MenuProvider>().currentPage < 3
@@ -69,7 +70,7 @@ class _MainScreenState extends State<MainScreen> {
         fabSize: 65.w,
         fabOpenIcon: const Icon(Icons.add, color: Colors.white, size: 42),
         fabCloseIcon: const Icon(Icons.close, color: Colors.white, size: 37),
-        ringColor: Theme.of(context).colorScheme.secondary.withOpacity(0.3),
+        ringColor: colorScheme.secondary.withOpacity(0.3),
         children: [
           _buildSubFAB(
             icon: Icons.sticky_note_2_rounded,
@@ -122,6 +123,7 @@ class MainListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return RefreshIndicator(
       onRefresh: () async => BlocProvider.of<DatabaseBloc>(context).add([
         GetPasswords(),
@@ -149,7 +151,7 @@ class MainListPage extends StatelessWidget {
                     padding: EdgeInsets.zero,
                     icon: Icon(
                       Icons.notes_rounded,
-                      color: Theme.of(context).colorScheme.primary,
+                      color: colorScheme.primary,
                     ),
                     onPressed: () {
                       ZoomDrawer.of(context)!.toggle();
@@ -161,7 +163,7 @@ class MainListPage extends StatelessWidget {
                     padding: EdgeInsets.zero,
                     icon: Icon(
                       Icons.settings_rounded,
-                      color: Theme.of(context).colorScheme.primary,
+                      color: colorScheme.primary,
                     ),
                     onPressed: () {
                       Navigator.push(
@@ -190,7 +192,7 @@ class MainListPage extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 31,
                           fontWeight: FontWeight.normal,
-                          color: Theme.of(context).colorScheme.onBackground,
+                          color: colorScheme.onBackground,
                           height: 0.9,
                         ),
                       ),
@@ -200,7 +202,7 @@ class MainListPage extends StatelessWidget {
                           height: 1.25,
                           fontSize: 43,
                           fontWeight: FontWeight.w700,
-                          color: Theme.of(context).colorScheme.onBackground,
+                          color: colorScheme.onBackground,
                         ),
                       ),
                     ],
@@ -216,7 +218,7 @@ class MainListPage extends StatelessWidget {
                 child: Container(
                   clipBehavior: Clip.antiAliasWithSaveLayer,
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.background,
+                    color: colorScheme.background,
                     borderRadius:
                         BorderRadius.vertical(top: Radius.circular(25.w)),
                   ),

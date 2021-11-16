@@ -28,7 +28,7 @@ InputDecoration customInputDecoration(
     ),
     fillColor: Theme.of(context).colorScheme.surface,
     labelText: labelText,
-    labelStyle: const TextStyle(fontSize: 18),
+    labelStyle: const TextStyle(fontSize: 16.5),
     alignLabelWithHint: true,
     floatingLabelBehavior: FloatingLabelBehavior.never,
     helperStyle: const TextStyle(
@@ -137,6 +137,7 @@ class CustomElevatedButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
+        elevation: 3,
         primary:
             style == 0 ? Theme.of(context).colorScheme.primary : Colors.white,
         shape: RoundedRectangleBorder(
