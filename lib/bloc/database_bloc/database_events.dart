@@ -131,32 +131,38 @@ class GetFolder extends DatabaseEvents {
   final String path;
 
   GetFolder({
-    this.path='root',
+    this.path = 'root',
   });
 }
 
 class AddFolder extends DatabaseEvents {
-  final String path;
+  final String currentPath;
+  final String newFolderName;
 
   AddFolder({
-    this.path='/',
+    required this.currentPath,
+    required this.newFolderName,
   });
 }
 
 class RenameFolder extends DatabaseEvents {
+  final String currentPath;
   final String oldPath;
   final String newPath;
 
   RenameFolder({
-    this.oldPath='/',
-    this.newPath='/',
+    this.currentPath = '/',
+    this.oldPath = '/',
+    this.newPath = '/',
   });
 }
 
 class DeleteFolder extends DatabaseEvents {
+  final String currentPath;
   final String path;
 
   DeleteFolder({
-    this.path='/',
+    this.currentPath = '/',
+    this.path = '/',
   });
 }

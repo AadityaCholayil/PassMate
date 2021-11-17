@@ -499,8 +499,8 @@ class _PasswordDetailCardState extends State<PasswordDetailCard> {
                 children: [
                   Container(
                     margin: EdgeInsets.all(5.w),
-                    height: 60.w,
-                    width: 60.w,
+                    height: 55.w,
+                    width: 55.w,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
                       border: Border.all(
@@ -510,8 +510,8 @@ class _PasswordDetailCardState extends State<PasswordDetailCard> {
                       borderRadius: BorderRadius.circular(30.w),
                     ),
                     child: Container(
-                      height: 50.w,
-                      width: 50.w,
+                      height: 45.w,
+                      width: 45.w,
                       clipBehavior: Clip.antiAliasWithSaveLayer,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(30.w),
@@ -527,12 +527,12 @@ class _PasswordDetailCardState extends State<PasswordDetailCard> {
                     password.siteName,
                     style: const TextStyle(
                       fontWeight: FontWeight.w600,
-                      fontSize: 28,
+                      fontSize: 25,
                     ),
                   ),
                   const Spacer(),
                   LikeButton(
-                    size: 35.w,
+                    size: 32.w,
                     isLiked: password.favourite,
                     onTap: (value) async {
                       password.favourite = !value;
@@ -565,7 +565,7 @@ class _PasswordDetailCardState extends State<PasswordDetailCard> {
                           children: [
                             _buildContent(context, password.email),
                             IconButton(
-                              icon: Icon(Icons.copy, size: 28.w),
+                              icon: Icon(Icons.copy, size: 25.w),
                               onPressed: () {
                                 Clipboard.setData(
                                     ClipboardData(text: password.email));
@@ -588,7 +588,7 @@ class _PasswordDetailCardState extends State<PasswordDetailCard> {
                                   showPassword
                                       ? Icons.visibility
                                       : Icons.visibility_off,
-                                  size: 28.w),
+                                  size: 25.w),
                               onPressed: () {
                                 setState(() {
                                   showPassword = !showPassword;
@@ -596,7 +596,7 @@ class _PasswordDetailCardState extends State<PasswordDetailCard> {
                               },
                             ),
                             IconButton(
-                              icon: Icon(Icons.copy, size: 28.w),
+                              icon: Icon(Icons.copy, size: 25.w),
                               onPressed: () {
                                 Clipboard.setData(
                                     ClipboardData(text: password.password));
@@ -612,7 +612,7 @@ class _PasswordDetailCardState extends State<PasswordDetailCard> {
                             children: [
                               Icon(
                                 passwordCategoryIcon[password.category.index],
-                                size: 28.w,
+                                size: 24.w,
                               ),
                               SizedBox(width: 20.w),
                               _buildContent(context, categoryText),
@@ -706,7 +706,7 @@ class _PasswordDetailCardState extends State<PasswordDetailCard> {
     return Text(
       text,
       style: const TextStyle(
-        fontSize: 19,
+        fontSize: 18,
         fontWeight: FontWeight.w500,
       ),
     );

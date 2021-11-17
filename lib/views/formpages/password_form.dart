@@ -1,11 +1,16 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:passmate/bloc/database_bloc/database_barrel.dart';
+import 'package:passmate/model/folder.dart';
 import 'package:passmate/model/password.dart';
 import 'package:passmate/shared/custom_snackbar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:passmate/shared/custom_widgets.dart';
+import 'package:passmate/shared/loading.dart';
 
 class PasswordFormPage extends StatefulWidget {
   final Password? password;
@@ -424,8 +429,21 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
       margin: EdgeInsets.only(top: 7.w, bottom: 5.w),
       child: InkWell(
         borderRadius: BorderRadius.circular(15.w),
-        onTap: () {
+        onTap: () async {
           print('change path');
+          var res = await showDialog(
+            context: context,
+            barrierColor: Colors.black.withOpacity(0.25),
+            // backgroundColor: Colors.transparent,
+            builder: (context) {
+              return SelectFolderDialog(startPath: _path);
+            },
+          );
+          if(res!=null){
+            setState(() {
+              _path = res;
+            });
+          }
         },
         child: Container(
           alignment: Alignment.centerLeft,
@@ -548,3 +566,334 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
 }
 
 enum FormFieldType { siteName, siteUrl, email, password, note }
+
+class SelectFolderDialog extends StatefulWidget {
+  final String startPath;
+
+  const SelectFolderDialog({Key? key, required this.startPath})
+      : super(key: key);
+
+  @override
+  _SelectFolderDialogState createState() => _SelectFolderDialogState();
+}
+
+class _SelectFolderDialogState extends State<SelectFolderDialog> {
+  String _path = '';
+  Folder _folder = Folder.empty;
+  List<String> pathList = [];
+  int selectedIndex = 999;
+  String selectedPath = '';
+
+  @override
+  void initState() {
+    super.initState();
+    if (_path == '') {
+      _path = widget.startPath;
+      selectedPath = _path;
+    }
+    String path = selectedPath.substring(
+        0, selectedPath.length - selectedPath.split('/').last.length - 1);
+    print(path);
+    context.read<DatabaseBloc>().add(GetFolder(path: path));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return Center(
+      child: BlocConsumer<DatabaseBloc, DatabaseState>(
+        listenWhen: (previous, current) => previous != current,
+        buildWhen: (previous, current) => previous != current,
+        listener: (context, state) {
+          if (state is FolderListState) {
+            _folder = state.folder;
+            List<String> list = _folder.path.split('/');
+            pathList = [];
+            _path = _folder.path;
+            for (var path in list) {
+              if (path == 'root') {
+                pathList.add('My Folders');
+              } else {
+                pathList.add(path.replaceRange(0, 1, path[0].toUpperCase()));
+              }
+            }
+          } else if (state is PasswordList ||
+              state is PaymentCardList ||
+              state is SecureNotesList) {
+            context.read<DatabaseBloc>().add(GetFolder(path: _path));
+          }
+        },
+        builder: (context, state) {
+          return SizedBox(
+            height: 550.w,
+            child: Card(
+              color: Theme.of(context).backgroundColor,
+              margin: EdgeInsets.all(10.w),
+              clipBehavior: Clip.antiAliasWithSaveLayer,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30.w)),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildAppBar(context),
+                  state is Fetching
+                      ? Container(
+                          height: 414.w,
+                          alignment: Alignment.center,
+                          child: const LoadingSmall(),
+                        )
+                      : SizedBox(
+                          height: 414.w,
+                          child: SingleChildScrollView(
+                            physics: const BouncingScrollPhysics(),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding:
+                                      EdgeInsets.fromLTRB(22.w, 10.w, 20.w, 0),
+                                  child: Text(
+                                    'Select Folder',
+                                    style: TextStyle(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onBackground,
+                                      fontSize: 36,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                ),
+                                _buildFolderPath(),
+                                SizedBox(height: 10.w),
+                                _buildFolderList(_folder),
+                              ],
+                            ),
+                          ),
+                        ),
+                  Container(
+                    height: 60.w,
+                    padding: EdgeInsets.only(right: 20.w),
+                    color: Theme.of(context).cardColor,
+                    alignment: Alignment.centerRight,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        selectedIndex != 999
+                            ? TextButton(
+                                child: const Text(
+                                  'Confirm',
+                                  style: TextStyle(
+                                      fontSize: 19,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                                onPressed: () {
+                                  Navigator.pop(context, selectedPath);
+                                },
+                              )
+                            : const SizedBox.shrink(),
+                        SizedBox(width: 10.w),
+                        TextButton(
+                          child: const Text(
+                            'Cancel',
+                            style: TextStyle(
+                                fontSize: 19, fontWeight: FontWeight.w600),
+                          ),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildAppBar(BuildContext context) {
+    return Container(
+      height: 56.w,
+      color: Theme.of(context).cardColor,
+      padding: EdgeInsets.fromLTRB(10.w, 0.w, 13.w, 0.w),
+      alignment: Alignment.centerLeft,
+      child: IconButton(
+        iconSize: 34.w,
+        padding: EdgeInsets.zero,
+        icon: Icon(
+          Icons.arrow_back_ios_rounded,
+          color: Theme.of(context).colorScheme.primary,
+          size: 26.w,
+        ),
+        onPressed: () {
+          if (_path != 'root') {
+            _path = _path.substring(
+                0, _path.length - _folder.folderName.length - 1);
+            context.read<DatabaseBloc>().add(GetFolder(path: _path));
+          }
+        },
+      ),
+    );
+  }
+
+  Widget _buildFolderPath() {
+    return Container(
+      padding: EdgeInsets.only(left: 22.w),
+      height: 30.w,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Expanded(
+            child: ListView.separated(
+              shrinkWrap: true,
+              physics: const BouncingScrollPhysics(),
+              itemCount: pathList.length + 1,
+              scrollDirection: Axis.horizontal,
+              itemBuilder: (context, index) {
+                if (pathList.length == index) {
+                  return SizedBox(
+                    width: 80.w,
+                  );
+                } else {
+                  return Center(
+                    child: TextButton(
+                      style: TextButton.styleFrom(
+                        padding: EdgeInsets.zero,
+                        splashFactory: NoSplash.splashFactory,
+                      ),
+                      child: Text(
+                        pathList[index],
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.secondary,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      onPressed: () {
+                        if (index != pathList.length - 1) {
+                          List<String> pathList2 = _folder.path.split('/');
+                          String newPath = pathList2[0];
+                          for (int i = 1; i <= index; i++) {
+                            newPath = newPath + '/' + pathList2[i];
+                          }
+                          _path = newPath;
+                          setState(() {
+                            selectedIndex = 999;
+                          });
+                          context
+                              .read<DatabaseBloc>()
+                              .add(GetFolder(path: _path));
+                        }
+                      },
+                    ),
+                  );
+                }
+              },
+              separatorBuilder: (context, index) {
+                return Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 5.w),
+                  child: Icon(
+                    Icons.arrow_forward_ios,
+                    size: 18.w,
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFolderList(Folder folder) {
+    return ListView.builder(
+      padding: EdgeInsets.fromLTRB(20.w, 1.w, 20.w, 10.w),
+      primary: false,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: folder.subFolderList.length,
+      itemBuilder: (context, index) {
+        String folderName = folder.subFolderList[index].split('/').last;
+        if (selectedPath == folder.subFolderList[index]) {
+          selectedIndex = index;
+        }
+        return InkWell(
+          onTap: () {
+            setState(() {
+              if (selectedIndex != index) {
+                selectedIndex = index;
+                selectedPath = folder.subFolderList[index];
+              } else {
+                selectedIndex = 999;
+              }
+            });
+          },
+          borderRadius: BorderRadius.circular(18.w),
+          child: Container(
+            height: 68.w,
+            padding: EdgeInsets.only(
+                top: 11.w,
+                bottom: 11.w,
+                left: selectedIndex == index ? 15.w : 5.w,
+                right: selectedIndex == index ? 5.w : 0.w),
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: selectedIndex == index
+                    ? Theme.of(context).primaryColor
+                    : Colors.transparent,
+                width: 2.w,
+              ),
+              borderRadius: BorderRadius.circular(18.w),
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Image.asset(
+                  'assets/folderIcon.png',
+                  height: 27.w,
+                  width: 34.w,
+                ),
+                SizedBox(
+                  width: 25.w,
+                ),
+                Text(
+                  folderName.replaceRange(0, 1, folderName[0].toUpperCase()),
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.fade,
+                  softWrap: false,
+                ),
+                const Spacer(),
+                IconButton(
+                  padding: EdgeInsets.zero,
+                  icon: Icon(
+                    Icons.arrow_forward_ios,
+                    size: 18.w,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      selectedIndex = 999;
+                    });
+                    context
+                        .read<DatabaseBloc>()
+                        .add(GetFolder(path: folder.subFolderList[index]));
+                  },
+                )
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+}

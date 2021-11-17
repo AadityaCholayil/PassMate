@@ -53,6 +53,7 @@ dependencies:
   dotted_border: ^2.0.0+1
   bloc: ^7.2.1
   bloc_concurrency: ^0.1.0
+  flip_card: ^0.6.0
 
 dev_dependencies:
   flutter_test:

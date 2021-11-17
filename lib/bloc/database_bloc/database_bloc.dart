@@ -19,7 +19,7 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState> {
     required this.databaseRepository,
     required this.encryptionRepository,
   }) : super(Fetching()) {
-    if (userData!=UserData.empty) {
+    if (userData != UserData.empty) {
       updateFolderList();
     }
   }
@@ -36,7 +36,7 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState> {
 
   @override
   Stream<DatabaseState> mapEventToState(DatabaseEvents event) async* {
-    if (folderList == null && userData!=UserData.empty) {
+    if (folderList == null && userData != UserData.empty) {
       await updateFolderList();
     }
     if (event is GetPasswords) {
@@ -65,6 +65,12 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState> {
       yield* _mapDeleteSecureNoteToState(event);
     } else if (event is GetFolder) {
       yield* _mapGetFolderToState(event);
+    } else if (event is AddFolder) {
+      yield* _mapAddFolderToState(event);
+    } else if (event is RenameFolder) {
+      yield* _mapRenameFolderToState(event);
+    } else if (event is DeleteFolder) {
+      yield* _mapDeleteFolderToState(event);
     }
   }
 
@@ -146,8 +152,8 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState> {
     await _password.encrypt(encryptionRepository);
     if (event.fromForm) {
       yield PasswordFormState.loading;
-      String res = await databaseRepository.updatePassword(
-          _password, event.oldPath);
+      String res =
+          await databaseRepository.updatePassword(_password, event.oldPath);
       if (res == 'Success') {
         yield PasswordFormState.success;
       } else {
@@ -415,8 +421,37 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState> {
     yield FolderListState(folder);
   }
 
-  Stream<DatabaseState> _mapAddFolderToState(GetFolder event) async* {
+  Stream<DatabaseState> _mapAddFolderToState(AddFolder event) async* {
     yield Fetching();
+    String newFolderPath = '${event.currentPath}/${event.newFolderName}';
+    String newFolderPathTemp = newFolderPath;
+    try {
+      for (int i = 2; i < 100; i++) {
+        if (!folderList!.contains(newFolderPathTemp)) {
+          await databaseRepository.addFolder(folderName: newFolderPathTemp);
+          break;
+        } else {
+          newFolderPathTemp = '$newFolderPath($i)';
+        }
+      }
+    } on Exception catch (_) {}
+    add(GetFolder(path: event.currentPath));
+  }
 
+  Stream<DatabaseState> _mapRenameFolderToState(RenameFolder event) async* {
+    yield Fetching();
+    try {
+      await databaseRepository.renameFolder(
+          oldPath: event.oldPath, newPath: event.newPath);
+    } on Exception catch (_) {}
+    add(GetFolder(path: event.currentPath));
+  }
+
+  Stream<DatabaseState> _mapDeleteFolderToState(DeleteFolder event) async* {
+    yield Fetching();
+    try {
+      await databaseRepository.deleteFolder(folderName: event.path);
+    } on Exception catch (_) {}
+    add(GetFolder(path: event.currentPath));
   }
 }

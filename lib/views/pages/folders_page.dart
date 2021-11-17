@@ -7,6 +7,7 @@ import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:passmate/bloc/database_bloc/database_barrel.dart';
 import 'package:passmate/model/folder.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:passmate/shared/custom_widgets.dart';
 import 'package:passmate/shared/loading.dart';
 import 'package:passmate/views/pages/passwords_page.dart';
 import 'package:passmate/views/pages/payment_card_page.dart';
@@ -80,7 +81,6 @@ class _FolderPageState extends State<FolderPage> {
           child: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
             child: Column(
-              // mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildAppBar(context),
@@ -295,9 +295,9 @@ class FolderList extends StatelessWidget {
       itemCount: folder.subFolderList.length + 1,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
-        crossAxisSpacing: 16.w,
+        crossAxisSpacing: 20.w,
         mainAxisSpacing: 20.w,
-        childAspectRatio: 157.w / 100.w,
+        childAspectRatio: 157.w / 98.w,
       ),
       itemBuilder: (context, index) {
         if (folder.subFolderList.length == index) {
@@ -312,7 +312,16 @@ class FolderList extends StatelessWidget {
               borderRadius: BorderRadius.circular(20.w),
               child: InkWell(
                 borderRadius: BorderRadius.circular(20.w),
-                onTap: () {},
+                onTap: () async {
+                  await showDialog(
+                    context: context,
+                    barrierColor: Colors.black.withOpacity(0.25),
+                    // backgroundColor: Colors.transparent,
+                    builder: (context) {
+                      return AddFolderDialog(currentPath: folder.path);
+                    },
+                  );
+                },
                 child: Center(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -347,7 +356,7 @@ class FolderList extends StatelessWidget {
           return Card(
             elevation: 3,
             clipBehavior: Clip.antiAliasWithSaveLayer,
-            margin: EdgeInsets.only(right: 1.w, left: 1),
+            margin: EdgeInsets.zero,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20.w),
             ),
@@ -357,9 +366,22 @@ class FolderList extends StatelessWidget {
                     .read<DatabaseBloc>()
                     .add(GetFolder(path: folder.subFolderList[index]));
               },
+              onLongPress: () async {
+                await showModalBottomSheet(
+                  context: context,
+                  barrierColor: Colors.black.withOpacity(0.25),
+                  backgroundColor: Colors.transparent,
+                  builder: (context) {
+                    return FolderDetails(
+                        currentPath: folder.path,
+                        path: folder.subFolderList[index]);
+                  },
+                );
+              },
               child: Container(
                 padding: EdgeInsets.fromLTRB(18.w, 18.w, 18.w, 5.w),
                 child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Image.asset(
@@ -374,7 +396,7 @@ class FolderList extends StatelessWidget {
                       folderName.replaceRange(
                           0, 1, folderName[0].toUpperCase()),
                       style: const TextStyle(
-                        fontSize: 20,
+                        fontSize: 18,
                         fontWeight: FontWeight.w500,
                       ),
                       maxLines: 1,
@@ -388,6 +410,283 @@ class FolderList extends StatelessWidget {
           );
         }
       },
+    );
+  }
+}
+
+class AddFolderDialog extends StatefulWidget {
+  final String currentPath;
+
+  const AddFolderDialog({Key? key, required this.currentPath})
+      : super(key: key);
+
+  @override
+  State<AddFolderDialog> createState() => _AddFolderDialogState();
+}
+
+class _AddFolderDialogState extends State<AddFolderDialog> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  String folderName = '';
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return Center(
+      child: Card(
+        margin: EdgeInsets.all(10.w),
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.w)),
+        child: Container(
+          padding: EdgeInsets.all(15.w),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Add Folder',
+                  style: TextStyle(
+                    color: colorScheme.primary,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 25,
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 15.w, bottom: 20.w),
+                  child: TextFormField(
+                    style: formTextStyle2(context),
+                    decoration: customInputDecoration(
+                      context: context,
+                      labelText: 'Name',
+                    ),
+                    validator: (value) {
+                      if (value == null || value == '') {
+                        return 'This field cannot be empty!';
+                      }
+                      return null;
+                    },
+                    onSaved: (value) {
+                      folderName = value ?? '';
+                    },
+                  ),
+                ),
+                CustomElevatedButton(
+                  text: 'Confirm',
+                  onPressed: () {
+                    if (!_formKey.currentState!.validate()) {
+                      return;
+                    }
+                    _formKey.currentState!.save();
+                    context.read<DatabaseBloc>().add(AddFolder(
+                        currentPath: widget.currentPath, newFolderName: folderName));
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class FolderDetails extends StatefulWidget {
+  final String currentPath;
+  final String path;
+
+  const FolderDetails({Key? key, required this.currentPath, required this.path})
+      : super(key: key);
+
+  @override
+  _FolderDetailsState createState() => _FolderDetailsState();
+}
+
+class _FolderDetailsState extends State<FolderDetails> {
+  String currentPath = '';
+  String path = '';
+
+  @override
+  void initState() {
+    super.initState();
+    currentPath = widget.currentPath;
+    path = widget.path;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return Card(
+      margin: EdgeInsets.all(10.w),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.w)),
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.w),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              path
+                  .split('/')
+                  .last
+                  .replaceRange(0, 1, path.split('/').last[0].toUpperCase()),
+              style: TextStyle(
+                color: colorScheme.primary,
+                fontWeight: FontWeight.w600,
+                fontSize: 22,
+              ),
+            ),
+            SizedBox(height: 10.w),
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              title: Text(
+                'Rename',
+                style: TextStyle(
+                  color: colorScheme.primary,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 18,
+                ),
+              ),
+              leading: Icon(
+                Icons.drive_file_rename_outline,
+                size: 26.w,
+                color: colorScheme.primary,
+              ),
+              onTap: () async {
+                Navigator.pop(context);
+                await showDialog(
+                  context: context,
+                  barrierColor: Colors.black.withOpacity(0.25),
+                  // backgroundColor: Colors.transparent,
+                  builder: (context) {
+                    return RenameFolderDialog(
+                      path: path,
+                      currentPath: currentPath,
+                    );
+                  },
+                );
+              },
+            ),
+            Divider(thickness: 2.w),
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              title: Text(
+                'Delete',
+                style: TextStyle(
+                  color: colorScheme.primary,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 18,
+                ),
+              ),
+              leading: Icon(
+                Icons.delete_outlined,
+                size: 26.w,
+                color: colorScheme.primary,
+              ),
+              onTap: () {
+                context.read<DatabaseBloc>().add(DeleteFolder(path: path, currentPath: currentPath));
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class RenameFolderDialog extends StatefulWidget {
+  final String currentPath;
+  final String path;
+
+  const RenameFolderDialog(
+      {Key? key, required this.currentPath, required this.path})
+      : super(key: key);
+
+  @override
+  _RenameFolderDialogState createState() => _RenameFolderDialogState();
+}
+
+class _RenameFolderDialogState extends State<RenameFolderDialog> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  String currentPath = '';
+  String path = '';
+  String newFolderName = '';
+
+  @override
+  void initState() {
+    super.initState();
+    path = widget.path;
+    currentPath = widget.currentPath;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return Center(
+      child: Card(
+        margin: EdgeInsets.all(10.w),
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.w)),
+        child: Container(
+          padding: EdgeInsets.all(15.w),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Rename Folder',
+                  style: TextStyle(
+                    color: colorScheme.primary,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 25,
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 15.w, bottom: 20.w),
+                  child: TextFormField(
+                    initialValue: path.split('/').last.replaceRange(
+                        0, 1, path.split('/').last[0].toUpperCase()),
+                    style: formTextStyle2(context),
+                    decoration: customInputDecoration(
+                      context: context,
+                      labelText: 'Name',
+                    ),
+                    validator: (value) {
+                      if (value == null || value == '') {
+                        return 'This field cannot be empty!';
+                      }
+                      return null;
+                    },
+                    onSaved: (value) {
+                      newFolderName = value ?? '';
+                    },
+                  ),
+                ),
+                CustomElevatedButton(
+                  text: 'Confirm',
+                  onPressed: () {
+                    if (!_formKey.currentState!.validate()) {
+                      return;
+                    }
+                    _formKey.currentState!.save();
+                    String oldPath = path;
+                    String newPath = '$currentPath/$newFolderName';
+                    context.read<DatabaseBloc>().add(RenameFolder(
+                        currentPath: currentPath,
+                        oldPath: oldPath,
+                        newPath: newPath));
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

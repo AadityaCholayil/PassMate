@@ -31,6 +31,8 @@
 .pub/
 /build/
 
+/public/
+
 # Web related
 lib/generated_plugin_registrant.dart
 
@@ -51,4 +53,3 @@ app.*.map.json
 /firestore.rules
 /remoteconfig.template.json
 /storage.rules
-/public/

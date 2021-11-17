@@ -252,4 +252,29 @@ class DatabaseRepository {
       throw const SomethingWentWrong();
     }
   }
+
+  Future renameFolder({String oldPath = '/', String newPath = '/'}) async {
+    try {
+      FolderData data = await foldersRef
+          .get()
+          .then((value) => value.data() ?? FolderData());
+      data.folderList.remove(oldPath);
+      data.folderList.add(newPath);
+      await foldersRef.set(data);
+    } on Exception catch (_) {
+      throw const SomethingWentWrong();
+    }
+  }
+
+  Future deleteFolder({String folderName = '/'}) async {
+    try {
+      FolderData data = await foldersRef
+          .get()
+          .then((value) => value.data() ?? FolderData());
+      data.folderList.remove(folderName);
+      await foldersRef.set(data);
+    } on Exception catch (_) {
+      throw const SomethingWentWrong();
+    }
+  }
 }
