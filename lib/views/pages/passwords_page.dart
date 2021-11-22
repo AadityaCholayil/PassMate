@@ -389,7 +389,7 @@ class PasswordCard extends StatelessWidget {
                   return PasswordDetailCard(password: password);
                 },
               );
-              if (res != 'Deleted') {
+              if (res != 'Deleted' && res != 'Updated') {
                 context
                     .read<DatabaseBloc>()
                     .add(UpdatePassword(password, false, password.path));
@@ -677,7 +677,7 @@ class _PasswordDetailCardState extends State<PasswordDetailCard> {
                         ).then((value) {
                           BlocProvider.of<DatabaseBloc>(context)
                               .add(GetPasswords());
-                          Navigator.pop(context);
+                          Navigator.pop(context, 'Updated');
                         });
                       },
                     ),

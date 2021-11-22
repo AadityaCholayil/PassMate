@@ -151,6 +151,7 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState> {
     Password _password = event.password;
     await _password.encrypt(encryptionRepository);
     if (event.fromForm) {
+      print(event.password);
       yield PasswordFormState.loading;
       String res =
           await databaseRepository.updatePassword(_password, event.oldPath);
@@ -160,7 +161,8 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState> {
         yield PasswordFormState.errorOccurred;
       }
     } else {
-      print('hi');
+      print('what');
+      print(event.password);
       await databaseRepository.updatePassword(_password, event.oldPath);
       await _password.decrypt(encryptionRepository);
       print('hi2');

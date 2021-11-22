@@ -12,6 +12,7 @@ import 'package:passmate/shared/loading.dart';
 import 'package:passmate/views/pages/passwords_page.dart';
 import 'package:passmate/views/pages/payment_card_page.dart';
 import 'package:passmate/views/pages/secure_notes_page.dart';
+import 'package:passmate/views/pages/settings_page.dart';
 
 class FolderPage extends StatefulWidget {
   final String path;
@@ -179,7 +180,10 @@ class _FolderPageState extends State<FolderPage> {
               color: Theme.of(context).colorScheme.primary,
             ),
             onPressed: () {
-              ZoomDrawer.of(context)!.toggle();
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const SettingsPage()));
             },
           ),
         ],
@@ -479,7 +483,8 @@ class _AddFolderDialogState extends State<AddFolderDialog> {
                     }
                     _formKey.currentState!.save();
                     context.read<DatabaseBloc>().add(AddFolder(
-                        currentPath: widget.currentPath, newFolderName: folderName));
+                        currentPath: widget.currentPath,
+                        newFolderName: folderName));
                     Navigator.pop(context);
                   },
                 ),
@@ -585,7 +590,9 @@ class _FolderDetailsState extends State<FolderDetails> {
                 color: colorScheme.primary,
               ),
               onTap: () {
-                context.read<DatabaseBloc>().add(DeleteFolder(path: path, currentPath: currentPath));
+                context
+                    .read<DatabaseBloc>()
+                    .add(DeleteFolder(path: path, currentPath: currentPath));
                 Navigator.pop(context);
               },
             ),

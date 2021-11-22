@@ -7,9 +7,29 @@ class Loading extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-          child: CircularProgressIndicator()
+    return Center(
+      child: SpinKitCircle(
+        size: 100,
+        color: Theme.of(context).primaryColor,
+      ),
+    );
+  }
+}
+
+class LoadingPage extends StatelessWidget {
+  const LoadingPage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        body: Center(
+          child: SpinKitCircle(
+            size: 100,
+            color: Theme.of(context).primaryColor,
+          ),
+        ),
       ),
     );
   }

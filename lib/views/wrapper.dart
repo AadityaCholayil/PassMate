@@ -13,7 +13,7 @@ class Wrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (state is Uninitialized) {
-      return const Loading();
+      return const LoadingPage();
     } else if (state is Unauthenticated ||
         state is LoginPageState ||
         state is SignupPageState ||
@@ -22,7 +22,7 @@ class Wrapper extends StatelessWidget {
     } else if (state is Authenticated || state is DeleteAccountPageState) {
       return const HomeScreen();
     } else {
-      return const Loading();
+      return const LoadingPage();
     }
   }
 }

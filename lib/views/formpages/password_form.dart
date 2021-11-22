@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:http/http.dart';
 import 'package:passmate/bloc/database_bloc/database_barrel.dart';
 import 'package:passmate/model/folder.dart';
 import 'package:passmate/model/password.dart';
@@ -30,6 +32,7 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
   String _password = '';
   String _note = '';
   PasswordCategory _category = PasswordCategory.others;
+  String _imageUrl = '';
   bool _favourite = false;
   int _usage = 0;
   Timestamp? _timeAdded;
@@ -116,7 +119,7 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
                           'Note (Optional)', Icons.sticky_note_2_outlined),
                       _buildNote(context),
                       SizedBox(height: 25.w),
-                      _buildSubmitButton(),
+                      _buildSubmitButton(context),
                       SizedBox(height: 100.w),
                     ],
                   ),
@@ -306,7 +309,7 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
               Text(
                 label,
                 style: const TextStyle(
-                  fontSize: 18,
+                  fontSize: 17,
                 ),
               ),
               const Spacer(),
@@ -439,7 +442,7 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
               return SelectFolderDialog(startPath: _path);
             },
           );
-          if(res!=null){
+          if (res != null) {
             setState(() {
               _path = res;
             });
@@ -511,17 +514,48 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
     );
   }
 
-  Widget _buildSubmitButton() {
+  Future<String?> getFavicon(String domain) async {
+    Client _client = Client();
+    Response response = await _client.get(Uri.https(
+      'favicongrabber.com',
+      '/api/grab/$domain',
+    ));
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body);
+      print(data);
+      try {
+        String url = data['icons'][0]['src'];
+        print(url);
+        return url;
+      } on Exception catch (_) {
+        return null;
+      } on Error catch (_) {
+        return null;
+      }
+    } else {
+      return null;
+    }
+  }
+
+  Widget _buildSubmitButton(BuildContext context) {
     return CustomElevatedButton(
       style: 0,
       text: _isUpdate ? 'Update' : 'Submit',
-      onPressed: () {
+      onPressed: () async {
         if (!_formKey.currentState!.validate()) {
           return;
         }
         setState(() {
           _formKey.currentState!.save();
         });
+        String? imageUrl = await getFavicon(_siteUrl);
+        if (imageUrl != null) {
+          _imageUrl = imageUrl;
+        } else {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(showCustomSnackBar(context, 'Please try again!'));
+          return;
+        }
         Password password = Password(
           id: _id,
           path: _path,
@@ -529,7 +563,7 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
           siteUrl: _siteUrl,
           email: _email,
           password: _password,
-          imageUrl: 'https://api.faviconkit.com/$_siteUrl/144',
+          imageUrl: _imageUrl,
           note: _note == '' ? 'null' : _note,
           category: _category,
           favourite: _favourite,
@@ -564,8 +598,6 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
     );
   }
 }
-
-enum FormFieldType { siteName, siteUrl, email, password, note }
 
 class SelectFolderDialog extends StatefulWidget {
   final String startPath;

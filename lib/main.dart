@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:passmate/bloc/app_bloc_observer.dart';
 import 'package:passmate/my_app.dart';
+import 'package:passmate/shared/error_screen.dart';
+import 'package:passmate/shared/loading.dart';
 
 // import 'dart:html' as html;
 
@@ -18,4 +20,36 @@ void main() async {
   runApp(const MyApp());
 }
 
+class FlutterFireInit extends StatefulWidget {
+  const FlutterFireInit({Key? key}) : super(key: key);
+
+  @override
+  _FlutterFireInitState createState() => _FlutterFireInitState();
+}
+
+class _FlutterFireInitState extends State<FlutterFireInit> {
+  final Future<FirebaseApp> _initialization = Firebase.initializeApp();
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      // Initialize FlutterFire:
+      future: _initialization,
+      builder: (context, snapshot) {
+        // Check for errors
+        if (snapshot.hasError) {
+          return const MaterialApp(home: SomethingWentWrong());
+        }
+
+        // Once complete, show your application
+        if (snapshot.connectionState == ConnectionState.done) {
+          return const MyApp();
+        }
+
+        // Otherwise, show something whilst waiting for initialization to complete
+        return const LoadingPage();
+      },
+    );
+  }
+}
 
