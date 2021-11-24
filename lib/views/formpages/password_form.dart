@@ -253,7 +253,7 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
         style: formTextStyle2(context),
         decoration: customInputDecoration(
           context: context,
-          labelText: 'Eg. Google',
+          labelText: 'Eg. For Google',
         ),
         maxLines: 3,
         onSaved: (value) {
@@ -816,6 +816,7 @@ class _SelectFolderDialogState extends State<SelectFolderDialog> {
                           _path = newPath;
                           setState(() {
                             selectedIndex = 999;
+                            selectedPath = widget.startPath;
                           });
                           context
                               .read<DatabaseBloc>()
@@ -872,8 +873,8 @@ class _SelectFolderDialogState extends State<SelectFolderDialog> {
             padding: EdgeInsets.only(
                 top: 11.w,
                 bottom: 11.w,
-                left: selectedIndex == index ? 15.w : 5.w,
-                right: selectedIndex == index ? 5.w : 0.w),
+                left: selectedIndex != index ? 5.w : 15.w,
+                right: selectedIndex != index ? 0.w : 5.w),
             decoration: BoxDecoration(
               border: Border.all(
                 color: selectedIndex == index

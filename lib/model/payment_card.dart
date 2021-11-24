@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:passmate/repositories/encryption_repository.dart';
 
 class PaymentCard {
@@ -90,8 +91,15 @@ class PaymentCard {
 
   @override
   String toString() {
-    return '$path - $bankName: $cardNo, $holderName Type: $cardType, isFav: $favourite';
+    return '$path - $bankName: $cardNo, $holderName, $cvv, $expiryDate, Type: $cardType, isFav: $favourite';
   }
 }
 
 enum PaymentCardType { all, creditCard, debitCard, others }
+
+List<IconData> paymentCategoryIcon = [
+  Icons.favorite_border_rounded,
+  Icons.credit_card_outlined,
+  Icons.credit_card_outlined,
+  Icons.more_horiz
+];

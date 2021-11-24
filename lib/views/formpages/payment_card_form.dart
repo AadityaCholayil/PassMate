@@ -9,6 +9,7 @@ import 'package:passmate/bloc/database_bloc/database_barrel.dart';
 import 'package:passmate/model/payment_card.dart';
 import 'package:passmate/shared/custom_snackbar.dart';
 import 'package:passmate/shared/custom_widgets.dart';
+import 'package:passmate/views/formpages/password_form.dart';
 
 class PaymentCardFormPage extends StatefulWidget {
   final PaymentCard? paymentCard;
@@ -31,7 +32,7 @@ class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
   PaymentCardType _cardType = PaymentCardType.others;
   bool _favourite = false;
   int _usage = 0;
-  String _color = '';
+  String _color = 'purple';
   Timestamp? _timeAdded;
 
   bool _isUpdate = false;
@@ -52,7 +53,8 @@ class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
       _holderName = widget.paymentCard!.holderName;
       _expiryDate = widget.paymentCard!.expiryDate;
       _cvv = widget.paymentCard!.cvv;
-      _note = widget.paymentCard!.note;
+      _note =
+          widget.paymentCard!.note == 'null' ? '' : widget.paymentCard!.note;
       _cardType = widget.paymentCard!.cardType;
       _favourite = widget.paymentCard!.favourite;
       _usage = widget.paymentCard!.usage;
@@ -60,6 +62,8 @@ class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
       _timeAdded = widget.paymentCard!.timeAdded;
     }
     _controller = FlipCardController();
+    Future.delayed(const Duration(seconds: 2),
+        () => _controller.hint(duration: const Duration(milliseconds: 800)));
   }
 
   @override
@@ -86,6 +90,7 @@ class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
               return Form(
                 key: _formKey,
                 child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
@@ -112,14 +117,27 @@ class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
                           _buildCard(),
                           SizedBox(height: 13.w),
                           _buildNav(context),
+                          SizedBox(height: 5.w),
                         ],
                       ),
                     ),
                     _buildCardForms(context),
-                    SizedBox(height: 10.w),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 20.w),
-                      child: _buildSubmitButton(),
+                      child: Column(
+                        children: [
+                          _buildHeader('Path', Icons.folder_outlined),
+                          _buildFolderPath(),
+                          _buildHeader('Category', Icons.category_outlined),
+                          _buildCategory(),
+                          _buildHeader(
+                              'Note (Optional)', Icons.sticky_note_2_outlined),
+                          _buildNote(context),
+                          SizedBox(height: 20.w),
+                          _buildSubmitButton(),
+                          SizedBox(height: 50.w),
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -167,7 +185,7 @@ class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.w)),
           clipBehavior: Clip.antiAliasWithSaveLayer,
           child: Container(
-            padding: EdgeInsets.fromLTRB(22.w, 22.w, 22.w, 18.w),
+            padding: EdgeInsets.fromLTRB(22.w, 22.w, 10.w, 18.w),
             height: 186.w,
             decoration: const BoxDecoration(
               image: DecorationImage(
@@ -212,16 +230,24 @@ class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
                 ),
                 const Spacer(),
                 _cardNo != ''
-                    ? Text(
-                        _cardNo,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 27,
-                          fontWeight: FontWeight.w600,
-                          decoration: index == 1
-                              ? TextDecoration.underline
-                              : TextDecoration.none,
-                        ),
+                    ? Row(
+                        children: [
+                          for (int i = 0; i < 4; i++)
+                            Padding(
+                              padding: EdgeInsets.only(right: 5.w),
+                              child: Text(
+                                initialNo[i],
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 27,
+                                  fontWeight: FontWeight.w600,
+                                  decoration: index == 1
+                                      ? TextDecoration.underline
+                                      : TextDecoration.none,
+                                ),
+                              ),
+                            ),
+                        ],
                       )
                     : Text(
                         '4393 1754 6712 5980',
@@ -460,9 +486,16 @@ class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
     );
   }
 
-  SizedBox _buildCardForms(BuildContext context) {
-    return SizedBox(
-      height: 110.w,
+  Widget _buildCardForms(BuildContext context) {
+    return ConstraintsTransformBox(
+      // constraints: BoxConstraints(
+      //   minHeight: 105.w,
+      //   maxHeight: 140.w,
+      // ),
+      constraintsTransform: (BoxConstraints constraints) {
+        print(constraints);
+        return constraints.tighten(height: 102.w);
+      },
       child: PageView(
         controller: pageController,
         onPageChanged: (i) {
@@ -475,36 +508,44 @@ class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
         children: [
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
             children: [
-              _buildHeader('Bank Name', Icons.account_balance_rounded),
+              _buildHeader('Bank Name', Icons.account_balance_rounded,
+                  extraPadding: true),
               _buildBankName(context),
             ],
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
             children: [
-              _buildHeader('Card No.', Icons.pin_outlined),
+              _buildHeader('Card No.', Icons.pin_outlined, extraPadding: true),
               _buildCardNo(context),
             ],
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
             children: [
-              _buildHeader('Holder Name', Icons.person_outlined),
+              _buildHeader('Holder Name', Icons.person_outlined,
+                  extraPadding: true),
               _buildHolderName(context),
             ],
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
             children: [
-              _buildHeader('Expiry Date', Icons.calendar_today),
-              _buildBankName(context),
+              _buildHeader('Expiry Date', Icons.calendar_today,
+                  extraPadding: true),
+              _buildExpiryDate(context),
             ],
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
             children: [
-              _buildHeader('CVV', Icons.password),
+              _buildHeader('CVV', Icons.password, extraPadding: true),
               _buildCVV(context),
             ],
           ),
@@ -520,9 +561,10 @@ class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
     return null;
   }
 
-  Widget _buildHeader(String title, IconData iconData) {
+  Widget _buildHeader(String title, IconData iconData,
+      {bool extraPadding = false}) {
     return Container(
-      padding: EdgeInsets.only(top: 10.w, left: 25.w),
+      padding: EdgeInsets.only(top: 10.w, left: extraPadding ? 25.w : 5.w),
       child: Row(
         children: [
           Icon(
@@ -564,6 +606,12 @@ class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
     );
   }
 
+  String? validateNo(String? value) {
+    // if(value)
+  }
+
+  List<String> initialNo = ['', '', '', ''];
+
   Widget _buildCardNo(BuildContext context) {
     return Padding(
       padding: EdgeInsets.fromLTRB(20.w, 7.w, 20.w, 5.w),
@@ -571,7 +619,7 @@ class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
         children: [
           Flexible(
             child: TextFormField(
-              initialValue: _cardNo,
+              initialValue: initialNo[0],
               keyboardType: const TextInputType.numberWithOptions(
                   signed: false, decimal: false),
               style: formTextStyle2(context),
@@ -581,24 +629,21 @@ class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
               ),
               onChanged: (value) {
                 setState(() {
-                  _cardNo = value;
+                  initialNo[0] = value;
+                  _cardNo = value + initialNo[1] + initialNo[2] + initialNo[3];
+                  if (value.length == 4) {
+                    FocusScope.of(context).nextFocus();
+                  }
                 });
               },
               autovalidateMode: AutovalidateMode.onUserInteraction,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Invalid!';
-                }
-                if (int.tryParse(value) == null) {
-                  return "Invalid!";
-                }
-              },
+              validator: validateNo,
             ),
           ),
           SizedBox(width: 10.w),
           Flexible(
             child: TextFormField(
-              initialValue: _cardNo,
+              initialValue: initialNo[1],
               keyboardType: const TextInputType.numberWithOptions(
                   signed: false, decimal: false),
               style: formTextStyle2(context),
@@ -608,24 +653,24 @@ class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
               ),
               onChanged: (value) {
                 setState(() {
-                  _cardNo = value;
+                  initialNo[1] = value;
+                  _cardNo = initialNo[0] + value + initialNo[2] + initialNo[3];
+                  if (value.length == 4) {
+                    FocusScope.of(context).nextFocus();
+                  }
+                  if (value.isEmpty || value == '') {
+                    FocusScope.of(context).previousFocus();
+                  }
                 });
               },
               autovalidateMode: AutovalidateMode.onUserInteraction,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Invalid!';
-                }
-                if (int.tryParse(value) == null) {
-                  return "Invalid!";
-                }
-              },
+              validator: validateNo,
             ),
           ),
           SizedBox(width: 10.w),
           Flexible(
             child: TextFormField(
-              initialValue: _cardNo,
+              initialValue: initialNo[2],
               keyboardType: const TextInputType.numberWithOptions(
                   signed: false, decimal: false),
               style: formTextStyle2(context),
@@ -635,24 +680,24 @@ class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
               ),
               onChanged: (value) {
                 setState(() {
-                  _cardNo = value;
+                  initialNo[2] = value;
+                  _cardNo = initialNo[0] + initialNo[1] + value + initialNo[3];
+                  if (value.length == 4) {
+                    FocusScope.of(context).nextFocus();
+                  }
+                  if (value.isEmpty || value == '') {
+                    FocusScope.of(context).previousFocus();
+                  }
                 });
               },
               autovalidateMode: AutovalidateMode.onUserInteraction,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Invalid!';
-                }
-                if (int.tryParse(value) == null) {
-                  return "Invalid!";
-                }
-              },
+              validator: validateNo,
             ),
           ),
           SizedBox(width: 10.w),
           Flexible(
             child: TextFormField(
-              initialValue: _cardNo,
+              initialValue: initialNo[3],
               keyboardType: const TextInputType.numberWithOptions(
                   signed: false, decimal: false),
               style: formTextStyle2(context),
@@ -662,18 +707,18 @@ class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
               ),
               onChanged: (value) {
                 setState(() {
-                  _cardNo = value;
+                  initialNo[3] = value;
+                  _cardNo = initialNo[0] + initialNo[1] + initialNo[2] + value;
+                  if (value.length == 4) {
+                    FocusScope.of(context).unfocus();
+                  }
+                  if (value.isEmpty || value == '') {
+                    FocusScope.of(context).previousFocus();
+                  }
                 });
               },
               autovalidateMode: AutovalidateMode.onUserInteraction,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Invalid!';
-                }
-                if (int.tryParse(value) == null) {
-                  return "Invalid!";
-                }
-              },
+              validator: validateNo,
             ),
           ),
         ],
@@ -701,6 +746,79 @@ class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
     );
   }
 
+  List<String> initialDate = ['', ''];
+
+  Widget _buildExpiryDate(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(20.w, 7.w, 20.w, 5.w),
+      child: Row(
+        children: [
+          // const Spacer(),
+          Flexible(
+            child: TextFormField(
+              initialValue: initialDate[0],
+              keyboardType: const TextInputType.numberWithOptions(
+                  signed: false, decimal: false),
+              style: formTextStyle2(context),
+              decoration: customInputDecoration2(
+                context: context,
+                labelText: 'MM',
+              ),
+              onChanged: (value) {
+                setState(() {
+                  if (value.length == 2) {
+                    FocusScope.of(context).nextFocus();
+                  }
+                  initialDate[0] = value;
+                  _expiryDate = value + '/' + initialDate[1];
+                });
+              },
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              validator: validateNo,
+            ),
+          ),
+          SizedBox(width: 10.w),
+          Text(
+            '/',
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onSurface,
+              fontSize: 22,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+          SizedBox(width: 10.w),
+          Flexible(
+            child: TextFormField(
+              initialValue: initialDate[1],
+              keyboardType: const TextInputType.numberWithOptions(
+                  signed: false, decimal: false),
+              style: formTextStyle2(context),
+              decoration: customInputDecoration2(
+                context: context,
+                labelText: 'YY',
+              ),
+              onChanged: (value) {
+                setState(() {
+                  initialDate[1] = value;
+                  _expiryDate = initialDate[0] + '/' + value;
+                  if (value.length == 2) {
+                    FocusScope.of(context).unfocus();
+                  }
+                  if (value.isEmpty || value == '') {
+                    FocusScope.of(context).previousFocus();
+                  }
+                });
+              },
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              validator: validateNo,
+            ),
+          ),
+          // const Spacer(),
+        ],
+      ),
+    );
+  }
+
   Widget _buildCVV(BuildContext context) {
     return Padding(
       padding: EdgeInsets.fromLTRB(20.w, 7.w, 20.w, 5.w),
@@ -715,10 +833,10 @@ class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
         ),
         onChanged: (value) {
           setState(() {
-            if (value.length<=3) {
+            if (value.length <= 3) {
               _cvv = value;
             }
-            if(value.length==3){
+            if (value.length == 3) {
               FocusScope.of(context).unfocus();
             }
           });
@@ -739,12 +857,313 @@ class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
     );
   }
 
+  Widget _buildFolderPath() {
+    List<String> pathList = [];
+    _path.split('/').forEach((path) {
+      if (path == 'root') {
+        pathList.add('My Folders');
+      } else {
+        pathList.add(path.replaceRange(0, 1, path[0].toUpperCase()));
+      }
+    });
+    return Container(
+      margin: EdgeInsets.only(top: 7.w, bottom: 5.w),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(15.w),
+        onTap: () async {
+          print('change path');
+          var res = await showDialog(
+            context: context,
+            barrierColor: Colors.black.withOpacity(0.25),
+            // backgroundColor: Colors.transparent,
+            builder: (context) {
+              return SelectFolderDialog(startPath: _path);
+            },
+          );
+          if (res != null) {
+            setState(() {
+              _path = res;
+            });
+          }
+        },
+        child: Container(
+          alignment: Alignment.centerLeft,
+          height: 55.w,
+          padding: EdgeInsets.only(left: 18.w, right: 7.w),
+          // padding: EdgeInsets.fromLTRB(18.w, 11.w, 15.w, 11.w),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(15.w),
+            border: Border.all(
+              color: Theme.of(context).colorScheme.secondaryVariant,
+              width: 2.w,
+              style: BorderStyle.solid,
+            ),
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Expanded(
+                child: ListView.separated(
+                  shrinkWrap: true,
+                  padding: EdgeInsets.zero,
+                  physics: const BouncingScrollPhysics(),
+                  itemCount: pathList.length,
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, index) {
+                    if (pathList.length == index) {
+                      return SizedBox(
+                        width: 10.w,
+                      );
+                    } else {
+                      return Center(
+                        child: Text(
+                          pathList[index],
+                          style: const TextStyle(
+                            fontSize: 18,
+                            // fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      );
+                    }
+                  },
+                  separatorBuilder: (context, index) {
+                    return Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 5.w),
+                      child: Icon(
+                        Icons.arrow_forward_ios,
+                        size: 18.w,
+                      ),
+                    );
+                  },
+                ),
+              ),
+              SizedBox(width: 5.w),
+              const Icon(
+                Icons.expand_more,
+                size: 35,
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCategory() {
+    String label = _cardType.toString().substring(16);
+    label = label.replaceRange(0, 1, label[0].toUpperCase());
+    return Container(
+      margin: EdgeInsets.only(top: 7.w, bottom: 5.w),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(15.w),
+        onTap: () async {
+          var res = await showModalBottomSheet(
+            context: context,
+            barrierColor: Colors.black.withOpacity(0.25),
+            backgroundColor: Colors.transparent,
+            builder: (context) {
+              return _buildCategoryCard();
+            },
+          );
+          if (res != null) {
+            setState(() {
+              _cardType = res;
+            });
+          }
+        },
+        child: Container(
+          alignment: Alignment.centerLeft,
+          height: 55.w,
+          padding: EdgeInsets.only(left: 18.w, right: 7.w),
+          // padding: EdgeInsets.fromLTRB(18.w, 11.w, 15.w, 11.w),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(15.w),
+            border: Border.all(
+              color: Theme.of(context).colorScheme.secondaryVariant,
+              width: 2.w,
+              style: BorderStyle.solid,
+            ),
+          ),
+          child: Row(
+            children: [
+              Icon(
+                paymentCategoryIcon[_cardType.index],
+                size: 23.w,
+              ),
+              SizedBox(width: 10.w),
+              Text(
+                label,
+                style: const TextStyle(
+                  fontSize: 17,
+                ),
+              ),
+              const Spacer(),
+              SizedBox(width: 5.w),
+              const Icon(
+                Icons.expand_more,
+                size: 35,
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCategoryCard() {
+    return StatefulBuilder(
+      builder: (context, setState) {
+        PaymentCardType category = _cardType;
+        return Card(
+          margin: EdgeInsets.all(10.w),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+          child: Container(
+            padding: EdgeInsets.all(15.w),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(left: 5.w),
+                  child: Text(
+                    'Categories',
+                    style: TextStyle(
+                        fontSize: 25,
+                        fontWeight: FontWeight.w600,
+                        color: Theme.of(context).colorScheme.primary),
+                  ),
+                ),
+                // Divider(thickness: 1,),
+                SizedBox(height: 17.w),
+                Wrap(
+                  runSpacing: 8.w,
+                  spacing: 8.w,
+                  children: [
+                    for (int index = 1;
+                        index < PaymentCardType.values.length;
+                        index++)
+                      Builder(
+                        builder: (context) {
+                          String label = PaymentCardType.values[index]
+                              .toString()
+                              .substring(16);
+                          label =
+                              label.replaceRange(0, 1, label[0].toUpperCase());
+                          bool selected =
+                              category == PaymentCardType.values[index];
+                          return InkWell(
+                            onTap: () {
+                              setState(() {
+                                category = PaymentCardType.values[index];
+                              });
+                              Future.delayed(const Duration(milliseconds: 50),
+                                  () {
+                                Navigator.pop(context, category);
+                              });
+                            },
+                            child: Chip(
+                              side: BorderSide(
+                                  color: Theme.of(context).colorScheme.primary,
+                                  width: 0.8),
+                              avatar: Icon(
+                                paymentCategoryIcon[index],
+                                size: 23.w,
+                                color: !selected
+                                    ? Theme.of(context).colorScheme.primary
+                                    : Theme.of(context).cardColor,
+                              ),
+                              backgroundColor: selected
+                                  ? Theme.of(context).colorScheme.primary
+                                  : Theme.of(context).cardColor,
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 11.w, vertical: 7.w),
+                              // padding: EdgeInsets.fromLTRB(12.w, 7.w, 12.w, 7.w),
+                              labelPadding: EdgeInsets.fromLTRB(8.w, 0, 6.w, 0),
+                              label: Text(
+                                label,
+                                style: TextStyle(
+                                  color: !selected
+                                      ? Theme.of(context).colorScheme.primary
+                                      : Theme.of(context).cardColor,
+                                  fontSize: 15,
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                  ],
+                ),
+                SizedBox(height: 5.w),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildNote(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(0.w, 7.w, 0.w, 5.w),
+      child: TextFormField(
+        initialValue: _note,
+        style: formTextStyle2(context),
+        decoration: customInputDecoration(
+          context: context,
+          labelText: 'Eg. Work Card',
+        ),
+        maxLines: 3,
+        onChanged: (value) {
+          setState(() {
+            _note = value;
+          });
+        },
+        validator: validateText,
+      ),
+    );
+  }
+
+  String validateAll() {
+    if (_bankName == '') {
+      return 'Bank name invalid!';
+    }
+    if (_cardNo == '' || int.tryParse(_cardNo) == null) {
+      return 'Card number invalid!';
+    }
+    if (_holderName == '') {
+      return 'Holder name invalid!';
+    }
+    if (_expiryDate == '' ||
+        int.tryParse(_expiryDate.substring(0, 2)) == null ||
+        int.tryParse(_expiryDate.substring(3, 5)) == null) {
+      return 'Expiry date invalid!';
+    }
+    if (_cvv == '' || int.tryParse(_cvv) == null) {
+      return 'CVV invalid!';
+    }
+    return 'success';
+  }
+
   Widget _buildSubmitButton() {
     return CustomElevatedButton(
       style: 0,
       text: _isUpdate ? 'Update' : 'Submit',
       onPressed: () {
-        if (!_formKey.currentState!.validate()) {
+        // if (!_formKey.currentState!.validate()) {
+        //   return;
+        // }
+        String validationStatus = validateAll();
+        if (validationStatus != 'success') {
+          print(validationStatus);
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          ScaffoldMessenger.of(context)
+              .showSnackBar(showCustomSnackBar(context, validationStatus));
           return;
         }
         setState(() {
@@ -759,34 +1178,35 @@ class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
           expiryDate: _expiryDate,
           cvv: _cvv,
           cardType: _cardType,
-          note: _note,
+          note: _note == '' ? 'null' : _note,
           favourite: _favourite,
           usage: _usage,
           color: _color,
           lastUsed: Timestamp.now(),
-          timeAdded: _timeAdded,
+          timeAdded: _timeAdded ?? Timestamp.now(),
         );
-        PaymentCard paymentCard2 = PaymentCard(
-          id: widget.paymentCard?.id ?? '',
-          path: 'root/default',
-          bankName: 'Canara',
-          cardNo: '222211110000',
-          holderName: 'Aaditya Cholayil',
-          expiryDate: '05/23',
-          cvv: '420',
-          cardType: PaymentCardType.creditCard,
-          note: 'Bruh',
-          favourite: false,
-          usage: 0,
-          color: 'purple',
-          lastUsed: Timestamp.now(),
-          timeAdded: Timestamp.now(),
-        );
+        print(paymentCard);
+        // PaymentCard paymentCard2 = PaymentCard(
+        //   id: widget.paymentCard?.id ?? '',
+        //   path: 'root/default',
+        //   bankName: 'Canara',
+        //   cardNo: '222211110000',
+        //   holderName: 'Aaditya Cholayil',
+        //   expiryDate: '05/23',
+        //   cvv: '420',
+        //   cardType: PaymentCardType.creditCard,
+        //   note: 'Bruh',
+        //   favourite: false,
+        //   usage: 0,
+        //   color: 'purple',
+        //   lastUsed: Timestamp.now(),
+        //   timeAdded: Timestamp.now(),
+        // );
         if (!_isUpdate) {
-          context.read<DatabaseBloc>().add(AddPaymentCard(paymentCard2));
+          context.read<DatabaseBloc>().add(AddPaymentCard(paymentCard));
         } else {
           context.read<DatabaseBloc>().add(UpdatePaymentCard(
-                paymentCard2,
+                paymentCard,
                 true,
                 widget.paymentCard!.path,
               ));
