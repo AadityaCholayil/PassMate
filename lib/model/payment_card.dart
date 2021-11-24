@@ -97,7 +97,7 @@ class PaymentCard {
 
 enum PaymentCardType { all, creditCard, debitCard, others }
 
-List<IconData> paymentCategoryIcon = [
+List<IconData> paymentCardCategoryIcon = [
   Icons.favorite_border_rounded,
   Icons.credit_card_outlined,
   Icons.credit_card_outlined,

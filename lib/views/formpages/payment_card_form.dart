@@ -50,6 +50,12 @@ class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
       _path = widget.paymentCard!.path;
       _bankName = widget.paymentCard!.bankName;
       _cardNo = widget.paymentCard!.cardNo;
+      initialNo = [
+        _cardNo.substring(0, 4),
+        _cardNo.substring(4, 8),
+        _cardNo.substring(8, 12),
+        _cardNo.substring(12, 16)
+      ];
       _holderName = widget.paymentCard!.holderName;
       _expiryDate = widget.paymentCard!.expiryDate;
       _cvv = widget.paymentCard!.cvv;
@@ -115,7 +121,7 @@ class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
                           ),
                           SizedBox(height: 8.w),
                           _buildCard(),
-                          SizedBox(height: 13.w),
+                          SizedBox(height: 10.w),
                           _buildNav(context),
                           SizedBox(height: 5.w),
                         ],
@@ -399,18 +405,15 @@ class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
               borderRadius: BorderRadius.circular(30.w),
             ),
             padding: EdgeInsets.zero,
+            maximumSize: Size(45.w, 45.w),
+            minimumSize: Size(45.w, 45.w),
           ),
-          child: Container(
-            alignment: Alignment.center,
-            height: 55.w,
-            width: 55.w,
-            child: Padding(
-              padding: EdgeInsets.only(left: 10.w),
-              child: Icon(
-                Icons.arrow_back_ios,
-                size: 27.w,
-                color: Theme.of(context).colorScheme.onSecondary,
-              ),
+          child: Padding(
+            padding: EdgeInsets.only(left: 7.w),
+            child: Icon(
+              Icons.arrow_back_ios,
+              size: 23.w,
+              color: Theme.of(context).colorScheme.onSecondary,
             ),
           ),
           onPressed: index <= 0
@@ -451,18 +454,15 @@ class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
               borderRadius: BorderRadius.circular(30.w),
             ),
             padding: EdgeInsets.zero,
+            maximumSize: Size(45.w, 45.w),
+            minimumSize: Size(45.w, 45.w),
           ),
-          child: Container(
-            alignment: Alignment.center,
-            height: 55.w,
-            width: 55.w,
-            child: Padding(
-              padding: EdgeInsets.only(left: 1.w),
-              child: Icon(
-                Icons.arrow_forward_ios,
-                size: 27.w,
-                color: Theme.of(context).colorScheme.onSecondary,
-              ),
+          child: Padding(
+            padding: EdgeInsets.only(left: 1.w),
+            child: Icon(
+              Icons.arrow_forward_ios,
+              size: 23.w,
+              color: Theme.of(context).colorScheme.onSecondary,
             ),
           ),
           onPressed: index > 3
@@ -493,7 +493,7 @@ class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
       //   maxHeight: 140.w,
       // ),
       constraintsTransform: (BoxConstraints constraints) {
-        print(constraints);
+        // print(constraints);
         return constraints.tighten(height: 102.w);
       },
       child: PageView(
@@ -991,7 +991,7 @@ class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
           child: Row(
             children: [
               Icon(
-                paymentCategoryIcon[_cardType.index],
+                paymentCardCategoryIcon[_cardType.index],
                 size: 23.w,
               ),
               SizedBox(width: 10.w),
@@ -1071,7 +1071,7 @@ class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
                                   color: Theme.of(context).colorScheme.primary,
                                   width: 0.8),
                               avatar: Icon(
-                                paymentCategoryIcon[index],
+                                paymentCardCategoryIcon[index],
                                 size: 23.w,
                                 color: !selected
                                     ? Theme.of(context).colorScheme.primary
@@ -1186,22 +1186,6 @@ class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
           timeAdded: _timeAdded ?? Timestamp.now(),
         );
         print(paymentCard);
-        // PaymentCard paymentCard2 = PaymentCard(
-        //   id: widget.paymentCard?.id ?? '',
-        //   path: 'root/default',
-        //   bankName: 'Canara',
-        //   cardNo: '222211110000',
-        //   holderName: 'Aaditya Cholayil',
-        //   expiryDate: '05/23',
-        //   cvv: '420',
-        //   cardType: PaymentCardType.creditCard,
-        //   note: 'Bruh',
-        //   favourite: false,
-        //   usage: 0,
-        //   color: 'purple',
-        //   lastUsed: Timestamp.now(),
-        //   timeAdded: Timestamp.now(),
-        // );
         if (!_isUpdate) {
           context.read<DatabaseBloc>().add(AddPaymentCard(paymentCard));
         } else {

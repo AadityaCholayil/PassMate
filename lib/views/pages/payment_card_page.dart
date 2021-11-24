@@ -1,5 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flip_card/flip_card.dart';
+import 'package:flip_card/flip_card_controller.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:passmate/bloc/app_bloc/app_bloc_files.dart';
@@ -30,8 +34,8 @@ class _PaymentCardPageState extends State<PaymentCardPage> {
   @override
   void initState() {
     super.initState();
-    sortMethod = context.read<AppBloc>().userData.sortMethod ??
-        SortMethod.recentlyAdded;
+    sortMethod =
+        context.read<AppBloc>().userData.sortMethod ?? SortMethod.recentlyAdded;
     sortLabel = sortMethodMessages[sortMethod.index];
     context.read<DatabaseBloc>().add(GetPaymentCards(
         sortMethod: sortMethod, paymentCardType: paymentCardType));
@@ -77,16 +81,19 @@ class _PaymentCardPageState extends State<PaymentCardPage> {
               ),
             ),
             SizedBox(height: 13.w),
-            _buildSearch(context),
-            SizedBox(height: 15.w),
             completePaymentCardList.isNotEmpty
-                ? _buildChipRow()
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildSearch(context),
+                      SizedBox(height: 15.w),
+                      _buildChipRow(),
+                      SizedBox(height: 10.w),
+                      _buildSortDropDownBox(context),
+                      SizedBox(height: 10.w),
+                    ],
+                  )
                 : const SizedBox.shrink(),
-            SizedBox(height: 5.w),
-            completePaymentCardList.isNotEmpty
-                ? _buildSortDropDownBox(context)
-                : const SizedBox.shrink(),
-            SizedBox(height: 5.w),
             state is Fetching
                 ? Container(
                     height: 180.w,
@@ -101,7 +108,7 @@ class _PaymentCardPageState extends State<PaymentCardPage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: const [
                             Text(
-                              'Start adding your Cards',
+                              'Start Adding Passwords',
                               style: TextStyle(
                                 fontSize: 25,
                                 fontWeight: FontWeight.w700,
@@ -109,7 +116,7 @@ class _PaymentCardPageState extends State<PaymentCardPage> {
                               textAlign: TextAlign.center,
                             ),
                             Text(
-                              'All your payment cards will be secure\nusing AES-256 encryption.',
+                              'All your passwords will be secure\nusing AES-256 encryption.',
                               style: TextStyle(
                                 fontSize: 17,
                               ),
@@ -123,10 +130,10 @@ class _PaymentCardPageState extends State<PaymentCardPage> {
                             paymentCardList: paymentCardList),
                       ),
             SizedBox(
-              height: paymentCardList.length < 3
+              height: paymentCardList.length < 2
                   ? paymentCardList.isEmpty
-                      ? 12.w
-                      : 200.w
+                      ? 30.h
+                      : 250.h
                   : 0,
             ),
           ],
@@ -138,21 +145,26 @@ class _PaymentCardPageState extends State<PaymentCardPage> {
   Padding _buildSearch(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20.w),
-      child: TextFormField(
-        initialValue: searchLabel,
-        decoration: customInputDecoration(
-          context: context,
-          labelText: 'Search',
-          isSearch: true,
+      child: Material(
+        borderRadius: BorderRadius.circular(15.w),
+        clipBehavior: Clip.antiAliasWithSaveLayer,
+        elevation: 2,
+        child: TextFormField(
+          initialValue: searchLabel,
+          decoration: customInputDecoration(
+            context: context,
+            labelText: 'Search',
+            isSearch: true,
+          ),
+          style: formTextStyle(context),
+          onChanged: (val) {
+            context.read<DatabaseBloc>().add(GetPaymentCards(
+                  search: val,
+                  paymentCardType: paymentCardType,
+                  list: completePaymentCardList,
+                ));
+          },
         ),
-        style: formTextStyle(context),
-        onChanged: (val) {
-          context.read<DatabaseBloc>().add(GetPaymentCards(
-                search: val,
-                paymentCardType: paymentCardType,
-                list: completePaymentCardList,
-              ));
-        },
       ),
     );
   }
@@ -228,7 +240,7 @@ class _PaymentCardPageState extends State<PaymentCardPage> {
               break;
           }
           return Container(
-            margin: EdgeInsets.only(right: 7.w),
+            margin: EdgeInsets.only(right: 9.w),
             child: InkWell(
               onTap: () {
                 print(category);
@@ -240,25 +252,26 @@ class _PaymentCardPageState extends State<PaymentCardPage> {
                     ));
               },
               child: Chip(
+                elevation: 2,
                 side: selected
                     ? BorderSide(
                         color: Theme.of(context).colorScheme.secondary,
                         width: 2)
                     : null,
                 avatar: Icon(
-                  Icons.favorite_border_rounded,
+                  paymentCardCategoryIcon[index],
                   size: 23.w,
                   color: Theme.of(context).colorScheme.secondary,
                 ),
                 backgroundColor: Colors.white,
                 padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 7.w),
                 // padding: EdgeInsets.fromLTRB(12.w, 7.w, 12.w, 7.w),
-                labelPadding: EdgeInsets.fromLTRB(10.w, 0, 10.w, 0),
+                labelPadding: EdgeInsets.fromLTRB(10.w, 0, 6.w, 0),
                 label: Text(
                   label.replaceRange(0, 1, label.substring(0, 1).toUpperCase()),
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.secondary,
-                    fontSize: 16,
+                    fontSize: 15,
                   ),
                 ),
                 deleteIcon: Icon(
@@ -364,63 +377,99 @@ class PaymentCardTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(bottom: 13.w),
-      height: 87.w,
-      child: Card(
-        elevation: 0,
-        margin: EdgeInsets.zero,
-        clipBehavior: Clip.antiAliasWithSaveLayer,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(23.w),
-        ),
-        child: InkWell(
-          onTap: () {
-            if (!ZoomDrawer.of(context)!.isOpen()) {
-              paymentCard.lastUsed = Timestamp.now();
-              paymentCard.usage++;
-              context
-                  .read<DatabaseBloc>()
-                  .add(UpdatePaymentCard(paymentCard, false, paymentCard.path));
-              showModalBottomSheet(
-                context: context,
-                barrierColor: Colors.black.withOpacity(0.25),
-                backgroundColor: Colors.transparent,
-                builder: (context) {
-                  return PaymentCardDetailCard(paymentCard: paymentCard);
-                },
-              );
+    return Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(23.w)),
+      clipBehavior: Clip.antiAliasWithSaveLayer,
+      margin: EdgeInsets.only(bottom: 18.w),
+      child: InkWell(
+        onTap: () async {
+          if (!ZoomDrawer.of(context)!.isOpen()) {
+            paymentCard.lastUsed = Timestamp.now();
+            paymentCard.usage++;
+            dynamic res = await showModalBottomSheet(
+              context: context,
+              barrierColor: Colors.black.withOpacity(0.25),
+              backgroundColor: Colors.transparent,
+              builder: (context) {
+                return PaymentCardDetailCard(paymentCard: paymentCard);
+              },
+            );
+            if (res != 'Deleted' && res != 'Updated') {
+              context.read<DatabaseBloc>().add(
+                  UpdatePaymentCard(paymentCard, false, paymentCard.path));
             }
-          },
-          child: Container(
-            padding: EdgeInsets.all(10.w),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(23.w),
-            ),
-            child: Row(
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      paymentCard.bankName,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 22,
+          }
+        },
+        child: Container(
+          padding: EdgeInsets.fromLTRB(20.w, 20.w, 20.w, 16.w),
+          height: 186.w,
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+                fit: BoxFit.cover,
+                image: AssetImage('assets/payment_card_bg.png')),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  SizedBox(
+                    height: 36.w,
+                    width: 36.w,
+                    child: Image.asset('assets/card_asset1.png'),
+                  ),
+                  SizedBox(width: 15.w),
+                  Text(
+                    paymentCard.bankName,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 21,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+              const Spacer(),
+              Row(
+                children: [
+                  for (int i = 0; i < 4; i++)
+                    Padding(
+                      padding: EdgeInsets.only(right: 5.w),
+                      child: Text(
+                        paymentCard.cardNo.substring(i * 4, i * 4 + 4),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 27,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
-                    Text(
-                      paymentCard.cardNo,
-                      style: const TextStyle(fontSize: 13),
+                ],
+              ),
+              Row(
+                children: [
+                  Text(
+                    paymentCard.holderName,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
                     ),
-                    const SizedBox(
-                      height: 3,
+                  ),
+                  const Spacer(),
+                  Text(
+                    paymentCard.expiryDate,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
                     ),
-                  ],
-                ),
-              ],
-            ),
+                  ),
+                  // SizedBox(width: .w),
+                ],
+              ),
+            ],
           ),
         ),
       ),
@@ -428,7 +477,7 @@ class PaymentCardTile extends StatelessWidget {
   }
 }
 
-class PaymentCardDetailCard extends StatelessWidget {
+class PaymentCardDetailCard extends StatefulWidget {
   const PaymentCardDetailCard({
     Key? key,
     required this.paymentCard,
@@ -437,48 +486,436 @@ class PaymentCardDetailCard extends StatelessWidget {
   final PaymentCard paymentCard;
 
   @override
+  State<PaymentCardDetailCard> createState() => _PaymentCardDetailCardState();
+}
+
+class _PaymentCardDetailCardState extends State<PaymentCardDetailCard> {
+  late PaymentCard paymentCard;
+  bool showCVV = false;
+  late String categoryText;
+  late FlipCardController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    paymentCard = widget.paymentCard;
+    categoryText = paymentCard.cardType.toString().substring(16).replaceRange(
+        0, 1, paymentCard.cardType.toString().substring(16)[0].toUpperCase());
+    _controller = FlipCardController();
+    Future.delayed(const Duration(milliseconds: 700),
+        () => _controller.hint(duration: const Duration(milliseconds: 800)));
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: 450.w,
       child: Card(
-        margin: const EdgeInsets.all(10),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-        child: Container(
-          padding: const EdgeInsets.all(15),
-          child: Column(
-            children: [
-              const Spacer(),
-              Row(
+        margin: EdgeInsets.all(10.w),
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.w)),
+        child: Column(
+          children: [
+            SizedBox(
+              height: 275.w,
+              child: Scrollbar(
+                isAlwaysShown: true,
+                child: SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildFlipCard(),
+                      SizedBox(height: 10.w),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 20.w),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildLabel(context, 'Card Holder Name'),
+                            Row(
+                              children: [
+                                _buildContent(context, paymentCard.holderName),
+                                const Spacer(),
+                                IconButton(
+                                  constraints:
+                                      BoxConstraints.tight(Size(30.w, 30.w)),
+                                  padding: EdgeInsets.zero,
+                                  icon: Icon(Icons.copy, size: 25.w),
+                                  onPressed: () {
+                                    Clipboard.setData(ClipboardData(
+                                        text: paymentCard.holderName));
+                                  },
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 8.w),
+                            _buildLabel(context, 'Card Number'),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                for (int i = 0; i < 4; i++)
+                                  Padding(
+                                    padding: EdgeInsets.only(right: 8.w),
+                                    child: _buildContent(
+                                        context,
+                                        paymentCard.cardNo
+                                            .substring(i * 4, i * 4 + 4)),
+                                  ),
+                                const Spacer(),
+                                IconButton(
+                                  constraints:
+                                      BoxConstraints.tight(Size(30.w, 30.w)),
+                                  padding: EdgeInsets.zero,
+                                  icon: Icon(Icons.copy, size: 25.w),
+                                  onPressed: () {
+                                    Clipboard.setData(ClipboardData(
+                                        text: paymentCard.cardNo));
+                                  },
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 10.w),
+                            Row(
+                              children: [
+                                Flexible(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      _buildLabel(context, 'Valid Thru'),
+                                      Row(
+                                        children: [
+                                          SizedBox(
+                                            height: 30.w,
+                                            child: _buildContent(context,
+                                                paymentCard.expiryDate),
+                                          ),
+                                          const Spacer(),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Flexible(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      _buildLabel(context, 'CVV'),
+                                      Row(
+                                        children: [
+                                          _buildContent(
+                                              context,
+                                              showCVV
+                                                  ? paymentCard.cvv
+                                                  : '•' *
+                                                      paymentCard.cvv.length),
+                                          const Spacer(),
+                                          IconButton(
+                                            constraints: BoxConstraints.tight(
+                                                Size(30.w, 30.w)),
+                                            padding: EdgeInsets.zero,
+                                            icon: Icon(
+                                                showCVV
+                                                    ? Icons.visibility
+                                                    : Icons.visibility_off,
+                                                size: 25.w),
+                                            onPressed: () {
+                                              setState(() {
+                                                showCVV = !showCVV;
+                                              });
+                                            },
+                                          ),
+                                          SizedBox(width: 3.w),
+                                          IconButton(
+                                            constraints: BoxConstraints.tight(
+                                                Size(30.w, 30.w)),
+                                            padding: EdgeInsets.zero,
+                                            icon: Icon(Icons.copy, size: 25.w),
+                                            onPressed: () {
+                                              Clipboard.setData(ClipboardData(
+                                                  text: paymentCard.cvv));
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 10.w),
+                            _buildLabel(context, 'Category'),
+                            Padding(
+                              padding: EdgeInsets.symmetric(vertical: 4.w),
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    paymentCardCategoryIcon[
+                                        paymentCard.cardType.index],
+                                    size: 24.w,
+                                  ),
+                                  SizedBox(width: 20.w),
+                                  _buildContent(context, categoryText),
+                                ],
+                              ),
+                            ),
+                            paymentCard.note != 'null'
+                                ? Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      SizedBox(height: 10.w),
+                                      _buildLabel(context, 'Note'),
+                                      _buildContent(context, paymentCard.note),
+                                    ],
+                                  )
+                                : const SizedBox.shrink(),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            const Spacer(),
+            Padding(
+              padding: EdgeInsets.fromLTRB(20.w, 0.w, 20.w, 20.w),
+              child: Row(
                 children: [
                   ElevatedButton(
-                    child: const Text('Delete'),
+                    style: ElevatedButton.styleFrom(
+                      primary: Theme.of(context).colorScheme.secondary,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.w),
+                      ),
+                      padding: EdgeInsets.zero,
+                    ),
+                    child: Container(
+                      alignment: Alignment.center,
+                      height: 55.w,
+                      width: 55.w,
+                      child: Icon(
+                        Icons.delete_outline_rounded,
+                        size: 31.w,
+                        color: Theme.of(context).colorScheme.onSecondary,
+                      ),
+                    ),
                     onPressed: () {
                       BlocProvider.of<DatabaseBloc>(context)
-                          .add(DeletePaymentCard(paymentCard));
-                      Navigator.pop(context);
+                          .add(DeletePaymentCard(widget.paymentCard));
+                      Navigator.pop(context, 'Deleted');
                     },
                   ),
-                  ElevatedButton(
-                    child: const Text('Edit Payment Card'),
-                    onPressed: () {
-                      print(paymentCard.id);
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                PaymentCardFormPage(paymentCard: paymentCard)),
-                      ).then((value) {
-                        BlocProvider.of<DatabaseBloc>(context)
-                            .add(GetPaymentCards());
-                        Navigator.pop(context);
-                      });
-                    },
+                  SizedBox(width: 10.w),
+                  Expanded(
+                    child: CustomElevatedButton(
+                      style: 0,
+                      text: 'Edit Payment Card',
+                      onPressed: () {
+                        print(widget.paymentCard.id);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => PaymentCardFormPage(
+                                  paymentCard: widget.paymentCard)),
+                        ).then((value) {
+                          BlocProvider.of<DatabaseBloc>(context)
+                              .add(GetPaymentCards());
+                          Navigator.pop(context, 'Updated');
+                        });
+                      },
+                    ),
                   ),
                 ],
               ),
-            ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFlipCard() {
+    return GestureDetector(
+      onHorizontalDragUpdate: (details) {
+        int sensitivity = 8;
+        if (details.delta.dx > sensitivity) {
+          if (!_controller.state!.isFront) {
+            _controller.toggleCard();
+          }
+        } else if (details.delta.dx < -sensitivity) {
+          if (_controller.state!.isFront) {
+            _controller.toggleCard();
+          }
+        }
+      },
+      child: FlipCard(
+        controller: _controller,
+        front: Card(
+          elevation: 3,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(23.w)),
+          clipBehavior: Clip.antiAliasWithSaveLayer,
+          margin: EdgeInsets.fromLTRB(20.w, 20.w, 20.w, 0.w),
+          child: Container(
+            padding: EdgeInsets.fromLTRB(20.w, 20.w, 20.w, 16.w),
+            height: 174.w,
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                  fit: BoxFit.cover,
+                  image: AssetImage('assets/payment_card_bg.png')),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    SizedBox(
+                      height: 33.w,
+                      width: 33.w,
+                      child: Image.asset('assets/card_asset1.png'),
+                    ),
+                    SizedBox(width: 15.w),
+                    Text(
+                      paymentCard.bankName,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 19,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+                const Spacer(),
+                Row(
+                  children: [
+                    for (int i = 0; i < 4; i++)
+                      Padding(
+                        padding: EdgeInsets.only(right: 5.w),
+                        child: Text(
+                          paymentCard.cardNo.substring(i * 4, i * 4 + 4),
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 25,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Text(
+                      paymentCard.holderName,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                    const Spacer(),
+                    Text(
+                      paymentCard.expiryDate,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                    // SizedBox(width: .w),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
+        back: Card(
+          elevation: 3,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(23.w)),
+          clipBehavior: Clip.antiAliasWithSaveLayer,
+          margin: EdgeInsets.fromLTRB(20.w, 20.w, 20.w, 0.w),
+          child: Container(
+            height: 174.w,
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                  fit: BoxFit.cover,
+                  image: AssetImage('assets/payment_card_bg.png')),
+            ),
+            child: Column(
+              children: [
+                SizedBox(height: 17.w),
+                Container(
+                  color: Colors.black,
+                  height: 45.w,
+                ),
+                SizedBox(height: 12.w),
+                Container(
+                  margin: EdgeInsets.only(left: 20.w, right: 60.w),
+                  color: Colors.white,
+                  height: 34.w,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Expanded(
+                        child: Column(
+                          children: [
+                            for (int i = 0; i < 7; i++)
+                              Divider(
+                                height: 4.5.w,
+                                thickness: 2.w,
+                                color: Colors.black12,
+                              ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 5.w),
+                        child: Text(
+                          paymentCard.cvv,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.black,
+                            fontStyle: FontStyle.italic,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLabel(BuildContext context, String text) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: 2.w),
+      child: Text(
+        text,
+        style: TextStyle(
+          fontSize: 14,
+          color: Theme.of(context).colorScheme.secondaryVariant,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildContent(BuildContext context, String text) {
+    return Text(
+      text,
+      style: const TextStyle(
+        fontSize: 19,
+        fontWeight: FontWeight.w500,
       ),
     );
   }
