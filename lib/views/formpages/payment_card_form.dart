@@ -500,6 +500,10 @@ class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
         controller: pageController,
         onPageChanged: (i) {
           setState(() {
+            if((index==4 && i==5)||(index==5 && i==4)){
+              // print('bruh');
+              _controller.state!.toggleCard();
+            }
             print('Page Changes to index $i');
             index = i;
           });
