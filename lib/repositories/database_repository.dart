@@ -15,6 +15,8 @@ class DatabaseRepository {
 
   final FirebaseFirestore db = FirebaseFirestore.instance;
 
+  final firebase_storage.FirebaseStorage storage = firebase_storage.FirebaseStorage.instance;
+
   CollectionReference<UserData> get usersRef =>
       db.collection('users').withConverter<UserData>(
             fromFirestore: (snapshot, _) => UserData.fromJson(snapshot.data()!),
@@ -51,15 +53,10 @@ class DatabaseRepository {
 
   Future<String?> uploadFile(File _image) async {
     try {
-      await firebase_storage.FirebaseStorage.instance
+      await storage
           .ref('UserProfiles/$uid/profile_pic.png')
           .putFile(_image);
-    } on Exception catch (e) {
-      print('Failed - $e');
-      return null;
-    }
-    try {
-      var result = await firebase_storage.FirebaseStorage.instance
+      var result = await storage
           .ref('UserProfiles/$uid/profile_pic.png')
           .getDownloadURL();
       print('profileUrl: $result');
@@ -67,6 +64,18 @@ class DatabaseRepository {
     } on Exception catch (e) {
       print('Failed - $e');
       return null;
+    }
+  }
+
+  Future<String> deleteStorageFolder() async {
+    try {
+      await storage
+          .ref('UserProfiles/$uid/profile_pic.png')
+          .delete();
+      return 'Success';
+    } on Exception catch (e) {
+      print('Failed - $e');
+      return 'Failed';
     }
   }
 

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:passmate/views/auth/details_page.dart';
 import 'package:passmate/views/auth/welcome_screen.dart';
 import 'package:passmate/bloc/app_bloc/app_bloc_files.dart';
 import 'package:passmate/views/home_screen.dart';
@@ -19,7 +18,9 @@ class Wrapper extends StatelessWidget {
         state is SignupPageState ||
         state is EmailInputPageState) {
       return const WelcomeScreen();
-    } else if (state is Authenticated || state is DeleteAccountPageState) {
+    } else if (state is Authenticated ||
+        state is DeleteAccountPageState ||
+        state is EditProfilePageState) {
       return const HomeScreen();
     } else {
       return const LoadingPage();

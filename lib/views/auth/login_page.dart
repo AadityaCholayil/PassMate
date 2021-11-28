@@ -7,7 +7,7 @@ import 'package:passmate/routes/routes_name.dart';
 import 'package:passmate/shared/custom_snackbar.dart';
 import 'package:passmate/shared/custom_widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:passmate/views/pages/temp_error.dart';
+import 'package:passmate/shared/temp_error.dart';
 
 import 'details_page.dart';
 

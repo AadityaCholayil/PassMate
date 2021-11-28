@@ -957,8 +957,7 @@ class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
   }
 
   Widget _buildCategory() {
-    String label = _cardType.toString().substring(16);
-    label = label.replaceRange(0, 1, label[0].toUpperCase());
+    String label = getPaymentCardTypeStr(_cardType);
     return Container(
       margin: EdgeInsets.only(top: 7.w, bottom: 5.w),
       child: InkWell(
@@ -1053,11 +1052,7 @@ class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
                         index++)
                       Builder(
                         builder: (context) {
-                          String label = PaymentCardType.values[index]
-                              .toString()
-                              .substring(16);
-                          label =
-                              label.replaceRange(0, 1, label[0].toUpperCase());
+                          String label = getPaymentCardTypeStr(PaymentCardType.values[index]);
                           bool selected =
                               category == PaymentCardType.values[index];
                           return InkWell(

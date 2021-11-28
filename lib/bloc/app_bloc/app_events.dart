@@ -1,5 +1,5 @@
+import 'dart:io';
 import 'package:equatable/equatable.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:meta/meta.dart';
 
 @immutable
@@ -45,14 +45,14 @@ class SignupUser extends AppEvent {
   final String password;
   final String firstName;
   final String lastName;
-  final XFile? photoUrl;
+  final File? image;
 
   const SignupUser({
     required this.email,
     required this.password,
     required this.firstName,
     required this.lastName,
-    this.photoUrl,
+    required this.image,
   });
 
   @override
@@ -65,9 +65,9 @@ class SignupUser extends AppEvent {
 class UpdateUserData extends AppEvent {
   final String firstName;
   final String lastName;
-  final String photoUrl;
+  final File? image ;
 
-  const UpdateUserData(this.firstName, this.lastName, this.photoUrl);
+  const UpdateUserData(this.firstName, this.lastName, this.image);
 
   @override
   String toString() => 'UpdateUserData';

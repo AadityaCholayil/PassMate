@@ -1,18 +1,18 @@
+import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:passmate/bloc/app_bloc/app_bloc_files.dart';
 import 'package:passmate/model/auth_credentials.dart';
 import 'package:passmate/routes/routes_name.dart';
 import 'package:passmate/shared/custom_snackbar.dart';
 import 'package:passmate/shared/custom_widgets.dart';
 import 'package:passmate/views/auth/login_page.dart';
-import 'package:passmate/views/pages/temp_error.dart';
+import 'package:passmate/shared/temp_error.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SignUpPage extends StatefulWidget {
-  final XFile? image;
+  final File? image;
   final String firstName;
   final String lastName;
   final String email;
@@ -21,7 +21,7 @@ class SignUpPage extends StatefulWidget {
       {required this.firstName,
       required this.lastName,
       required this.email,
-      this.image,
+      required this.image,
       Key? key})
       : super(key: key);
 
@@ -206,6 +206,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       password: password.password,
                       firstName: widget.firstName,
                       lastName: widget.lastName,
+                      image: widget.image,
                     ));
                   },
                 ),

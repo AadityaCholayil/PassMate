@@ -103,12 +103,10 @@ class AppBloc extends Bloc<AppEvent, AppState> {
       // Login using email and password
       userData = await _authRepository.logInWithCredentials(
           event.email, event.password);
-
       // Update DatabaseRepository
       databaseRepository = DatabaseRepository(uid: userData.uid);
       // After login fetch rest of the user details from database
       UserData completeUserData = await databaseRepository.completeUserData;
-
       if (completeUserData != UserData.empty) {
         // if db fetch is successful
         userData = completeUserData;
@@ -169,15 +167,18 @@ class AppBloc extends Bloc<AppEvent, AppState> {
       // Signup using email and password
       userData = await _authRepository.signUpUsingCredentials(
           event.email, event.password);
-
       // Update DatabaseRepository
       databaseRepository = DatabaseRepository(uid: userData.uid);
-
       // Upload Profile Pic
       String photoUrl = '';
-      if (event.photoUrl != null) {
-        // TODO upload profilePic
-
+      if (event.image != null) {
+        // Upload new image to Firebase storage
+        String? res = await databaseRepository.uploadFile(event.image!);
+        if (res != null) {
+          photoUrl = res;
+        } else {
+          emit(EditProfilePageState.somethingWentWrong);
+        }
       } else {
         // Default profile pic
         photoUrl = 'https://www.mgretails.com/assets/img/default.png';
@@ -223,26 +224,40 @@ class AppBloc extends Bloc<AppEvent, AppState> {
 
   FutureOr<void> _onUpdateUserData(
       UpdateUserData event, Emitter<AppState> emit) async {
-    emit(Uninitialized(userData: UserData.empty));
-    userData = _authRepository.getUserData();
-    UserData newUserData = UserData(
-        uid: userData.uid,
-        email: userData.email,
-        firstName: event.firstName,
-        lastName: event.lastName,
-        photoUrl: event.photoUrl,
-        pinSet: false,
-        sortMethod: SortMethod.recentlyAdded);
+    emit(EditProfilePageState.loading);
     try {
-      databaseRepository = DatabaseRepository(uid: userData.uid);
-      databaseRepository.updateUserData(newUserData);
-      databaseRepository.addFolder(folderName: 'root/default');
+      // Get userData for uid and email
+      UserData userDataTemp = _authRepository.getUserData();
+      // Update databaseRepository
+      databaseRepository = DatabaseRepository(uid: userDataTemp.uid);
+      String photoUrl = '';
+      if (event.image != null) {
+        // Upload new image to Firebase storage
+        String? res = await databaseRepository.uploadFile(event.image!);
+        if (res != null) {
+          photoUrl = res;
+        } else {
+          emit(EditProfilePageState.somethingWentWrong);
+        }
+      } else {
+        // Keep the same photoUrl
+        photoUrl = userData.photoUrl!;
+      }
+      // Create new userData object
+      UserData newUserData = UserData(
+          uid: userDataTemp.uid,
+          email: userDataTemp.email,
+          firstName: event.firstName,
+          lastName: event.lastName,
+          photoUrl: photoUrl,
+          pinSet: false,
+          sortMethod: SortMethod.recentlyAdded);
+      // Update userData
+      await databaseRepository.updateUserData(newUserData);
       userData = newUserData;
-      // TODO change UpdateUserData
-
+      emit(EditProfilePageState.success);
     } on Exception catch (_) {
-      // TODO add exception
-      print('Something Went Wrong');
+      emit(EditProfilePageState.somethingWentWrong);
     }
   }
 
@@ -260,25 +275,25 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     if (event.email == userData.email) {
       try {
         await _authRepository.logInWithCredentials(event.email, event.password);
+        try {
+          await databaseRepository.deleteUserData();
+          await databaseRepository.deleteStorageFolder();
+          await _authRepository.deleteUser();
+          userData = UserData.empty;
+          databaseRepository = DatabaseRepository(uid: userData.uid);
+          encryptionRepository.updateKey('');
+          if (!kIsWeb) {
+            const storage = FlutterSecureStorage();
+            storage.write(key: 'key', value: '');
+          }
+          updateDatabaseBloc();
+          emit(Unauthenticated(userData: userData));
+        } on Exception catch (_) {
+          emit(const ErrorOccurred(
+              error: 'Unable to delete your account, Please try again!'));
+        }
       } on Exception catch (_) {
         emit(DeleteAccountPageState.invalidCredentials);
-      }
-      try {
-        print('Lets goo');
-        await databaseRepository.deleteUserData();
-        await _authRepository.deleteUser();
-        userData = UserData.empty;
-        databaseRepository = DatabaseRepository(uid: userData.uid);
-        encryptionRepository.updateKey('');
-        if (!kIsWeb) {
-          const storage = FlutterSecureStorage();
-          storage.write(key: 'key', value: '');
-        }
-        updateDatabaseBloc();
-        emit(Unauthenticated(userData: userData));
-      } on Exception catch (_) {
-        emit(const ErrorOccurred(
-            error: 'Unable to delete your account, Please try again!'));
       }
     } else {
       emit(DeleteAccountPageState.invalidCredentials);

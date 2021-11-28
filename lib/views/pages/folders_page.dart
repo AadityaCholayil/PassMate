@@ -12,7 +12,7 @@ import 'package:passmate/shared/loading.dart';
 import 'package:passmate/views/pages/passwords_page.dart';
 import 'package:passmate/views/pages/payment_card_page.dart';
 import 'package:passmate/views/pages/secure_notes_page.dart';
-import 'package:passmate/views/pages/settings_page.dart';
+import 'package:passmate/views/settings/settings_page.dart';
 
 class FolderPage extends StatefulWidget {
   final String path;

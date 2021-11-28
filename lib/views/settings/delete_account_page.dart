@@ -5,7 +5,7 @@ import 'package:passmate/model/auth_credentials.dart';
 import 'package:passmate/routes/routes_name.dart';
 import 'package:passmate/shared/custom_snackbar.dart';
 import 'package:passmate/shared/custom_widgets.dart';
-import 'package:passmate/views/pages/temp_error.dart';
+import 'package:passmate/shared/temp_error.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class DeleteAccountPage extends StatefulWidget {
@@ -35,7 +35,7 @@ class _DeleteAccountPageState extends State<DeleteAccountPage> {
           ScaffoldMessenger.of(context)
               .showSnackBar(showCustomSnackBar(context, state.message));
         }
-        if (state is Uninitialized) {
+        if (state is Unauthenticated) {
           stateMessage = 'Success!';
           ScaffoldMessenger.of(context).hideCurrentSnackBar();
           print('Navigating..');
@@ -83,12 +83,21 @@ class _DeleteAccountPageState extends State<DeleteAccountPage> {
                     'Delete Account',
                     style: TextStyle(
                       height: 1.25.w,
-                      fontSize: 35,
+                      fontSize: 40,
                       fontWeight: FontWeight.w700,
                       color: Theme.of(context).colorScheme.onBackground,
                     ),
                   ),
-                  SizedBox(height: 25.h),
+                  SizedBox(height: 15.h),
+                  Text(
+                    'Please re-enter your credentials',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: Theme.of(context).colorScheme.secondaryVariant,
+                    ),
+                  ),
+                  SizedBox(height: 20.h),
                   TextFormField(
                     decoration: customInputDecoration(
                         context: context, labelText: 'Email'),
@@ -108,7 +117,7 @@ class _DeleteAccountPageState extends State<DeleteAccountPage> {
                   SizedBox(height: 20.w),
                   TextFormField(
                     decoration: customInputDecoration(
-                        context: context, labelText: 'Password'),
+                        context: context, labelText: 'Master Password'),
                     style: formTextStyle(context),
                     onSaved: (value) {
                       password = value ?? '';
@@ -121,24 +130,136 @@ class _DeleteAccountPageState extends State<DeleteAccountPage> {
                   ),
                   SizedBox(height: 25.w),
                   CustomElevatedButton(
-                    text: 'Confirm',
+                    text: 'Delete Account',
                     onPressed: () async {
                       if (!_formKey.currentState!.validate()) {
                         return;
                       }
                       _formKey.currentState?.save();
-                      print(stateMessage);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                          showCustomSnackBar(context, stateMessage));
-                      BlocProvider.of<AppBloc>(context)
-                          .add(DeleteUser(email: email, password: password));
+                      dynamic res = await showDialog(
+                        context: context,
+                        barrierColor: Colors.black.withOpacity(0.25),
+                        builder: (context) {
+                          return const ConfirmDialog(
+                              heading: 'Delete Account?',
+                              content:
+                                  'All your credentials will be deleted permanently. This action cannot be undone!');
+                        },
+                      );
+                      if(res=='confirm'){
+                        // print('delete acc');
+                        BlocProvider.of<AppBloc>(context)
+                            .add(DeleteUser(email: email, password: password));
+                      }
+                      // print(stateMessage);
+                      // ScaffoldMessenger.of(context).showSnackBar(
+                      //     showCustomSnackBar(context, stateMessage));
                     },
                   ),
                 ],
               ),
             ),
-            SizedBox(height: 50.h),
+            SizedBox(height: 60.h),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class ConfirmDialog extends StatefulWidget {
+  final String heading;
+  final String content;
+
+  const ConfirmDialog({Key? key, required this.heading, required this.content})
+      : super(key: key);
+
+  @override
+  _ConfirmDialogState createState() => _ConfirmDialogState();
+}
+
+class _ConfirmDialogState extends State<ConfirmDialog> {
+  String heading = '';
+  String content = '';
+
+  @override
+  void initState() {
+    super.initState();
+    heading = widget.heading;
+    content = widget.content;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: SizedBox(
+        // height: 335.w,
+        width: MediaQuery.of(context).size.width,
+        child: Card(
+          margin: EdgeInsets.all(15.w),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.w)),
+          child: Padding(
+            padding: EdgeInsets.all(15.w),
+            child: Column(
+              // crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(height: 5.w),
+                SizedBox(
+                  height: 100.w,
+                  width: 100.w,
+                  child: Image.network(
+                      'https://www.freeiconspng.com/uploads/orange-error-icon-0.png'),
+                ),
+                SizedBox(height: 15.w),
+                Text(
+                  heading,
+                  style: TextStyle(
+                    fontSize: 32,
+                    fontWeight: FontWeight.w700,
+                    color: Theme.of(context).colorScheme.onBackground,
+                  ),
+                ),
+                SizedBox(height: 5.w),
+                Text(
+                  content,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: Theme.of(context).colorScheme.secondaryVariant,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 20.w),
+                Row(
+                  children: [
+                    Flexible(
+                      child: CustomElevatedButton(
+                        style: 1,
+                        text: 'Cancel',
+                        fontSize: 17,
+                        onPressed: () {
+                          Navigator.pop(context, 'cancel');
+                        },
+                      ),
+                    ),
+                    SizedBox(width: 10.w),
+                    Flexible(
+                      child: CustomElevatedButton(
+                        text: 'Confirm',
+                        fontSize: 17,
+                        onPressed: () {
+                          Navigator.pop(context, 'confirm');
+                        },
+                      ),
+                    ),
+                  ],
+                )
+              ],
+            ),
+          ),
         ),
       ),
     );

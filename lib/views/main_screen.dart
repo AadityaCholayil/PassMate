@@ -15,7 +15,7 @@ import 'package:passmate/views/pages/passwords_page.dart';
 import 'package:passmate/views/pages/payment_card_page.dart';
 import 'package:passmate/views/pages/secure_notes_page.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:passmate/views/pages/settings_page.dart';
+import 'package:passmate/views/settings/settings_page.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -26,7 +26,6 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   final GlobalKey<FabCircularMenuState> fabKey = GlobalKey();
-  late final String fName;
 
   Widget _buildSubFAB({required IconData icon, void Function()? onPressed}) {
     return Container(
@@ -47,7 +46,6 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     super.initState();
-    fName = context.read<AppBloc>().userData.firstName ?? '';
   }
 
   @override
@@ -56,12 +54,13 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: context.read<MenuProvider>().currentPage < 3
-          ? MainListPage(fName: fName)
+          // ignore: prefer_const_constructors
+          ? MainListPage()
           : [
               const PasswordGeneratorPage(),
               const FolderPage(),
-              for (String path in context.read<DatabaseBloc>().folderList??[])
-                FolderPage(path: path),
+              // for (String path in context.read<DatabaseBloc>().folderList??[])
+              //   FolderPage(path: path),
             ][context.read<MenuProvider>().currentPage-3],
       floatingActionButton: FabCircularMenu(
         key: fabKey,
@@ -113,17 +112,22 @@ class _MainScreenState extends State<MainScreen> {
   }
 }
 
-class MainListPage extends StatelessWidget {
+class MainListPage extends StatefulWidget {
   const MainListPage({
     Key? key,
-    required this.fName,
   }) : super(key: key);
 
-  final String fName;
+  @override
+  State<MainListPage> createState() => _MainListPageState();
+}
+
+class _MainListPageState extends State<MainListPage> {
+  String fName = '';
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    fName = context.read<AppBloc>().userData.firstName ?? '';
     return RefreshIndicator(
       onRefresh: () async => BlocProvider.of<DatabaseBloc>(context).add([
         GetPasswords(),
@@ -165,11 +169,12 @@ class MainListPage extends StatelessWidget {
                       Icons.settings_rounded,
                       color: colorScheme.primary,
                     ),
-                    onPressed: () {
-                      Navigator.push(
+                    onPressed: () async {
+                      await Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => const SettingsPage())
                       );
+                      setState(() {});
                     },
                   ),
                 ],

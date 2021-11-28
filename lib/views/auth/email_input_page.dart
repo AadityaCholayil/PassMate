@@ -1,21 +1,21 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:passmate/bloc/app_bloc/app_bloc_files.dart';
 import 'package:passmate/model/auth_credentials.dart';
 import 'package:passmate/shared/custom_widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:passmate/views/auth/login_page.dart';
 import 'package:passmate/views/auth/signup_page.dart';
-import 'package:passmate/views/pages/temp_error.dart';
+import 'package:passmate/shared/temp_error.dart';
 
 class EmailInputPage extends StatefulWidget {
   final String firstName;
   final String lastName;
-  final XFile? image;
+  final File? image;
 
   const EmailInputPage(
-      {required this.firstName, required this.lastName, this.image, Key? key})
+      {required this.firstName, required this.lastName, required this.image, Key? key})
       : super(key: key);
 
   @override
@@ -164,6 +164,7 @@ class _EmailInputPageState extends State<EmailInputPage> {
                             builder: (context) => SignUpPage(
                                   firstName: widget.firstName,
                                   lastName: widget.lastName,
+                                  image: widget.image,
                                   email: email.email,
                                 )));
                   },

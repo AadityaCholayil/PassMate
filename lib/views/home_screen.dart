@@ -4,11 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:passmate/bloc/app_bloc/app_bloc.dart';
+import 'package:passmate/bloc/app_bloc/app_bloc_files.dart';
 import 'package:passmate/bloc/database_bloc/database_barrel.dart';
 import 'package:passmate/model/main_screen_provider.dart';
+import 'package:passmate/model/user.dart';
 import 'package:passmate/views/main_screen.dart';
-import 'package:passmate/views/pages/settings_page.dart';
-import 'package:passmate/views/pages/temp_error.dart';
+import 'package:passmate/views/settings/edit_profile_page.dart';
+import 'package:passmate/views/settings/settings_page.dart';
+import 'package:passmate/shared/temp_error.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -35,7 +38,6 @@ class _HomeScreenState extends State<HomeScreen> {
             builder: (context) {
               return Consumer<MenuProvider>(
                 builder: (context, provider, child) {
-                  print('updated');
                   return LayoutBuilder(
                     builder: (context, constraints) {
                       // Responsive
@@ -82,7 +84,7 @@ class _MenuScreenState extends State<MenuScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final userData = context.read<AppBloc>().userData;
+    UserData userData = context.read<AppBloc>().userData;
     final colorScheme = Theme.of(context).colorScheme;
     return BlocConsumer<DatabaseBloc, DatabaseState>(
       listener: (context, state) {
@@ -103,53 +105,7 @@ class _MenuScreenState extends State<MenuScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding: EdgeInsets.only(top: 5.w, left: 10.w),
-                  child: Row(
-                    children: [
-                      Container(
-                        height: 50.w,
-                        width: 50.w,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(25.w)),
-                        child: Image.network(userData.photoUrl!),
-                      ),
-                      SizedBox(width: 15.w),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                            height: 16.w,
-                          ),
-                          Text(
-                            '${userData.firstName} ${userData.lastName}',
-                            style: TextStyle(
-                              color: colorScheme.onPrimary,
-                              fontSize: 19,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          TextButton(
-                            style: TextButton.styleFrom(
-                                padding: EdgeInsets.zero,
-                                alignment: Alignment.topLeft),
-                            child: Text(
-                              'View profile',
-                              style: TextStyle(
-                                color: colorScheme.secondary,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                                height: 0.9.w,
-                              ),
-                            ),
-                            onPressed: () {},
-                          )
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
+                _buildProfile(userData, colorScheme),
                 Spacer(),
                 MenuItem(
                   index: 0,
@@ -243,6 +199,94 @@ class _MenuScreenState extends State<MenuScreen> {
       },
     );
   }
+
+  Widget _buildProfile(UserData userData, ColorScheme colorScheme) {
+    return BlocConsumer<AppBloc, AppState>(
+      listener: (context, state) {
+        userData = context.read<AppBloc>().userData;
+      },
+      builder: (context, state) {
+        return Padding(
+          padding: EdgeInsets.only(top: 5.w, left: 10.w),
+          child: Row(
+            children: [
+              Container(
+                height: 50.w,
+                width: 50.w,
+                clipBehavior: Clip.antiAliasWithSaveLayer,
+                decoration: BoxDecoration(
+                    border: Border.all(
+                        color: Theme.of(context).colorScheme.secondary,
+                        width: 1.3.w),
+                    borderRadius: BorderRadius.circular(25.w)),
+                padding: EdgeInsets.all(2.5.w),
+                child: InkWell(
+                  onTap: () async {
+                    ZoomDrawer.of(context)!.toggle();
+                    await Future.delayed(const Duration(milliseconds: 200));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const EditProfilePage()));
+                  },
+                  child: Container(
+                    height: 46.w,
+                    width: 46.w,
+                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(25.w)),
+                    child: Image.network(
+                      userData.photoUrl!,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(width: 15.w),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: 16.w,
+                  ),
+                  Text(
+                    '${userData.firstName} ${userData.lastName}',
+                    style: TextStyle(
+                      color: colorScheme.onPrimary,
+                      fontSize: 19,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  TextButton(
+                    style: TextButton.styleFrom(
+                        padding: EdgeInsets.zero, alignment: Alignment.topLeft),
+                    child: Text(
+                      'View profile',
+                      style: TextStyle(
+                        color: colorScheme.secondary,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        height: 0.9.w,
+                      ),
+                    ),
+                    onPressed: () async {
+                      ZoomDrawer.of(context)!.toggle();
+                      await Future.delayed(const Duration(milliseconds: 200));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const EditProfilePage()));
+                    },
+                  )
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 }
 
 class MenuItem extends StatelessWidget {
@@ -265,9 +309,7 @@ class MenuItem extends StatelessWidget {
             width: 263.w,
             padding: EdgeInsets.only(left: 8.w),
             decoration: BoxDecoration(
-              color: colorScheme
-                  .secondaryVariant
-                  .withOpacity(0.15),
+              color: colorScheme.secondaryVariant.withOpacity(0.15),
               borderRadius: BorderRadius.circular(17.w),
               border: Border.all(
                 width: 2.w,
@@ -298,9 +340,7 @@ class MenuItem extends StatelessWidget {
           Icon(
             icon,
             size: 27.w,
-            color: selected
-                ? colorScheme.secondaryVariant
-                : Colors.white,
+            color: selected ? colorScheme.secondaryVariant : Colors.white,
           ),
           SizedBox(
             width: 25.w,
@@ -308,9 +348,7 @@ class MenuItem extends StatelessWidget {
           Text(
             text,
             style: TextStyle(
-              color: selected
-                  ? colorScheme.secondaryVariant
-                  : Colors.white,
+              color: selected ? colorScheme.secondaryVariant : Colors.white,
               fontSize: 17,
               fontWeight: FontWeight.w400,
             ),

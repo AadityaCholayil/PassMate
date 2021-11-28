@@ -95,29 +95,51 @@ class SignupPageState extends AppState {
   List<Object?> get props => [message];
 }
 
+class EditProfilePageState extends AppState {
+  final String message;
+
+  const EditProfilePageState({required this.message});
+
+  static EditProfilePageState loading =
+      const EditProfilePageState(message: 'Loading');
+
+  static EditProfilePageState somethingWentWrong =
+      const EditProfilePageState(
+          message: 'Something went wrong, Please try again');
+
+  static EditProfilePageState success =
+  const EditProfilePageState(message: 'Success!');
+
+  @override
+  String toString() => 'EditProfilePageState.'+message;
+
+  @override
+  List<Object?> get props => [toString()];
+}
+
 class DeleteAccountPageState extends AppState {
   final String message;
 
   const DeleteAccountPageState({required this.message});
 
   static DeleteAccountPageState loading =
-      const DeleteAccountPageState(message: 'Loading');
+  const DeleteAccountPageState(message: 'Loading');
 
   static DeleteAccountPageState invalidCredentials =
-      const DeleteAccountPageState(message: 'Invalid Credentials!');
+  const DeleteAccountPageState(message: 'Invalid Credentials!');
 
   static DeleteAccountPageState somethingWentWrong =
-      const DeleteAccountPageState(
-          message: 'Something went wrong, Please try again');
+  const DeleteAccountPageState(
+      message: 'Something went wrong, Please try again');
 
   static DeleteAccountPageState success =
   const DeleteAccountPageState(message: 'Success!');
 
   @override
-  String toString() => 'DeleteAccountPageState';
+  String toString() => 'DeleteAccountPageState.'+message;
 
   @override
-  List<Object?> get props => [toString()+message];
+  List<Object?> get props => [toString()];
 }
 
 class ErrorOccurred extends AppState {

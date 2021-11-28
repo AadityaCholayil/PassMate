@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart';
@@ -264,8 +262,7 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
   }
 
   Widget _buildCategory() {
-    String label = _category.toString().substring(17);
-    label = label.replaceRange(0, 1, label[0].toUpperCase());
+    String label = getPasswordCategoryStr(_category);
     return Container(
       margin: EdgeInsets.only(top: 7.w, bottom: 5.w),
       child: InkWell(
@@ -302,7 +299,7 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
           child: Row(
             children: [
               Icon(
-                passwordCategoryIcon[_category.index],
+                passwordCategoryIcon[getPasswordCategoryStr(_category)],
                 size: 23.w,
               ),
               SizedBox(width: 10.w),
@@ -360,11 +357,7 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
                         index++)
                       Builder(
                         builder: (context) {
-                          String label = PasswordCategory.values[index]
-                              .toString()
-                              .substring(17);
-                          label =
-                              label.replaceRange(0, 1, label[0].toUpperCase());
+                          String label = getPasswordCategoryStr(PasswordCategory.values[index]);
                           bool selected =
                               category == PasswordCategory.values[index];
                           return InkWell(
@@ -382,7 +375,7 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
                                   color: Theme.of(context).colorScheme.primary,
                                   width: 0.8),
                               avatar: Icon(
-                                passwordCategoryIcon[index],
+                                passwordCategoryIcon[label],
                                 size: 23.w,
                                 color: !selected
                                     ? Theme.of(context).colorScheme.primary
@@ -631,7 +624,7 @@ class _SelectFolderDialogState extends State<SelectFolderDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+    // final colorScheme = Theme.of(context).colorScheme;
     return Center(
       child: BlocConsumer<DatabaseBloc, DatabaseState>(
         listenWhen: (previous, current) => previous != current,

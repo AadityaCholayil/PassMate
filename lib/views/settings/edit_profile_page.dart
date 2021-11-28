@@ -1,46 +1,81 @@
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:passmate/bloc/app_bloc/app_bloc.dart';
+import 'package:passmate/bloc/app_bloc/app_bloc_files.dart';
+import 'package:passmate/model/user.dart';
+import 'package:passmate/shared/custom_snackbar.dart';
 import 'package:passmate/shared/custom_widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:passmate/views/auth/email_input_page.dart';
-import 'package:passmate/views/auth/login_page.dart';
 import 'package:passmate/shared/temp_error.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class DetailsPage extends StatefulWidget {
-  const DetailsPage({Key? key}) : super(key: key);
+class EditProfilePage extends StatefulWidget {
+  const EditProfilePage({Key? key}) : super(key: key);
 
   @override
-  _DetailsPageState createState() => _DetailsPageState();
+  _EditProfilePageState createState() => _EditProfilePageState();
 }
 
-class _DetailsPageState extends State<DetailsPage> {
+class _EditProfilePageState extends State<EditProfilePage> {
   String firstName = '';
   String lastName = '';
+  String photoUrl = '';
   File? _image;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: LayoutBuilder(builder: (context, constraints) {
-          /// Responsive
-          print('Layout Changed');
-          if (constraints.maxHeight < 1.2 * constraints.maxWidth) {
-            ///LandScape
-            return const TempError(pageName: 'Additional Details Screen');
-          }
-          return _buildDetailsPortrait(context);
-        }),
-      ),
-    );
+  void initState() {
+    super.initState();
+    UserData userData = context.read<AppBloc>().userData;
+    firstName = userData.firstName ?? '';
+    lastName = userData.lastName ?? '';
+    photoUrl = userData.photoUrl ?? '';
   }
 
-  Widget _buildDetailsPortrait(BuildContext context) {
+  @override
+  Widget build(BuildContext context) {
+    return BlocConsumer<AppBloc, AppState>(
+        listenWhen: (previous, current) => previous != current,
+        buildWhen: (previous, current) => previous != current,
+        listener: (context, state) async {
+          if (state is EditProfilePageState) {
+            if (state.message == 'Success!') {
+              ScaffoldMessenger.of(context).hideCurrentSnackBar();
+              print('Navigating..');
+              await Future.delayed(const Duration(milliseconds: 300));
+              Navigator.pop(context);
+            } else {
+              ScaffoldMessenger.of(context).hideCurrentSnackBar();
+              ScaffoldMessenger.of(context)
+                  .showSnackBar(showCustomSnackBar(context, state.message));
+            }
+          }
+        },
+        builder: (context, state) {
+          return SafeArea(
+            child: Scaffold(
+              resizeToAvoidBottomInset: false,
+              body: LayoutBuilder(builder: (context, constraints) {
+                // Responsive
+                print('Layout Changed');
+                if (constraints.maxHeight < 1.2 * constraints.maxWidth) {
+                  // LandScape
+                  return const TempError(
+                      pageName: 'Additional EditProfile Screen');
+                }
+                return _buildEditProfilePortrait(context);
+              }),
+            ),
+          );
+        });
+  }
+
+  Widget _buildEditProfilePortrait(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
       child: Container(
@@ -53,26 +88,39 @@ class _DetailsPageState extends State<DetailsPage> {
             children: [
               SizedBox(height: 25.w),
               const CustomBackButton(),
-              SizedBox(height: 15.w),
+              SizedBox(height: 25.w),
               Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Create an Account',
+                    'Edit Profile',
                     style: TextStyle(
                       height: 1.25,
                       fontSize: 43.5,
                       fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.onBackground,
+                      color: colors.onBackground,
                     ),
                   ),
                   SizedBox(height: 20.w),
-                  _buildProfile(Theme.of(context).colorScheme, context),
-                  SizedBox(height: 25.w),
+                  _buildProfile(colors, context),
+                  SizedBox(height: 20.w),
+                  Padding(
+                    padding: EdgeInsets.only(left: 12.w, bottom: 4.w),
+                    child: Text(
+                      'First Name',
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                        color: colors.secondaryVariant,
+                      ),
+                    ),
+                  ),
                   Material(
                     borderRadius: BorderRadius.circular(15.w),
                     clipBehavior: Clip.antiAliasWithSaveLayer,
                     elevation: 2,
                     child: TextFormField(
+                      initialValue: firstName,
                       decoration: customInputDecoration(
                           context: context, labelText: 'First Name'),
                       style: formTextStyle(context),
@@ -86,12 +134,24 @@ class _DetailsPageState extends State<DetailsPage> {
                       },
                     ),
                   ),
-                  SizedBox(height: 20.w),
+                  SizedBox(height: 12.w),
+                  Padding(
+                    padding: EdgeInsets.only(left: 12.w, bottom: 4.w),
+                    child: Text(
+                      'Last Name',
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                        color: colors.secondaryVariant,
+                      ),
+                    ),
+                  ),
                   Material(
                     borderRadius: BorderRadius.circular(15.w),
                     clipBehavior: Clip.antiAliasWithSaveLayer,
                     elevation: 2,
                     child: TextFormField(
+                      initialValue: lastName,
                       decoration: customInputDecoration(
                           context: context, labelText: 'Last Name'),
                       style: formTextStyle(context),
@@ -107,49 +167,19 @@ class _DetailsPageState extends State<DetailsPage> {
                   ),
                   SizedBox(height: 30.w),
                   CustomElevatedButton(
-                    text: 'Next',
+                    text: 'Update Profile',
                     onPressed: () async {
                       if (!_formKey.currentState!.validate()) {
                         return;
                       }
                       _formKey.currentState?.save();
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => EmailInputPage(
-                                    firstName: firstName,
-                                    lastName: lastName,
-                                    image: _image,
-                                  )));
+                      BlocProvider.of<AppBloc>(context)
+                          .add(UpdateUserData(firstName, lastName, _image));
                     },
                   ),
                 ],
               ),
-              SizedBox(height: 50.h),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "Already have an account?",
-                    style: TextStyle(
-                        fontSize: 14,
-                        color: Theme.of(context).colorScheme.onSurface),
-                  ),
-                  TextButton(
-                    child: Text(
-                      "Login!",
-                      style: TextStyle(
-                          fontSize: 14,
-                          color: Theme.of(context).colorScheme.primary),
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(
-                          builder: (context) => const LoginPage()));
-                    },
-                  ),
-                ],
-              ),
-              SizedBox(height: 20.w),
+              SizedBox(height: 30.w),
             ],
           ),
         ),
@@ -203,7 +233,7 @@ class _DetailsPageState extends State<DetailsPage> {
                               height: 110.w,
                               width: 110.w,
                               child: Image.network(
-                                'https://www.mgretails.com/assets/img/default.png',
+                                photoUrl,
                                 fit: BoxFit.cover,
                               ),
                             ),

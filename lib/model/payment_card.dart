@@ -97,9 +97,31 @@ class PaymentCard {
 
 enum PaymentCardType { all, creditCard, debitCard, others }
 
-List<IconData> paymentCardCategoryIcon = [
-  Icons.favorite_border_rounded,
-  Icons.credit_card_outlined,
-  Icons.credit_card_outlined,
-  Icons.more_horiz
-];
+Map<String, IconData> paymentCardCategoryIcon = {
+  'Favourites': Icons.favorite_border_rounded,
+  'All': Icons.favorite_border_rounded,
+  'Credit Card': Icons.credit_card_outlined,
+  'Debit Card': Icons.credit_card_outlined,
+  'Others': Icons.more_horiz
+};
+
+String getPaymentCardTypeStr(PaymentCardType type) {
+  String label = '';
+  switch (type) {
+    case PaymentCardType.all:
+      label = 'All';
+      break;
+    case PaymentCardType.creditCard:
+      label = 'Credit Card';
+      break;
+    case PaymentCardType.debitCard:
+      label = 'Debit Card';
+      break;
+    case PaymentCardType.others:
+      label = 'Others';
+      break;
+    default:
+      break;
+  }
+  return label.replaceRange(0, 1, label.substring(0, 1).toUpperCase());
+}

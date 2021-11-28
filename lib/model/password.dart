@@ -100,6 +100,16 @@ class Password {
   }
 }
 
+// class PasswordCategory {
+//   final String label;
+//   final String icon;
+//
+//   PasswordCategory({required this.label, required this.icon});
+//
+//
+// }
+
+
 enum PasswordCategory {
   all,
   social,
@@ -111,13 +121,18 @@ enum PasswordCategory {
   others,
 }
 
-List<IconData> passwordCategoryIcon = [
-  Icons.favorite_border_rounded,
-  Icons.people_alt_outlined,
-  Icons.work_outline,
-  Icons.movie_creation_outlined,
-  Icons.attach_money,
-  Icons.school_outlined,
-  Icons.shopping_cart_outlined,
-  Icons.more_horiz
-];
+Map<String, IconData> passwordCategoryIcon = {
+  'Favourites': Icons.favorite_border_rounded,
+  'Social': Icons.people_alt_outlined,
+  'Work': Icons.work_outline,
+  'Entertainment': Icons.movie_creation_outlined,
+  'Finance': Icons.attach_money,
+  'Education': Icons.school_outlined,
+  'Ecommerce': Icons.shopping_cart_outlined,
+  'Others': Icons.more_horiz
+};
+
+String getPasswordCategoryStr(PasswordCategory passwordCategory){
+  String label = passwordCategory.toString().substring(17);
+  return label.replaceRange(0, 1, label.substring(0, 1).toUpperCase());
+}

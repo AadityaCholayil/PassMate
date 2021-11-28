@@ -129,9 +129,7 @@ class _PasswordPageState extends State<PasswordPage> {
                       ),
             SizedBox(
               height: passwordList.length < 3
-                  ? passwordList.isEmpty
-                      ? 30.h
-                      : 250.h
+                  ? (3 - passwordList.length) * 70.w
                   : 0,
             ),
           ],
@@ -186,8 +184,8 @@ class _PasswordPageState extends State<PasswordPage> {
           int? selectedIndex;
           PasswordCategory category = PasswordCategory.all;
           if (passwordCategory == PasswordCategory.all && !favourites) {
-            label = PasswordCategory.values[index].toString().substring(17);
             category = PasswordCategory.values[index];
+            label = getPasswordCategoryStr(category);
             if (index == 0) {
               label = 'Favourites';
               fav = true;
@@ -197,8 +195,8 @@ class _PasswordPageState extends State<PasswordPage> {
             if (selectedIndex == 0) {
               //favourites
               if (index != 0) {
-                label = PasswordCategory.values[index].toString().substring(17);
                 category = PasswordCategory.values[index];
+                label = getPasswordCategoryStr(category);
               } else {
                 selected = true;
                 label = 'Favourites';
@@ -210,14 +208,12 @@ class _PasswordPageState extends State<PasswordPage> {
                   label = 'Favourites';
                   fav = true;
                 } else {
-                  label = PasswordCategory.values[index - 1]
-                      .toString()
-                      .substring(17);
                   category = PasswordCategory.values[index - 1];
+                  label = getPasswordCategoryStr(category);
                 }
               } else {
                 selected = true;
-                label = passwordCategory.toString().substring(17);
+                label = getPasswordCategoryStr(passwordCategory);
                 category = PasswordCategory.values[index];
               }
             }
@@ -247,7 +243,7 @@ class _PasswordPageState extends State<PasswordPage> {
                         width: 2)
                     : null,
                 avatar: Icon(
-                  passwordCategoryIcon[index],
+                  passwordCategoryIcon[label],
                   size: 23.w,
                   color: Theme.of(context).colorScheme.secondary,
                 ),
@@ -256,7 +252,7 @@ class _PasswordPageState extends State<PasswordPage> {
                 // padding: EdgeInsets.fromLTRB(12.w, 7.w, 12.w, 7.w),
                 labelPadding: EdgeInsets.fromLTRB(10.w, 0, 6.w, 0),
                 label: Text(
-                  label.replaceRange(0, 1, label.substring(0, 1).toUpperCase()),
+                  label,
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.secondary,
                     fontSize: 15,
@@ -479,8 +475,7 @@ class _PasswordDetailCardState extends State<PasswordDetailCard> {
   void initState() {
     super.initState();
     password = widget.password;
-    categoryText = password.category.toString().substring(17).replaceRange(
-        0, 1, password.category.toString().substring(17)[0].toUpperCase());
+    categoryText = getPasswordCategoryStr(password.category);
   }
 
   @override
@@ -611,7 +606,8 @@ class _PasswordDetailCardState extends State<PasswordDetailCard> {
                           child: Row(
                             children: [
                               Icon(
-                                passwordCategoryIcon[password.category.index],
+                                passwordCategoryIcon[
+                                    getPasswordCategoryStr(password.category)],
                                 size: 24.w,
                               ),
                               SizedBox(width: 20.w),

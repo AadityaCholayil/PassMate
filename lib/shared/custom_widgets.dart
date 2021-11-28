@@ -237,9 +237,10 @@ class CustomElevatedButton extends StatelessWidget {
   final void Function()? onPressed;
   final String text;
   final int style;
+  final double fontSize;
 
   const CustomElevatedButton(
-      {Key? key, this.onPressed, this.text = 'Submit', this.style = 0})
+      {Key? key, this.onPressed, this.text = 'Submit', this.style = 0, this.fontSize=19})
       : super(key: key);
 
   @override
@@ -266,8 +267,8 @@ class CustomElevatedButton extends StatelessWidget {
               color: style == 0
                   ? Theme.of(context).colorScheme.onPrimary
                   : Theme.of(context).colorScheme.primary,
-              fontSize: 19,
-              fontWeight: FontWeight.w600),
+              fontSize: fontSize,
+              fontWeight: FontWeight.w500),
         ),
       ),
       onPressed: onPressed,

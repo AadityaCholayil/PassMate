@@ -108,7 +108,7 @@ class _PaymentCardPageState extends State<PaymentCardPage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: const [
                             Text(
-                              'Start Adding Passwords',
+                              'Start Adding Cards',
                               style: TextStyle(
                                 fontSize: 25,
                                 fontWeight: FontWeight.w700,
@@ -116,7 +116,7 @@ class _PaymentCardPageState extends State<PaymentCardPage> {
                               textAlign: TextAlign.center,
                             ),
                             Text(
-                              'All your passwords will be secure\nusing AES-256 encryption.',
+                              'All your cards will be secure\nusing AES-256 encryption.',
                               style: TextStyle(
                                 fontSize: 17,
                               ),
@@ -132,8 +132,8 @@ class _PaymentCardPageState extends State<PaymentCardPage> {
             SizedBox(
               height: paymentCardList.length < 2
                   ? paymentCardList.isEmpty
-                      ? 30.h
-                      : 250.h
+                      ? 140.h
+                      : 50.h
                   : 0,
             ),
           ],
@@ -188,8 +188,8 @@ class _PaymentCardPageState extends State<PaymentCardPage> {
           int? selectedIndex;
           PaymentCardType category = PaymentCardType.all;
           if (paymentCardType == PaymentCardType.all && !favourites) {
-            label = PaymentCardType.values[index].toString().substring(16);
             category = PaymentCardType.values[index];
+            label = getPaymentCardTypeStr(category);
             if (index == 0) {
               label = 'Favourites';
               fav = true;
@@ -199,8 +199,8 @@ class _PaymentCardPageState extends State<PaymentCardPage> {
             if (selectedIndex == 0) {
               //favourites
               if (index != 0) {
-                label = PaymentCardType.values[index].toString().substring(16);
                 category = PaymentCardType.values[index];
+                label = getPaymentCardTypeStr(category);
               } else {
                 selected = true;
                 label = 'Favourites';
@@ -212,14 +212,12 @@ class _PaymentCardPageState extends State<PaymentCardPage> {
                   label = 'Favourites';
                   fav = true;
                 } else {
-                  label = PaymentCardType.values[index - 1]
-                      .toString()
-                      .substring(16);
                   category = PaymentCardType.values[index - 1];
+                  label = getPaymentCardTypeStr(category);
                 }
               } else {
                 selected = true;
-                label = paymentCardType.toString().substring(16);
+                label = getPaymentCardTypeStr(paymentCardType);
                 category = PaymentCardType.values[index];
               }
             }
@@ -228,16 +226,6 @@ class _PaymentCardPageState extends State<PaymentCardPage> {
             if (selectedIndex + 1 == index && selectedIndex != 0) {
               return const SizedBox.shrink();
             }
-          }
-          switch (label) {
-            case 'creditCard':
-              label = 'Credit Card';
-              break;
-            case 'debitCard':
-              label = 'Debit Card';
-              break;
-            default:
-              break;
           }
           return Container(
             margin: EdgeInsets.only(right: 9.w),
@@ -259,7 +247,7 @@ class _PaymentCardPageState extends State<PaymentCardPage> {
                         width: 2)
                     : null,
                 avatar: Icon(
-                  paymentCardCategoryIcon[index],
+                  paymentCardCategoryIcon[label],
                   size: 23.w,
                   color: Theme.of(context).colorScheme.secondary,
                 ),
@@ -268,7 +256,7 @@ class _PaymentCardPageState extends State<PaymentCardPage> {
                 // padding: EdgeInsets.fromLTRB(12.w, 7.w, 12.w, 7.w),
                 labelPadding: EdgeInsets.fromLTRB(10.w, 0, 6.w, 0),
                 label: Text(
-                  label.replaceRange(0, 1, label.substring(0, 1).toUpperCase()),
+                  label,
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.secondary,
                     fontSize: 15,
@@ -499,8 +487,7 @@ class _PaymentCardDetailCardState extends State<PaymentCardDetailCard> {
   void initState() {
     super.initState();
     paymentCard = widget.paymentCard;
-    categoryText = paymentCard.cardType.toString().substring(16).replaceRange(
-        0, 1, paymentCard.cardType.toString().substring(16)[0].toUpperCase());
+    categoryText = getPaymentCardTypeStr(paymentCard.cardType);
     _controller = FlipCardController();
     Future.delayed(const Duration(milliseconds: 700),
         () => _controller.hint(duration: const Duration(milliseconds: 800)));
@@ -653,7 +640,7 @@ class _PaymentCardDetailCardState extends State<PaymentCardDetailCard> {
                                 children: [
                                   Icon(
                                     paymentCardCategoryIcon[
-                                        paymentCard.cardType.index],
+                                        getPaymentCardTypeStr(paymentCard.cardType)],
                                     size: 24.w,
                                   ),
                                   SizedBox(width: 20.w),
