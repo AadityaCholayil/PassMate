@@ -237,53 +237,39 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                 fit: BoxFit.cover,
                               ),
                             ),
-                      _image != null
-                          ? const SizedBox.shrink()
-                          : Container(
-                              height: 40.w,
-                              color: Colors.black45,
-                              alignment: Alignment.center,
-                              child: Icon(
-                                Icons.add_a_photo_outlined,
-                                size: 25.w,
-                                color: colors.surface,
-                              ),
-                            ),
                     ],
                   ),
                 ),
               ),
             ),
-            _image != null
-                ? Container(
-                    alignment: Alignment.bottomRight,
-                    child: Container(
-                      height: 44.w,
-                      width: 44.w,
-                      decoration: BoxDecoration(
-                        color: colors.surface,
-                        border: Border.all(color: colors.primary, width: 2.5.w),
-                        borderRadius: BorderRadius.circular(22.w),
-                      ),
-                      child: IconButton(
-                        icon: Icon(
-                          Icons.edit,
-                          size: 24.w,
-                        ),
-                        onPressed: () async {
-                          await showModalBottomSheet(
-                            context: context,
-                            barrierColor: Colors.black.withOpacity(0.25),
-                            backgroundColor: Colors.transparent,
-                            builder: (context) {
-                              return _buildBottomCard(colors);
-                            },
-                          );
-                        },
-                      ),
-                    ),
-                  )
-                : const SizedBox.shrink(),
+            Container(
+              alignment: Alignment.bottomRight,
+              child: Container(
+                height: 44.w,
+                width: 44.w,
+                decoration: BoxDecoration(
+                  color: colors.surface,
+                  border: Border.all(color: colors.primary, width: 2.5.w),
+                  borderRadius: BorderRadius.circular(22.w),
+                ),
+                child: IconButton(
+                  icon: Icon(
+                    Icons.edit,
+                    size: 24.w,
+                  ),
+                  onPressed: () async {
+                    await showModalBottomSheet(
+                      context: context,
+                      barrierColor: Colors.black.withOpacity(0.25),
+                      backgroundColor: Colors.transparent,
+                      builder: (context) {
+                        return _buildBottomCard(colors);
+                      },
+                    );
+                  },
+                ),
+              ),
+            )
           ],
         ),
       ),

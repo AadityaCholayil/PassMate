@@ -1008,7 +1008,7 @@ class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
           child: Row(
             children: [
               Icon(
-                paymentCardCategoryIcon[_cardType.index],
+                paymentCardCategoryIcon[label],
                 size: 23.w,
               ),
               SizedBox(width: 10.w),
@@ -1085,7 +1085,7 @@ class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
                                   color: Theme.of(context).colorScheme.primary,
                                   width: 0.8),
                               avatar: Icon(
-                                paymentCardCategoryIcon[index],
+                                paymentCardCategoryIcon[label],
                                 size: 23.w,
                                 color: !selected
                                     ? Theme.of(context).colorScheme.primary

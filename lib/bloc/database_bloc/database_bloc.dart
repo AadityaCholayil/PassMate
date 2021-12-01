@@ -383,8 +383,13 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState> {
       DeleteSecureNote event) async* {
     yield Fetching();
     await event.secureNote.encrypt(encryptionRepository);
-    await databaseRepository.deleteSecureNote(event.secureNote);
-    add(GetSecureNotes());
+    String res = await databaseRepository.deleteSecureNote(event.secureNote);
+    if (res == 'Success') {
+      yield SecureNoteFormState.deleted;
+      add(GetSecureNotes());
+    } else {
+      yield SecureNoteFormState.errorOccurred;
+    }
   }
 
   Stream<DatabaseState> _mapGetFolderToState(GetFolder event) async* {

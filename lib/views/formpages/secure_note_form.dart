@@ -7,6 +7,7 @@ import 'package:passmate/shared/custom_snackbar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:passmate/shared/custom_widgets.dart';
 import 'package:passmate/shared/temp_error.dart';
+import 'package:passmate/views/formpages/password_form.dart';
 
 class SecureNoteFormPage extends StatefulWidget {
   final SecureNote? secureNote;
@@ -51,29 +52,33 @@ class _SecureNoteFormPageState extends State<SecureNoteFormPage> {
       listener: (context, state) async {
         if (state is SecureNoteFormState) {
           if (state == SecureNoteFormState.success) {
-            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+            // ScaffoldMessenger.of(context).hideCurrentSnackBar();
             // await Future.delayed(const Duration(milliseconds: 300));
-            Navigator.pop(context, 'Updated');
+            if (_isUpdate) {
+              Navigator.pop(context, 'Updated');
+            } else {
+              Navigator.pop(context);
+            }
+          } else if (state == SecureNoteFormState.deleted) {
+            Navigator.pop(context, 'Deleted');
           } else {
-            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-            ScaffoldMessenger.of(context)
-                .showSnackBar(showCustomSnackBar(context, state.message));
+            // ScaffoldMessenger.of(context).hideCurrentSnackBar();
+            // ScaffoldMessenger.of(context)
+            //     .showSnackBar(showCustomSnackBar(context, state.message));
           }
         }
       },
       builder: (context, state) {
         return SafeArea(
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              // Responsive
-              print('Layout Changed');
-              if (constraints.maxHeight < 1.2 * constraints.maxWidth) {
-                // LandScape
-                return const TempError(pageName: 'Secure Note Form Screen');
-              }
-              return _buildSecureNoteFormPortrait(context, colorScheme);
+          child: LayoutBuilder(builder: (context, constraints) {
+            // Responsive
+            print('Layout Changed');
+            if (constraints.maxHeight < 1.2 * constraints.maxWidth) {
+              // LandScape
+              return const TempError(pageName: 'Secure Note Form Screen');
             }
-          ),
+            return _buildSecureNoteFormPortrait(context, colorScheme);
+          }),
         );
       },
     );
@@ -97,23 +102,35 @@ class _SecureNoteFormPageState extends State<SecureNoteFormPage> {
                   const Spacer(),
                   IconButton(
                     // padding: EdgeInsets.fromLTRB(0, 9.w, 0.w, 9.w),
-                    iconSize: 33.w,
+                    iconSize: 30.w,
                     color: Theme.of(context).primaryColor,
                     icon: const Icon(Icons.folder_outlined),
-                    onPressed: () {
-                      // Navigator.pop(context);
+                    onPressed: () async {
+                      var res = await showDialog(
+                        context: context,
+                        barrierColor: Colors.black.withOpacity(0.25),
+                        // backgroundColor: Colors.transparent,
+                        builder: (context) {
+                          return SelectFolderDialog(startPath: _path);
+                        },
+                      );
+                      if (res != null) {
+                        setState(() {
+                          _path = res;
+                        });
+                      }
                     },
                   ),
+                  SizedBox(width: 5.w),
                   _isUpdate
                       ? IconButton(
                           // padding: EdgeInsets.fromLTRB(0, 9.w, 0.w, 9.w),
-                          iconSize: 33.w,
+                          iconSize: 30.w,
                           color: Theme.of(context).primaryColor,
                           icon: const Icon(Icons.delete_outlined),
                           onPressed: () {
                             BlocProvider.of<DatabaseBloc>(context)
                                 .add(DeleteSecureNote(widget.secureNote!));
-                            Navigator.pop(context, 'Deleted');
                           },
                         )
                       : const SizedBox.shrink(),

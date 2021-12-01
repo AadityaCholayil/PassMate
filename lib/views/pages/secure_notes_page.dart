@@ -259,13 +259,13 @@ class SecureNoteCard extends StatelessWidget {
                     builder: (context) =>
                         SecureNoteFormPage(secureNote: secureNote)),
               );
-              if (res != 'Deleted' && res != 'Updated') {
+              if(res == 'Updated'){
+                context.read<DatabaseBloc>().add(GetSecureNotes());
+              } else if(res!='Deleted') {
                 print('Updating');
                 context
                     .read<DatabaseBloc>()
                     .add(UpdateSecureNote(secureNote, false, secureNote.path));
-              } else {
-                BlocProvider.of<DatabaseBloc>(context).add(GetSecureNotes());
               }
             }
           },

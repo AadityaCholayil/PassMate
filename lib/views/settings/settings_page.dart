@@ -6,6 +6,7 @@ import 'package:passmate/shared/temp_error.dart';
 import 'package:passmate/views/settings/delete_account_page.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:passmate/views/settings/edit_profile_page.dart';
+import 'package:passmate/views/settings/read_more_security_page.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);
@@ -57,8 +58,13 @@ class _SettingsPageState extends State<SettingsPage> {
               SizedBox(height: 7.w),
               _buildTile(
                 colors,
-                label: 'Read more',
-                onTap: () {},
+                label: 'Security FAQs',
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const ReadMoreSecurityPage()));
+                },
               ),
               SizedBox(height: 20.w),
               _buildCategoryHead(

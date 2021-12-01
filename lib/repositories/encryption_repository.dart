@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 import 'dart:typed_data';
 import 'package:crypto/crypto.dart';
 import 'package:encrypt/encrypt.dart';
@@ -63,5 +64,11 @@ class EncryptionRepository{
     }
   }
 
-
+  static String generateCryptoRandomString({int length = 32}) {
+    Random _random = Random.secure();
+    var values = List<int>.generate(length, (i) => _random.nextInt(256));
+    String key = base64Url.encode(values);
+    key=key.substring(0, length);
+    return key;
+  }
 }

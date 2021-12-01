@@ -121,6 +121,8 @@ class SecureNoteFormState extends DatabaseState {
 
   static SecureNoteFormState success = SecureNoteFormState('Success');
 
+  static SecureNoteFormState deleted = SecureNoteFormState('Deleted');
+
   @override
   List<Object?> get props => [message];
 }
