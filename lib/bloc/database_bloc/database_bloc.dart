@@ -136,6 +136,13 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState> {
 
   Stream<DatabaseState> _mapAddPasswordToState(AddPassword event) async* {
     yield PasswordFormState.loading;
+    String? imageUrl = await getFavicon(event.password.siteUrl);
+    if (imageUrl != null) {
+      event.password.imageUrl = imageUrl;
+    } else {
+      event.password.imageUrl = await databaseRepository
+          .getFaviconFromStorage(event.password.siteName);
+    }
     await event.password.encrypt(encryptionRepository);
     print(event.password);
     String res = await databaseRepository.addPassword(event.password);
@@ -149,17 +156,27 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState> {
 
   Stream<DatabaseState> _mapUpdatePasswordToState(UpdatePassword event) async* {
     Password _password = event.password;
-    await _password.encrypt(encryptionRepository);
     if (event.fromForm) {
       yield PasswordFormState.loading;
+      String? imageUrl = await getFavicon(_password.siteUrl);
+      if (imageUrl != null) {
+        _password.imageUrl = imageUrl;
+      } else {
+        _password.imageUrl = await databaseRepository
+            .getFaviconFromStorage(_password.siteName);
+      }
+      await _password.encrypt(encryptionRepository);
+      print(_password);
       String res =
           await databaseRepository.updatePassword(_password, event.oldPath);
+      print(res);
       if (res == 'Success') {
         yield PasswordFormState.success;
       } else {
         yield PasswordFormState.errorOccurred;
       }
     } else {
+      await _password.encrypt(encryptionRepository);
       await databaseRepository.updatePassword(_password, event.oldPath);
       await _password.decrypt(encryptionRepository);
     }
@@ -358,6 +375,7 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState> {
       await databaseRepository.updateSecureNote(
           event.secureNote, event.oldPath);
       await event.secureNote.decrypt(encryptionRepository);
+      add(GetSecureNotes());
     }
   }
 

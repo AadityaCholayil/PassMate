@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:passmate/model/auth_credentials.dart';
 import 'package:passmate/repositories/encryption_repository.dart';
 
@@ -135,4 +138,31 @@ Map<String, IconData> passwordCategoryIcon = {
 String getPasswordCategoryStr(PasswordCategory passwordCategory){
   String label = passwordCategory.toString().substring(17);
   return label.replaceRange(0, 1, label.substring(0, 1).toUpperCase());
+}
+
+Future<String?> getFavicon(String domain) async {
+  Client _client = Client();
+  Response response = await _client.get(Uri.https(
+    'favicongrabber.com',
+    '/api/grab/$domain',
+  ));
+  if (response.statusCode == 200) {
+    var data = jsonDecode(response.body);
+    print(data);
+    try {
+      for (var icon in data['icons']) {
+        String url = icon['src'];
+        if(!url.endsWith('.svg')){
+          print(url);
+          return url;
+        }
+      }
+    } on Exception catch (_) {
+      return null;
+    } on Error catch (_) {
+      return null;
+    }
+  } else {
+    return null;
+  }
 }

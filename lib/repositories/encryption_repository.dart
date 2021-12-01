@@ -7,7 +7,7 @@ import 'package:pointycastle/key_derivators/scrypt.dart';
 
 class EncryptionRepository{
 
-  String key = 'Bruh moment';
+  String key = 'null';
 
   EncryptionRepository();
 

@@ -29,8 +29,8 @@ class _SecureNotesPageState extends State<SecureNotesPage> {
   @override
   void initState() {
     super.initState();
-    sortMethod = context.read<AppBloc>().userData.sortMethod ??
-        SortMethod.recentlyAdded;
+    sortMethod =
+        context.read<AppBloc>().userData.sortMethod ?? SortMethod.recentlyAdded;
     sortLabel = sortMethodMessages[sortMethod.index];
     context.read<DatabaseBloc>().add(GetSecureNotes(
           sortMethod: sortMethod,
@@ -113,13 +113,12 @@ class _SecureNotesPageState extends State<SecureNotesPage> {
                         ),
                       )
                     : Flexible(
-                        child: SecureNoteCardList(secureNoteList: secureNoteList),
+                        child:
+                            SecureNoteCardList(secureNoteList: secureNoteList),
                       ),
             SizedBox(
               height: secureNoteList.length < 3
-                  ? secureNoteList.isEmpty
-                      ? 12.w
-                      : 200.w
+                  ? (3 - secureNoteList.length) * 110.w
                   : 0,
             ),
           ],
@@ -131,20 +130,25 @@ class _SecureNotesPageState extends State<SecureNotesPage> {
   Padding _buildSearch(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20.w),
-      child: TextFormField(
-        initialValue: searchLabel,
-        decoration: customInputDecoration(
-          context: context,
-          labelText: 'Search',
-          isSearch: true,
+      child: Material(
+        borderRadius: BorderRadius.circular(15.w),
+        clipBehavior: Clip.antiAliasWithSaveLayer,
+        elevation: 2,
+        child: TextFormField(
+          initialValue: searchLabel,
+          decoration: customInputDecoration(
+            context: context,
+            labelText: 'Search',
+            isSearch: true,
+          ),
+          style: formTextStyle(context),
+          onChanged: (val) {
+            context.read<DatabaseBloc>().add(GetSecureNotes(
+                  search: val,
+                  list: completeSecureNoteList,
+                ));
+          },
         ),
-        style: formTextStyle(context),
-        onChanged: (val) {
-          context.read<DatabaseBloc>().add(GetSecureNotes(
-                search: val,
-                list: completeSecureNoteList,
-              ));
-        },
       ),
     );
   }
@@ -236,36 +240,39 @@ class SecureNoteCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(bottom: 13.w),
-      height: 87.w,
+      // height: 110.w,
       child: Card(
-        elevation: 0,
+        elevation: 2,
         margin: EdgeInsets.zero,
         clipBehavior: Clip.antiAliasWithSaveLayer,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(23.w),
+          borderRadius: BorderRadius.circular(20.w),
         ),
         child: InkWell(
-          onTap: () {
+          onTap: () async {
             if (!ZoomDrawer.of(context)!.isOpen()) {
               secureNote.lastUsed = Timestamp.now();
               secureNote.usage++;
-              context
-                  .read<DatabaseBloc>()
-                  .add(UpdateSecureNote(secureNote, false, secureNote.path));
-              showModalBottomSheet(
-                context: context,
-                barrierColor: Colors.black.withOpacity(0.25),
-                backgroundColor: Colors.transparent,
-                builder: (context) {
-                  return SecureNoteDetailCard(secureNote: secureNote);
-                },
+              var res = await Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        SecureNoteFormPage(secureNote: secureNote)),
               );
+              if (res != 'Deleted' && res != 'Updated') {
+                print('Updating');
+                context
+                    .read<DatabaseBloc>()
+                    .add(UpdateSecureNote(secureNote, false, secureNote.path));
+              } else {
+                BlocProvider.of<DatabaseBloc>(context).add(GetSecureNotes());
+              }
             }
           },
           child: Container(
-            padding: EdgeInsets.symmetric(vertical: 10.w, horizontal: 15.w),
+            padding: EdgeInsets.symmetric(vertical: 14.w, horizontal: 18.w),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(23.w),
+              borderRadius: BorderRadius.circular(20.w),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -278,74 +285,17 @@ class SecureNoteCard extends StatelessWidget {
                     fontSize: 22,
                   ),
                 ),
+                SizedBox(height: 3.w),
                 Text(
                   secureNote.content,
-                  softWrap: false,
-                  overflow: TextOverflow.fade,
-                  maxLines: 1,
-                  style: const TextStyle(fontSize: 13),
+                  softWrap: true,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
+                  style: const TextStyle(fontSize: 14),
                 ),
-                const SizedBox(
-                  height: 3,
-                ),
+                SizedBox(height: 4.w),
               ],
             ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class SecureNoteDetailCard extends StatelessWidget {
-  const SecureNoteDetailCard({
-    Key? key,
-    required this.secureNote,
-  }) : super(key: key);
-
-  final SecureNote secureNote;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 450.w,
-      child: Card(
-        margin: EdgeInsets.all(10.w),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-        child: Container(
-          padding: EdgeInsets.all(15.w),
-          child: Column(
-            children: [
-              const Spacer(),
-              Row(
-                children: [
-                  ElevatedButton(
-                    child: const Text('Delete'),
-                    onPressed: () {
-                      BlocProvider.of<DatabaseBloc>(context)
-                          .add(DeleteSecureNote(secureNote));
-                      Navigator.pop(context);
-                    },
-                  ),
-                  ElevatedButton(
-                    child: const Text('Edit Secure Note'),
-                    onPressed: () {
-                      print(secureNote.id);
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                SecureNoteFormPage(secureNote: secureNote)),
-                      ).then((value) {
-                        BlocProvider.of<DatabaseBloc>(context)
-                            .add(GetSecureNotes());
-                        Navigator.pop(context);
-                      });
-                    },
-                  ),
-                ],
-              ),
-            ],
           ),
         ),
       ),

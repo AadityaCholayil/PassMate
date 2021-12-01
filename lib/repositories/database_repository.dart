@@ -15,7 +15,8 @@ class DatabaseRepository {
 
   final FirebaseFirestore db = FirebaseFirestore.instance;
 
-  final firebase_storage.FirebaseStorage storage = firebase_storage.FirebaseStorage.instance;
+  final firebase_storage.FirebaseStorage storage =
+      firebase_storage.FirebaseStorage.instance;
 
   CollectionReference<UserData> get usersRef =>
       db.collection('users').withConverter<UserData>(
@@ -53,9 +54,7 @@ class DatabaseRepository {
 
   Future<String?> uploadFile(File _image) async {
     try {
-      await storage
-          .ref('UserProfiles/$uid/profile_pic.png')
-          .putFile(_image);
+      await storage.ref('UserProfiles/$uid/profile_pic.png').putFile(_image);
       var result = await storage
           .ref('UserProfiles/$uid/profile_pic.png')
           .getDownloadURL();
@@ -67,11 +66,21 @@ class DatabaseRepository {
     }
   }
 
-  Future<String> deleteStorageFolder() async {
+  Future<String> getFaviconFromStorage(String siteName) async {
     try {
-      await storage
-          .ref('UserProfiles/$uid/profile_pic.png')
-          .delete();
+      var result = await storage
+          .ref('WebIcons/${siteName[0].toUpperCase()}.png')
+          .getDownloadURL();
+      return result;
+    } on Exception catch (e) {
+      print('Failed fetch - $e');
+      return 'http://www.trianglelearningcenter.org/wp-content/uploads/2020/08/placeholder.png';
+    }
+  }
+
+  Future<String> deleteProfilePicFromStorage() async {
+    try {
+      await storage.ref('UserProfiles/$uid/profile_pic.png').delete();
       return 'Success';
     } on Exception catch (e) {
       print('Failed - $e');
@@ -244,17 +253,15 @@ class DatabaseRepository {
   }
 
   Future<FolderData> getFolder() async {
-    FolderData data = await foldersRef
-        .get()
-        .then((value) => value.data() ?? FolderData());
+    FolderData data =
+        await foldersRef.get().then((value) => value.data() ?? FolderData());
     return data;
   }
 
   Future addFolder({String folderName = '/'}) async {
     try {
-      FolderData data = await foldersRef
-          .get()
-          .then((value) => value.data() ?? FolderData());
+      FolderData data =
+          await foldersRef.get().then((value) => value.data() ?? FolderData());
       data.folderList.add(folderName);
       await foldersRef.set(data);
     } on Exception catch (_) {
@@ -264,9 +271,8 @@ class DatabaseRepository {
 
   Future renameFolder({String oldPath = '/', String newPath = '/'}) async {
     try {
-      FolderData data = await foldersRef
-          .get()
-          .then((value) => value.data() ?? FolderData());
+      FolderData data =
+          await foldersRef.get().then((value) => value.data() ?? FolderData());
       data.folderList.remove(oldPath);
       data.folderList.add(newPath);
       await foldersRef.set(data);
@@ -277,9 +283,8 @@ class DatabaseRepository {
 
   Future deleteFolder({String folderName = '/'}) async {
     try {
-      FolderData data = await foldersRef
-          .get()
-          .then((value) => value.data() ?? FolderData());
+      FolderData data =
+          await foldersRef.get().then((value) => value.data() ?? FolderData());
       data.folderList.remove(folderName);
       await foldersRef.set(data);
     } on Exception catch (_) {

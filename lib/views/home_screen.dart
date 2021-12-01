@@ -306,20 +306,20 @@ class MenuItem extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
     return selected
         ? Container(
-            width: 263.w,
-            padding: EdgeInsets.only(left: 8.w),
+            width: 260.w,
+            padding: EdgeInsets.only(left: 9.w),
             decoration: BoxDecoration(
               color: colorScheme.secondaryVariant.withOpacity(0.15),
-              borderRadius: BorderRadius.circular(17.w),
-              border: Border.all(
-                width: 2.w,
-                color: colorScheme.secondaryVariant,
-              ),
+              borderRadius: BorderRadius.circular(15.w),
+              // border: Border.all(
+              //   width: 2.w,
+              //   color: colorScheme.secondaryVariant,
+              // ),
             ),
             child: _buildButton(context, selected),
           )
         : Padding(
-            padding: EdgeInsets.only(left: 10.w),
+            padding: EdgeInsets.only(left: 9.w),
             child: _buildButton(context, selected),
           );
   }

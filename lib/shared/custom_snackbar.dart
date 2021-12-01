@@ -4,6 +4,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 SnackBar showCustomSnackBar(BuildContext context, String message) {
   return SnackBar(
+    duration: message == LoginPageState.loading.message
+        ? const Duration(seconds: 15)
+        : const Duration(seconds: 4),
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.w)),
     margin: EdgeInsets.all(15.w),
     behavior: SnackBarBehavior.floating,

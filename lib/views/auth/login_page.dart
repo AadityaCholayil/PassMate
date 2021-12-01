@@ -48,15 +48,17 @@ class _LoginPageState extends State<LoginPage> {
         return SafeArea(
           child: Scaffold(
             resizeToAvoidBottomInset: false,
-            body: LayoutBuilder(builder: (context, constraints) {
-              // Responsive
-              print('Layout Changed');
-              if (constraints.maxHeight < 1.2 * constraints.maxWidth) {
-                // LandScape
-                return const TempError(pageName: 'Login Screen');
-              }
-              return _buildLoginPortrait(context);
-            }),
+            body: LayoutBuilder(
+              builder: (context, constraints) {
+                // Responsive
+                print('Layout Changed');
+                if (constraints.maxHeight < 1.2 * constraints.maxWidth) {
+                  // LandScape
+                  return const TempError(pageName: 'Login Screen');
+                }
+                return _buildLoginPortrait(context);
+              },
+            ),
           ),
         );
       },

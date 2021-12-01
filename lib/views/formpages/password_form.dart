@@ -1,9 +1,7 @@
 import 'dart:async';
-import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:http/http.dart';
 import 'package:passmate/bloc/database_bloc/database_barrel.dart';
 import 'package:passmate/model/folder.dart';
 import 'package:passmate/model/password.dart';
@@ -11,6 +9,7 @@ import 'package:passmate/shared/custom_snackbar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:passmate/shared/custom_widgets.dart';
 import 'package:passmate/shared/loading.dart';
+import 'package:passmate/shared/temp_error.dart';
 
 class PasswordFormPage extends StatefulWidget {
   final Password? password;
@@ -30,7 +29,7 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
   String _password = '';
   String _note = '';
   PasswordCategory _category = PasswordCategory.others;
-  String _imageUrl = '';
+  final String _imageUrl = '';
   bool _favourite = false;
   int _usage = 0;
   Timestamp? _timeAdded;
@@ -59,71 +58,85 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: BlocConsumer<DatabaseBloc, DatabaseState>(
-            listener: (context, state) async {
-              if (state is PasswordFormState) {
-                if (state == PasswordFormState.success) {
-                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                  await Future.delayed(const Duration(milliseconds: 300));
-                  Navigator.pop(context);
-                } else {
-                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                  ScaffoldMessenger.of(context)
-                      .showSnackBar(showCustomSnackBar(context, state.message));
-                }
+    return BlocConsumer<DatabaseBloc, DatabaseState>(
+      listener: (context, state) async {
+        if (state is PasswordFormState) {
+          if (state == PasswordFormState.success) {
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+            // await Future.delayed(const Duration(milliseconds: 300));
+            Navigator.pop(context);
+          } else {
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+            ScaffoldMessenger.of(context)
+                .showSnackBar(showCustomSnackBar(context, state.message));
+          }
+        }
+      },
+      builder: (context, state) {
+        return SafeArea(
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              // Responsive
+              print('Layout Changed');
+              if (constraints.maxHeight < 1.2 * constraints.maxWidth) {
+                // LandScape
+                return const TempError(pageName: 'Password Form Screen');
               }
+              return _buildPasswordFormPortrait(context);
             },
-            builder: (context, state) {
-              return Container(
-                padding: EdgeInsets.symmetric(horizontal: 20.w),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(height: 25.w),
-                      const CustomBackButton(),
-                      SizedBox(height: 12.w),
-                      Padding(
-                        padding: EdgeInsets.only(left: 5.w),
-                        child: Text(
-                          'Add Password',
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.onBackground,
-                            fontSize: 42,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 8.w),
-                      _buildHeader(
-                          'Site Name', Icons.drive_file_rename_outline),
-                      _buildSiteName(context),
-                      _buildHeader('Site Url', Icons.link),
-                      _buildSiteUrl(context),
-                      _buildHeader('Username / Email', Icons.person_outlined),
-                      _buildEmail(context),
-                      _buildHeader('Password', Icons.password_outlined),
-                      _buildPassword(context),
-                      _buildHeader('Category', Icons.category_outlined),
-                      _buildCategory(),
-                      _buildHeader('Path', Icons.folder_outlined),
-                      _buildFolderPath(),
-                      _buildHeader(
-                          'Note (Optional)', Icons.sticky_note_2_outlined),
-                      _buildNote(context),
-                      SizedBox(height: 25.w),
-                      _buildSubmitButton(context),
-                      SizedBox(height: 100.w),
-                    ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildPasswordFormPortrait(BuildContext context) {
+    return Scaffold(
+      // resizeToAvoidBottomInset: false,
+      // height: MediaQuery.of(context).size.height,
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 20.w),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 25.w),
+                const CustomBackButton(),
+                SizedBox(height: 12.w),
+                Padding(
+                  padding: EdgeInsets.only(left: 5.w),
+                  child: Text(
+                    'Add Password',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onBackground,
+                      fontSize: 42,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-              );
-            },
+                SizedBox(height: 8.w),
+                _buildHeader('Site Name', Icons.drive_file_rename_outline),
+                _buildSiteName(context),
+                _buildHeader('Site Url', Icons.link),
+                _buildSiteUrl(context),
+                _buildHeader('Username / Email', Icons.person_outlined),
+                _buildEmail(context),
+                _buildHeader('Password', Icons.password_outlined),
+                _buildPassword(context),
+                _buildHeader('Category', Icons.category_outlined),
+                _buildCategory(),
+                _buildHeader('Path', Icons.folder_outlined),
+                _buildFolderPath(),
+                _buildHeader('Note (Optional)', Icons.sticky_note_2_outlined),
+                _buildNote(context),
+                SizedBox(height: 25.w),
+                _buildSubmitButton(context),
+                SizedBox(height: 100.w),
+              ],
+            ),
           ),
         ),
       ),
@@ -329,7 +342,8 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
         return Card(
           margin: EdgeInsets.all(10.w),
           shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.w)),
+          clipBehavior: Clip.antiAliasWithSaveLayer,
           child: Container(
             padding: EdgeInsets.all(15.w),
             child: Column(
@@ -357,10 +371,12 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
                         index++)
                       Builder(
                         builder: (context) {
-                          String label = getPasswordCategoryStr(PasswordCategory.values[index]);
+                          String label = getPasswordCategoryStr(
+                              PasswordCategory.values[index]);
                           bool selected =
                               category == PasswordCategory.values[index];
                           return InkWell(
+                            borderRadius: BorderRadius.circular(30.w),
                             onTap: () {
                               setState(() {
                                 category = PasswordCategory.values[index];
@@ -507,29 +523,6 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
     );
   }
 
-  Future<String?> getFavicon(String domain) async {
-    Client _client = Client();
-    Response response = await _client.get(Uri.https(
-      'favicongrabber.com',
-      '/api/grab/$domain',
-    ));
-    if (response.statusCode == 200) {
-      var data = jsonDecode(response.body);
-      print(data);
-      try {
-        String url = data['icons'][0]['src'];
-        print(url);
-        return url;
-      } on Exception catch (_) {
-        return null;
-      } on Error catch (_) {
-        return null;
-      }
-    } else {
-      return null;
-    }
-  }
-
   Widget _buildSubmitButton(BuildContext context) {
     return CustomElevatedButton(
       style: 0,
@@ -541,14 +534,6 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
         setState(() {
           _formKey.currentState!.save();
         });
-        String? imageUrl = await getFavicon(_siteUrl);
-        if (imageUrl != null) {
-          _imageUrl = imageUrl;
-        } else {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(showCustomSnackBar(context, 'Please try again!'));
-          return;
-        }
         Password password = Password(
           id: _id,
           path: _path,

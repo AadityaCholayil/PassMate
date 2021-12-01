@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:passmate/bloc/app_bloc/app_bloc_files.dart';
 import 'package:passmate/shared/custom_widgets.dart';
+import 'package:passmate/shared/temp_error.dart';
 import 'package:passmate/views/settings/delete_account_page.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:passmate/views/settings/edit_profile_page.dart';
@@ -17,6 +18,21 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // Responsive
+        print('Layout Changed');
+        if (constraints.maxHeight < 1.2 * constraints.maxWidth) {
+          // LandScape
+          return const TempError(pageName: 'Settings Screen');
+        }
+        return _buildSettingsPagePortrait(colors, context);
+      }
+    );
+  }
+
+  Widget _buildSettingsPagePortrait(
+      ColorScheme colors, BuildContext context) {
     return SafeArea(
       child: Scaffold(
         body: Container(

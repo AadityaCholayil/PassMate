@@ -9,6 +9,7 @@ import 'package:passmate/bloc/database_bloc/database_barrel.dart';
 import 'package:passmate/model/payment_card.dart';
 import 'package:passmate/shared/custom_snackbar.dart';
 import 'package:passmate/shared/custom_widgets.dart';
+import 'package:passmate/shared/temp_error.dart';
 import 'package:passmate/views/formpages/password_form.dart';
 
 class PaymentCardFormPage extends StatefulWidget {
@@ -74,81 +75,94 @@ class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: BlocConsumer<DatabaseBloc, DatabaseState>(
-            listener: (context, state) async {
-              if (state is PaymentCardFormState) {
-                if (state == PaymentCardFormState.success) {
-                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                  await Future.delayed(const Duration(milliseconds: 300));
-                  Navigator.pop(context);
-                } else {
-                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                  ScaffoldMessenger.of(context)
-                      .showSnackBar(showCustomSnackBar(context, state.message));
-                }
+    return BlocConsumer<DatabaseBloc, DatabaseState>(
+      listener: (context, state) async {
+        if (state is PaymentCardFormState) {
+          if (state == PaymentCardFormState.success) {
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+            await Future.delayed(const Duration(milliseconds: 300));
+            Navigator.pop(context);
+          } else {
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+            ScaffoldMessenger.of(context)
+                .showSnackBar(showCustomSnackBar(context, state.message));
+          }
+        }
+      },
+      builder: (context, state) {
+        return SafeArea(
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              // Responsive
+              print('Layout Changed');
+              if (constraints.maxHeight < 1.2 * constraints.maxWidth) {
+                // LandScape
+                return const TempError(pageName: 'Payment Card Form Screen');
               }
-            },
-            builder: (context, state) {
-              return Form(
-                key: _formKey,
+              return _buildPaymentCardFormPortrait(context);
+            }
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildPaymentCardFormPortrait(BuildContext context) {
+    return Scaffold(
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20.w),
                 child: Column(
-                  mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    SizedBox(height: 25.w),
+                    const CustomBackButton(),
+                    SizedBox(height: 12.w),
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20.w),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(height: 25.w),
-                          const CustomBackButton(),
-                          SizedBox(height: 12.w),
-                          Padding(
-                            padding: EdgeInsets.only(left: 5.w),
-                            child: Text(
-                              'Add Card',
-                              style: TextStyle(
-                                color:
-                                    Theme.of(context).colorScheme.onBackground,
-                                fontSize: 42,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 8.w),
-                          _buildCard(),
-                          SizedBox(height: 10.w),
-                          _buildNav(context),
-                          SizedBox(height: 5.w),
-                        ],
+                      padding: EdgeInsets.only(left: 5.w),
+                      child: Text(
+                        'Add Card',
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onBackground,
+                          fontSize: 42,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
-                    _buildCardForms(context),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20.w),
-                      child: Column(
-                        children: [
-                          _buildHeader('Path', Icons.folder_outlined),
-                          _buildFolderPath(),
-                          _buildHeader('Category', Icons.category_outlined),
-                          _buildCategory(),
-                          _buildHeader(
-                              'Note (Optional)', Icons.sticky_note_2_outlined),
-                          _buildNote(context),
-                          SizedBox(height: 20.w),
-                          _buildSubmitButton(),
-                          SizedBox(height: 50.w),
-                        ],
-                      ),
-                    ),
+                    SizedBox(height: 8.w),
+                    _buildCard(),
+                    SizedBox(height: 10.w),
+                    _buildNav(context),
+                    SizedBox(height: 5.w),
                   ],
                 ),
-              );
-            },
+              ),
+              _buildCardForms(context),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20.w),
+                child: Column(
+                  children: [
+                    _buildHeader('Path', Icons.folder_outlined),
+                    _buildFolderPath(),
+                    _buildHeader('Category', Icons.category_outlined),
+                    _buildCategory(),
+                    _buildHeader(
+                        'Note (Optional)', Icons.sticky_note_2_outlined),
+                    _buildNote(context),
+                    SizedBox(height: 20.w),
+                    _buildSubmitButton(),
+                    SizedBox(height: 50.w),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -166,7 +180,7 @@ class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
               index = 0;
             });
             pageController.animateToPage(index,
-                duration: const Duration(milliseconds: 600),
+                duration: const Duration(milliseconds: 1200),
                 curve: Curves.ease);
             FocusScope.of(context).unfocus();
           }
@@ -177,7 +191,7 @@ class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
               index = 4;
             });
             pageController.animateToPage(index,
-                duration: const Duration(milliseconds: 600),
+                duration: const Duration(milliseconds: 1200),
                 curve: Curves.ease);
             FocusScope.of(context).unfocus();
           }
@@ -500,7 +514,7 @@ class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
         controller: pageController,
         onPageChanged: (i) {
           setState(() {
-            if((index==4 && i==5)||(index==5 && i==4)){
+            if ((index == 4 && i == 5) || (index == 5 && i == 4)) {
               // print('bruh');
               _controller.state!.toggleCard();
             }
@@ -1052,7 +1066,8 @@ class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
                         index++)
                       Builder(
                         builder: (context) {
-                          String label = getPaymentCardTypeStr(PaymentCardType.values[index]);
+                          String label = getPaymentCardTypeStr(
+                              PaymentCardType.values[index]);
                           bool selected =
                               category == PaymentCardType.values[index];
                           return InkWell(

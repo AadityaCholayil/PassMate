@@ -384,8 +384,9 @@ class PaymentCardTile extends StatelessWidget {
               },
             );
             if (res != 'Deleted' && res != 'Updated') {
-              context.read<DatabaseBloc>().add(
-                  UpdatePaymentCard(paymentCard, false, paymentCard.path));
+              context
+                  .read<DatabaseBloc>()
+                  .add(UpdatePaymentCard(paymentCard, false, paymentCard.path));
             }
           }
         },
@@ -640,7 +641,8 @@ class _PaymentCardDetailCardState extends State<PaymentCardDetailCard> {
                                 children: [
                                   Icon(
                                     paymentCardCategoryIcon[
-                                        getPaymentCardTypeStr(paymentCard.cardType)],
+                                        getPaymentCardTypeStr(
+                                            paymentCard.cardType)],
                                     size: 24.w,
                                   ),
                                   SizedBox(width: 20.w),

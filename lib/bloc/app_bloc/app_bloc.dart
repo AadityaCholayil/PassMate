@@ -277,7 +277,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
         await _authRepository.logInWithCredentials(event.email, event.password);
         try {
           await databaseRepository.deleteUserData();
-          await databaseRepository.deleteStorageFolder();
+          await databaseRepository.deleteProfilePicFromStorage();
           await _authRepository.deleteUser();
           userData = UserData.empty;
           databaseRepository = DatabaseRepository(uid: userData.uid);
