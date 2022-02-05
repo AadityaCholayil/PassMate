@@ -29,9 +29,6 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<MenuProvider>(
       create: (context) => MenuProvider(),
-      builder: (context, child) {
-        return child ?? Container();
-      },
       child: SafeArea(
         child: GestureDetector(
           child: Builder(
@@ -46,9 +43,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         return const TempError(pageName: 'HomeScreen');
                       }
                       return ZoomDrawer(
+                        // style: DrawerStyle.Style9,
                         controller: _zoomController,
-                        borderRadius: 35.w,
-                        slideWidth: MediaQuery.of(context).size.width * .60,
+                        angle: 0,
+                        borderRadius: 45.w,
+                        slideWidth: MediaQuery.of(context).size.width * .535,
                         menuScreen: MenuScreen(),
                         mainScreen: MainScreen(),
                       );

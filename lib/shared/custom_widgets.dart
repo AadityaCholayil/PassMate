@@ -16,7 +16,7 @@ InputDecoration customInputDecoration(
             ),
           )
         : null,
-    contentPadding: EdgeInsets.fromLTRB(24.w, 18.w, 15.w, 18.w),
+    contentPadding: EdgeInsets.fromLTRB(24.w, 17.w, 15.w, 17.w),
     enabledBorder: OutlineInputBorder(
       borderSide: BorderSide(
         color: isSearch
@@ -29,7 +29,7 @@ InputDecoration customInputDecoration(
     ),
     fillColor: CustomTheme.surface,
     labelText: labelText,
-    labelStyle: const TextStyle(fontSize: 16.5),
+    labelStyle: const TextStyle(fontSize: 16),
     alignLabelWithHint: true,
     floatingLabelBehavior: FloatingLabelBehavior.never,
     helperStyle: const TextStyle(

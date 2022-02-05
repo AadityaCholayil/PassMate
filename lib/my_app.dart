@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:passmate/repositories/authentication_repository.dart';
 import 'package:passmate/bloc/app_bloc/app_bloc_files.dart';
 import 'package:passmate/routes/route_generator.dart';
-import 'package:passmate/routes/routes_name.dart';
 import 'package:passmate/theme/theme.dart';
 import 'package:passmate/views/wrapper.dart';
 import 'bloc/database_bloc/database_barrel.dart';

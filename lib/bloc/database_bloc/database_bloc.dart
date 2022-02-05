@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:passmate/bloc/database_bloc/database_barrel.dart';
 import 'package:passmate/model/folder.dart';
@@ -22,6 +24,22 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState> {
     if (userData != UserData.empty) {
       updateFolderList();
     }
+    on<GetPasswords>(_onGetPasswords);
+    on<AddPassword>(_onAddPassword);
+    on<UpdatePassword>(_onUpdatePassword);
+    on<DeletePassword>(_onDeletePassword);
+    on<GetPaymentCards>(_onGetPaymentCards);
+    on<AddPaymentCard>(_onAddPaymentCard);
+    on<UpdatePaymentCard>(_onUpdatePaymentCard);
+    on<DeletePaymentCard>(_onDeletePaymentCard);
+    on<GetSecureNotes>(_onGetSecureNotes);
+    on<AddSecureNote>(_onAddSecureNote);
+    on<UpdateSecureNote>(_onUpdateSecureNote);
+    on<DeleteSecureNote>(_onDeleteSecureNote);
+    on<GetFolder>(_onGetFolder);
+    on<AddFolder>(_onAddFolder);
+    on<RenameFolder>(_onRenameFolder);
+    on<DeleteFolder>(_onDeleteFolder);
   }
 
   Future updateFolderList() async {
@@ -34,48 +52,48 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState> {
     }
   }
 
-  @override
-  Stream<DatabaseState> mapEventToState(DatabaseEvents event) async* {
-    if (folderList == null && userData != UserData.empty) {
-      await updateFolderList();
-    }
-    if (event is GetPasswords) {
-      yield* _mapGetPasswordsToState(event);
-    } else if (event is AddPassword) {
-      yield* _mapAddPasswordToState(event);
-    } else if (event is UpdatePassword) {
-      yield* _mapUpdatePasswordToState(event);
-    } else if (event is DeletePassword) {
-      yield* _mapDeletePasswordToState(event);
-    } else if (event is GetPaymentCards) {
-      yield* _mapGetPaymentCardsToState(event);
-    } else if (event is AddPaymentCard) {
-      yield* _mapAddPaymentCardToState(event);
-    } else if (event is UpdatePaymentCard) {
-      yield* _mapUpdatePaymentCardToState(event);
-    } else if (event is DeletePaymentCard) {
-      yield* _mapDeletePaymentCardToState(event);
-    } else if (event is GetSecureNotes) {
-      yield* _mapGetSecureNotesToState(event);
-    } else if (event is AddSecureNote) {
-      yield* _mapAddSecureNoteToState(event);
-    } else if (event is UpdateSecureNote) {
-      yield* _mapUpdateSecureNoteToState(event);
-    } else if (event is DeleteSecureNote) {
-      yield* _mapDeleteSecureNoteToState(event);
-    } else if (event is GetFolder) {
-      yield* _mapGetFolderToState(event);
-    } else if (event is AddFolder) {
-      yield* _mapAddFolderToState(event);
-    } else if (event is RenameFolder) {
-      yield* _mapRenameFolderToState(event);
-    } else if (event is DeleteFolder) {
-      yield* _mapDeleteFolderToState(event);
-    }
-  }
+  // @override
+  // Stream<DatabaseState> mapEventToState(DatabaseEvents event) async* {
+  //   if (folderList == null && userData != UserData.empty) {
+  //     await updateFolderList();
+  //   }
+  //   if (event is GetPasswords) {
+  //     yield* _mapGetPasswordsToState(event);
+  //   } else if (event is AddPassword) {
+  //     yield* _mapAddPasswordToState(event);
+  //   } else if (event is UpdatePassword) {
+  //     yield* _mapUpdatePasswordToState(event);
+  //   } else if (event is DeletePassword) {
+  //     yield* _mapDeletePasswordToState(event);
+  //   } else if (event is GetPaymentCards) {
+  //     yield* _mapGetPaymentCardsToState(event);
+  //   } else if (event is AddPaymentCard) {
+  //     yield* _mapAddPaymentCardToState(event);
+  //   } else if (event is UpdatePaymentCard) {
+  //     yield* _mapUpdatePaymentCardToState(event);
+  //   } else if (event is DeletePaymentCard) {
+  //     yield* _mapDeletePaymentCardToState(event);
+  //   } else if (event is GetSecureNotes) {
+  //     yield* _mapGetSecureNotesToState(event);
+  //   } else if (event is AddSecureNote) {
+  //     yield* _mapAddSecureNoteToState(event);
+  //   } else if (event is UpdateSecureNote) {
+  //     yield* _mapUpdateSecureNoteToState(event);
+  //   } else if (event is DeleteSecureNote) {
+  //     yield* _mapDeleteSecureNoteToState(event);
+  //   } else if (event is GetFolder) {
+  //     yield* _mapGetFolderToState(event);
+  //   } else if (event is AddFolder) {
+  //     yield* _mapAddFolderToState(event);
+  //   } else if (event is RenameFolder) {
+  //     yield* _mapRenameFolderToState(event);
+  //   } else if (event is DeleteFolder) {
+  //     yield* _mapDeleteFolderToState(event);
+  //   }
+  // }
 
-  Stream<DatabaseState> _mapGetPasswordsToState(GetPasswords event) async* {
-    yield Fetching();
+  FutureOr<void> _onGetPasswords(GetPasswords event, Emitter<DatabaseState> emit) async {
+    emit(Fetching());
     if (userData.sortMethod == null) {
       userData = await databaseRepository.completeUserData;
     }
@@ -130,12 +148,12 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState> {
         return pass2.lastUsed!.compareTo(pass1.lastUsed!);
       }
     });
-    yield PasswordList(list, completeList, event.search, event.passwordCategory,
-        userData.sortMethod!, event.favourites);
+    emit(PasswordList(list, completeList, event.search, event.passwordCategory,
+        userData.sortMethod!, event.favourites));
   }
 
-  Stream<DatabaseState> _mapAddPasswordToState(AddPassword event) async* {
-    yield PasswordFormState.loading;
+  FutureOr<void> _onAddPassword(AddPassword event, Emitter<DatabaseState> emit) async {
+  emit(PasswordFormState.loading);
     String? imageUrl = await getFavicon(event.password.siteUrl);
     if (imageUrl != null) {
       event.password.imageUrl = imageUrl;
@@ -148,16 +166,16 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState> {
     String res = await databaseRepository.addPassword(event.password);
     print(res);
     if (res == 'Success') {
-      yield PasswordFormState.success;
+      emit(PasswordFormState.success);
     } else {
-      yield PasswordFormState.errorOccurred;
+      emit(PasswordFormState.errorOccurred);
     }
   }
 
-  Stream<DatabaseState> _mapUpdatePasswordToState(UpdatePassword event) async* {
+  FutureOr<void> _onUpdatePassword(UpdatePassword event, Emitter<DatabaseState> emit) async {
     Password _password = event.password;
     if (event.fromForm) {
-      yield PasswordFormState.loading;
+      emit(PasswordFormState.loading);
       String? imageUrl = await getFavicon(_password.siteUrl);
       if (imageUrl != null) {
         _password.imageUrl = imageUrl;
@@ -171,9 +189,9 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState> {
           await databaseRepository.updatePassword(_password, event.oldPath);
       print(res);
       if (res == 'Success') {
-        yield PasswordFormState.success;
+        emit(PasswordFormState.success);
       } else {
-        yield PasswordFormState.errorOccurred;
+        emit(PasswordFormState.errorOccurred);
       }
     } else {
       await _password.encrypt(encryptionRepository);
@@ -182,16 +200,15 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState> {
     }
   }
 
-  Stream<DatabaseState> _mapDeletePasswordToState(DeletePassword event) async* {
-    yield Fetching();
+  FutureOr<void> _onDeletePassword(DeletePassword event, Emitter<DatabaseState> emit) async {
+    emit(Fetching());
     await event.password.encrypt(encryptionRepository);
     await databaseRepository.deletePassword(event.password);
     add(GetPasswords());
   }
 
-  Stream<DatabaseState> _mapGetPaymentCardsToState(
-      GetPaymentCards event) async* {
-    yield Fetching();
+  FutureOr<void> _onGetPaymentCards(GetPaymentCards event, Emitter<DatabaseState> emit) async {
+    emit(Fetching());
     if (userData.sortMethod == null) {
       userData = await databaseRepository.completeUserData;
     }
@@ -247,34 +264,33 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState> {
         return card2.lastUsed!.compareTo(card1.lastUsed!);
       }
     });
-    yield PaymentCardList(list, completeList, event.search,
-        event.paymentCardType, userData.sortMethod!, event.favourites);
+    emit(PaymentCardList(list, completeList, event.search,
+        event.paymentCardType, userData.sortMethod!, event.favourites));
   }
 
-  Stream<DatabaseState> _mapAddPaymentCardToState(AddPaymentCard event) async* {
-    yield PaymentCardFormState.loading;
+  FutureOr<void> _onAddPaymentCard(AddPaymentCard event, Emitter<DatabaseState> emit) async {
+    emit(PaymentCardFormState.loading);
     await event.paymentCard.encrypt(encryptionRepository);
     print(event.paymentCard);
     String res = await databaseRepository.addPaymentCard(event.paymentCard);
     print(res);
     if (res == 'Success') {
-      yield PaymentCardFormState.success;
+      emit(PaymentCardFormState.success);
     } else {
-      yield PaymentCardFormState.errorOccurred;
+      emit(PaymentCardFormState.errorOccurred);
     }
   }
 
-  Stream<DatabaseState> _mapUpdatePaymentCardToState(
-      UpdatePaymentCard event) async* {
+  FutureOr<void> _onUpdatePaymentCard(UpdatePaymentCard event, Emitter<DatabaseState> emit) async {
     await event.paymentCard.encrypt(encryptionRepository);
     if (event.fromForm) {
-      yield PaymentCardFormState.loading;
+      emit(PaymentCardFormState.loading);
       String res = await databaseRepository.updatePaymentCard(
           event.paymentCard, event.oldPath);
       if (res == 'Success') {
-        yield PaymentCardFormState.success;
+        emit(PaymentCardFormState.success);
       } else {
-        yield PaymentCardFormState.errorOccurred;
+        emit(PaymentCardFormState.errorOccurred);
       }
     } else {
       await databaseRepository.updatePaymentCard(
@@ -283,16 +299,15 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState> {
     }
   }
 
-  Stream<DatabaseState> _mapDeletePaymentCardToState(
-      DeletePaymentCard event) async* {
-    yield Fetching();
+  FutureOr<void> _onDeletePaymentCard(DeletePaymentCard event, Emitter<DatabaseState> emit) async {
+    emit(Fetching());
     await event.paymentCard.encrypt(encryptionRepository);
     await databaseRepository.deletePaymentCard(event.paymentCard);
     add(GetPaymentCards());
   }
 
-  Stream<DatabaseState> _mapGetSecureNotesToState(GetSecureNotes event) async* {
-    yield Fetching();
+  FutureOr<void> _onGetSecureNotes(GetSecureNotes event, Emitter<DatabaseState> emit) async {
+    emit(Fetching());
     if (userData.sortMethod == null) {
       userData = await databaseRepository.completeUserData;
     }
@@ -342,34 +357,33 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState> {
         return note2.lastUsed!.compareTo(note1.lastUsed!);
       }
     });
-    yield SecureNotesList(list, completeList, event.search,
-        userData.sortMethod!, event.favourites);
+    emit(SecureNotesList(list, completeList, event.search,
+        userData.sortMethod!, event.favourites));
   }
 
-  Stream<DatabaseState> _mapAddSecureNoteToState(AddSecureNote event) async* {
-    yield SecureNoteFormState.loading;
+  FutureOr<void> _onAddSecureNote(AddSecureNote event, Emitter<DatabaseState> emit) async {
+    emit(SecureNoteFormState.loading);
     await event.secureNote.encrypt(encryptionRepository);
     print(event.secureNote);
     String res = await databaseRepository.addSecureNote(event.secureNote);
     print(res);
     if (res == 'Success') {
-      yield SecureNoteFormState.success;
+      emit(SecureNoteFormState.success);
     } else {
-      yield SecureNoteFormState.errorOccurred;
+      emit(SecureNoteFormState.errorOccurred);
     }
   }
 
-  Stream<DatabaseState> _mapUpdateSecureNoteToState(
-      UpdateSecureNote event) async* {
+  FutureOr<void> _onUpdateSecureNote(UpdateSecureNote event, Emitter<DatabaseState> emit) async {
     await event.secureNote.encrypt(encryptionRepository);
     if (event.fromForm) {
-      yield SecureNoteFormState.loading;
+      emit(SecureNoteFormState.loading);
       String res = await databaseRepository.updateSecureNote(
           event.secureNote, event.oldPath);
       if (res == 'Success') {
-        yield SecureNoteFormState.success;
+        emit(SecureNoteFormState.success);
       } else {
-        yield SecureNoteFormState.errorOccurred;
+        emit(SecureNoteFormState.errorOccurred);
       }
     } else {
       await databaseRepository.updateSecureNote(
@@ -379,21 +393,20 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState> {
     }
   }
 
-  Stream<DatabaseState> _mapDeleteSecureNoteToState(
-      DeleteSecureNote event) async* {
-    yield Fetching();
+  FutureOr<void> _onDeleteSecureNote(DeleteSecureNote event, Emitter<DatabaseState> emit) async {
+    emit(Fetching());
     await event.secureNote.encrypt(encryptionRepository);
     String res = await databaseRepository.deleteSecureNote(event.secureNote);
     if (res == 'Success') {
-      yield SecureNoteFormState.deleted;
+      emit(SecureNoteFormState.deleted);
       add(GetSecureNotes());
     } else {
-      yield SecureNoteFormState.errorOccurred;
+      emit(SecureNoteFormState.errorOccurred);
     }
   }
 
-  Stream<DatabaseState> _mapGetFolderToState(GetFolder event) async* {
-    yield Fetching();
+  FutureOr<void> _onGetFolder(GetFolder event, Emitter<DatabaseState> emit) async {
+    emit(Fetching());
     FolderData data = await databaseRepository.getFolder();
     List<String> folderList = [];
     List<Password> passwordList = [];
@@ -439,11 +452,11 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState> {
       paymentCardList: paymentCardList,
       secureNotesList: secureNoteList,
     );
-    yield FolderListState(folder);
+    emit(FolderListState(folder));
   }
 
-  Stream<DatabaseState> _mapAddFolderToState(AddFolder event) async* {
-    yield Fetching();
+  FutureOr<void> _onAddFolder(AddFolder event, Emitter<DatabaseState> emit) async {
+    emit(Fetching());
     String newFolderPath = '${event.currentPath}/${event.newFolderName}';
     String newFolderPathTemp = newFolderPath;
     try {
@@ -459,8 +472,8 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState> {
     add(GetFolder(path: event.currentPath));
   }
 
-  Stream<DatabaseState> _mapRenameFolderToState(RenameFolder event) async* {
-    yield Fetching();
+  FutureOr<void> _onRenameFolder(RenameFolder event, Emitter<DatabaseState> emit) async {
+    emit(Fetching());
     try {
       await databaseRepository.renameFolder(
           oldPath: event.oldPath, newPath: event.newPath);
@@ -468,8 +481,8 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState> {
     add(GetFolder(path: event.currentPath));
   }
 
-  Stream<DatabaseState> _mapDeleteFolderToState(DeleteFolder event) async* {
-    yield Fetching();
+  FutureOr<void> _onDeleteFolder(DeleteFolder event, Emitter<DatabaseState> emit) async {
+    emit(Fetching());
     try {
       await databaseRepository.deleteFolder(folderName: event.path);
     } on Exception catch (_) {}

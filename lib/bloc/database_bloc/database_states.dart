@@ -30,7 +30,7 @@ class PasswordList extends DatabaseState {
   );
 
   @override
-  List<Object?> get props => ['PasswordList'];
+  List<Object?> get props => [list, completeList, search, passwordCategory, sortMethod, favourites];
 }
 
 class PaymentCardList extends DatabaseState {
@@ -126,3 +126,5 @@ class SecureNoteFormState extends DatabaseState {
   @override
   List<Object?> get props => [message];
 }
+
+enum PageState{ init, loading, success, error}

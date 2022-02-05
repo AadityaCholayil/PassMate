@@ -55,7 +55,7 @@ class _MainScreenState extends State<MainScreen> {
       resizeToAvoidBottomInset: false,
       body: context.read<MenuProvider>().currentPage < 3
           // ignore: prefer_const_constructors
-          ? MainListPage()
+          ? const MainListPage()
           : [
               const PasswordGeneratorPage(),
               const FolderPage(),
@@ -139,31 +139,32 @@ class _MainListPageState extends State<MainListPage> {
         slivers: [
           SliverAppBar(
             // bottom: PreferredSize(child: Container(color: Colors.red,), preferredSize: Size(100,40)),
-            toolbarHeight: 65.w,
+            toolbarHeight: 70.w,
             elevation: 0,
             pinned: true,
-            collapsedHeight: 65.w,
+            collapsedHeight: 70.w,
             backgroundColor: Colors.white,
-            expandedHeight: 200.w,
+            expandedHeight: 235.w,
             title: Container(
-              height: 65.w,
+              height: 70.w,
               alignment: Alignment.centerLeft,
               child: Row(
                 children: [
-                  IconButton(
-                    iconSize: 38.w,
-                    padding: EdgeInsets.zero,
-                    icon: Icon(
+                  InkWell(
+                    // splashRadius: 32.w,
+                    // padding: EdgeInsets.zero,
+                    child: Icon(
                       Icons.notes_rounded,
                       color: colorScheme.primary,
+                      size: 36.w,
                     ),
-                    onPressed: () {
+                    onTap: () {
                       ZoomDrawer.of(context)!.toggle();
                     },
                   ),
                   const Spacer(),
                   IconButton(
-                    iconSize: 34.w,
+                    iconSize: 32.w,
                     padding: EdgeInsets.zero,
                     icon: Icon(
                       Icons.settings_rounded,
@@ -187,7 +188,7 @@ class _MainListPageState extends State<MainListPage> {
               background: FittedBox(
                 alignment: Alignment.centerLeft,
                 child: Container(
-                  padding: EdgeInsets.fromLTRB(20.w, 90.w, 80.w, 27.w),
+                  padding: EdgeInsets.fromLTRB(24.w, 105.w, 80.w, 47.w),
                   alignment: Alignment.topLeft,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -195,7 +196,7 @@ class _MainListPageState extends State<MainListPage> {
                       Text(
                         'Welcome back,',
                         style: TextStyle(
-                          fontSize: 31,
+                          fontSize: 30,
                           fontWeight: FontWeight.normal,
                           color: colorScheme.onBackground,
                           height: 0.9,

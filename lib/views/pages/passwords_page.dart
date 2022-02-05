@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -33,6 +32,7 @@ class _PasswordPageState extends State<PasswordPage> {
   @override
   void initState() {
     super.initState();
+    print('hi');
     sortMethod =
         context.read<AppBloc>().userData.sortMethod ?? SortMethod.recentlyAdded;
     sortLabel = sortMethodMessages[sortMethod.index];
