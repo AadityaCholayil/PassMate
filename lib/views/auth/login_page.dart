@@ -8,6 +8,7 @@ import 'package:passmate/shared/custom_snackbar.dart';
 import 'package:passmate/shared/custom_widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:passmate/shared/temp_error.dart';
+import 'package:passmate/theme/theme.dart';
 
 import 'details_page.dart';
 
@@ -78,13 +79,13 @@ class _LoginPageState extends State<LoginPage> {
             children: [
               SizedBox(height: 25.w),
               const CustomBackButton(),
-              SizedBox(height: 50.h),
+              SizedBox(height: 90.h),
               Text(
                 'Welcome to,',
                 style: TextStyle(
-                  fontSize: 32.5,
+                  fontSize: 30,
                   fontWeight: FontWeight.normal,
-                  color: Theme.of(context).colorScheme.onBackground,
+                  color: CustomTheme.primary,
                   height: 0.9,
                 ),
               ),
@@ -94,17 +95,17 @@ class _LoginPageState extends State<LoginPage> {
                   height: 1.25,
                   fontSize: 43.5,
                   fontWeight: FontWeight.bold,
-                  color: Theme.of(context).colorScheme.onBackground,
+                  color: CustomTheme.primary,
                 ),
               ),
-              SizedBox(height: 50.h),
+              SizedBox(height: 60.h),
               Text(
                 'Login to continue',
                 style: TextStyle(
                   height: 1.25.w,
                   fontSize: 25,
                   fontWeight: FontWeight.w600,
-                  color: Theme.of(context).colorScheme.onBackground,
+                  color: CustomTheme.primary,
                 ),
               ),
               SizedBox(height: 25.h),
@@ -122,6 +123,7 @@ class _LoginPageState extends State<LoginPage> {
                   if (!AuthEmail(value).isValid) {
                     return 'Invalid email format';
                   }
+                  return null;
                 },
               ),
               SizedBox(height: 20.w),
@@ -139,6 +141,7 @@ class _LoginPageState extends State<LoginPage> {
                       if (value == null || value.isEmpty) {
                         return 'Please enter your password';
                       }
+                      return null;
                     },
                   ),
                   Container(
@@ -174,7 +177,7 @@ class _LoginPageState extends State<LoginPage> {
                       .add(LoginUser(email: email, password: password));
                 },
               ),
-              SizedBox(height: 110.h),
+              SizedBox(height: 150.h),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -182,20 +185,21 @@ class _LoginPageState extends State<LoginPage> {
                     "Don't have an account?",
                     style: TextStyle(
                         fontSize: 15,
-                        color: Theme.of(context).colorScheme.onSurface),
+                        color: CustomTheme.onSurface),
                   ),
                   TextButton(
                     child: Text(
                       "Sign Up!",
                       style: TextStyle(
                           fontSize: 15,
-                          color: Theme.of(context).colorScheme.primary),
+                          color: CustomTheme.primary),
                     ),
                     onPressed: () {
                       Navigator.of(context).pushReplacement(MaterialPageRoute(
                           builder: (context) => const DetailsPage()));
                     },
                   ),
+                  SizedBox(height: 50.h),
                 ],
               ),
             ],

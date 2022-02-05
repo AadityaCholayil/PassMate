@@ -16,18 +16,18 @@ InputDecoration customInputDecoration(
             ),
           )
         : null,
-    contentPadding: EdgeInsets.fromLTRB(20.w, 15.w, 15.w, 15.w),
+    contentPadding: EdgeInsets.fromLTRB(24.w, 18.w, 15.w, 18.w),
     enabledBorder: OutlineInputBorder(
       borderSide: BorderSide(
         color: isSearch
-            ? Theme.of(context).cardColor
-            : Theme.of(context).colorScheme.secondaryVariant,
+            ? CustomTheme.surface
+            : CustomTheme.secondaryVariant,
         width: 2.w,
         style: BorderStyle.solid,
       ),
       borderRadius: BorderRadius.all(Radius.circular(15.0.w)),
     ),
-    fillColor: Theme.of(context).colorScheme.surface,
+    fillColor: CustomTheme.surface,
     labelText: labelText,
     labelStyle: const TextStyle(fontSize: 16.5),
     alignLabelWithHint: true,
@@ -82,7 +82,7 @@ InputDecoration customInputDecoration(
     ),
     focusedBorder: OutlineInputBorder(
       borderSide: BorderSide(
-        color: Theme.of(context).colorScheme.primary,
+        color: CustomTheme.primary,
         width: 2.w,
         style: BorderStyle.solid,
       ),
@@ -133,14 +133,14 @@ InputDecoration customInputDecoration2(
     enabledBorder: OutlineInputBorder(
       borderSide: BorderSide(
         color: isSearch
-            ? Theme.of(context).cardColor
-            : Theme.of(context).colorScheme.secondaryVariant,
+            ? CustomTheme.surface
+            : CustomTheme.secondaryVariant,
         width: 2.w,
         style: BorderStyle.solid,
       ),
       borderRadius: BorderRadius.all(Radius.circular(15.0.w)),
     ),
-    fillColor: Theme.of(context).colorScheme.surface,
+    fillColor: CustomTheme.surface,
     labelText: labelText,
     labelStyle: const TextStyle(fontSize: 16.5),
     alignLabelWithHint: true,
@@ -195,7 +195,7 @@ InputDecoration customInputDecoration2(
     ),
     focusedBorder: OutlineInputBorder(
       borderSide: BorderSide(
-        color: Theme.of(context).colorScheme.primary,
+        color: CustomTheme.primary,
         width: 2.w,
         style: BorderStyle.solid,
       ),
@@ -229,10 +229,10 @@ InputDecoration customInputDecoration2(
 }
 
 TextStyle formTextStyle(BuildContext context) =>
-    TextStyle(fontSize: 18, color: Theme.of(context).primaryColor);
+    TextStyle(fontSize: 17, color: CustomTheme.primary, fontWeight: FontWeight.w500);
 
 TextStyle formTextStyle2(BuildContext context) =>
-    TextStyle(fontSize: 18, color: Theme.of(context).colorScheme.onSurface);
+    TextStyle(fontSize: 16, color: CustomTheme.onSurface);
 
 class CustomElevatedButton extends StatelessWidget {
   final void Function()? onPressed;
@@ -285,7 +285,7 @@ class CustomBackButton extends StatelessWidget {
     return IconButton(
       padding: EdgeInsets.fromLTRB(0, 9.w, 15.w, 9.w),
       iconSize: 32.w,
-      color: Theme.of(context).primaryColor,
+      color: CustomTheme.primary,
       icon: const Icon(Icons.arrow_back_ios_rounded),
       onPressed: () {
         Navigator.pop(context);

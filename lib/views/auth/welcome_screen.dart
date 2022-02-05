@@ -90,10 +90,10 @@ class WelcomeScreenPortrait extends StatelessWidget {
           ),
           SizedBox(height: 26.w),
           Text(
-            'One password to remember them all',
+            'One password to \nremember them all',
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: 26,
+              fontSize: 25,
               fontWeight: FontWeight.w500,
               color: CustomTheme.primary,
             ),
