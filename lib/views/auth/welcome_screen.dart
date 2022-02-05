@@ -3,6 +3,7 @@ import 'package:passmate/routes/routes_name.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:passmate/shared/custom_widgets.dart';
 import 'package:passmate/shared/temp_error.dart';
+import 'package:passmate/theme/theme.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({Key? key}) : super(key: key);
@@ -34,13 +35,13 @@ class WelcomeScreenPortrait extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20.w),
+      padding: EdgeInsets.symmetric(horizontal: 24.w),
       alignment: Alignment.centerLeft,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SizedBox(height: 90.w),
+          SizedBox(height: 70.w),
           Container(
             alignment: Alignment.topLeft,
             child: Text(
@@ -48,35 +49,58 @@ class WelcomeScreenPortrait extends StatelessWidget {
               style: TextStyle(
                 fontSize: 30,
                 fontWeight: FontWeight.normal,
-                color: Theme.of(context).colorScheme.onBackground,
+                color: CustomTheme.primary,
                 height: 0.9,
               ),
             ),
           ),
-          const Spacer(flex: 4,),
+          const Spacer(
+            flex: 4,
+          ),
           SizedBox(
-            height: 170.w,
-            width: 170.w,
+            height: 200.w,
+            width: 200.w,
             child: Image.asset('assets/icon_without_bg.png'),
           ),
           Text(
             'PassMate',
             style: TextStyle(
               height: 1.25,
-              fontSize: 49,
+              fontSize: 53,
               fontWeight: FontWeight.bold,
-              color: Theme.of(context).colorScheme.onBackground,
+              color: CustomTheme.primary,
             ),
           ),
           Text(
             'Your Password Manager',
             style: TextStyle(
-              fontSize: 17,
+              fontSize: 18,
               fontWeight: FontWeight.w500,
-              color: Theme.of(context).colorScheme.onSurface,
+              color: CustomTheme.onSurface,
             ),
           ),
-          const Spacer(flex: 5,),
+          SizedBox(height: 20.w),
+          Container(
+            decoration: BoxDecoration(
+              color: CustomTheme.secondaryVariant,
+              borderRadius: BorderRadius.circular(3.w),
+            ),
+            height: 5.w,
+            width: 100.w,
+          ),
+          SizedBox(height: 26.w),
+          Text(
+            'One password to remember them all',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 26,
+              fontWeight: FontWeight.w500,
+              color: CustomTheme.primary,
+            ),
+          ),
+          const Spacer(
+            flex: 5,
+          ),
           CustomElevatedButton(
             style: 0,
             text: 'Login',

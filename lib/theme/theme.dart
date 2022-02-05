@@ -15,3 +15,25 @@ ColorScheme colorScheme = const ColorScheme(
   onError: Color(0xFFFFFFFF),
   brightness: Brightness.light,
 );
+
+class CustomTheme {
+  static Color get primary => const Color(0xFF4C154D);
+
+  static Color get onPrimary => const Color(0xFFFFFFFF);
+
+  static Color get primaryVariant => const Color(0xFF5E2D5C);
+
+  static Color get secondary => const Color(0xFFDB88CD);
+
+  static Color get secondaryVariant => const Color(0xFFCD7DBF);
+
+  static Color get surface => const Color(0xFFFFFFFF);
+
+  static Color get background => const Color(0xFFFFF5FD);
+
+  static Color get onSurface => const Color(0xFF000000);
+
+  static Color get black => const Color(0xFF000000);
+
+  static Color get text2 => const Color(0xFF787878);
+}

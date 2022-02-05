@@ -1,13 +1,11 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:passmate/repositories/authentication_repository.dart';
 import 'package:passmate/bloc/app_bloc/app_bloc_files.dart';
 import 'package:passmate/routes/route_generator.dart';
+import 'package:passmate/routes/routes_name.dart';
 import 'package:passmate/theme/theme.dart';
-import 'package:passmate/views/wrapper.dart';
-import 'package:provider/provider.dart';
 import 'bloc/database_bloc/database_barrel.dart';
 
 class MyApp extends StatelessWidget {
@@ -31,7 +29,7 @@ class MyApp extends StatelessWidget {
               builder: (context, state) => BlocProvider<DatabaseBloc>.value(
                 value: context.read<AppBloc>().databaseBloc,
                 child: ScreenUtilInit(
-                  designSize: const Size(375, 812),
+                  designSize: const Size(414, 896),
                   builder: () {
                     return MaterialApp(
                       debugShowCheckedModeBanner: false,
@@ -44,14 +42,15 @@ class MyApp extends StatelessWidget {
                       onGenerateRoute: (settings) {
                         return RouteGenerator.generateRoute(settings, state);
                       },
-                      // initialRoute: RoutesName.WRAPPER,
-                      home: Wrapper(
-                        state: state,
-                      ),
+                      initialRoute: RoutesName.wrapper,
+                      // home: Wrapper(
+                      //   state: state,
+                      // ),
                       builder: (context, child) {
                         int height = MediaQuery.of(context).size.height.toInt();
                         int width = MediaQuery.of(context).size.width.toInt();
                         int factor = 0;
+                        ScreenUtil.setContext(context);
                         if(height < 1.2*width){
                           factor = height;
                         } else {
@@ -59,7 +58,7 @@ class MyApp extends StatelessWidget {
                         }
                         return MediaQuery(
                             data: MediaQuery.of(context)
-                                .copyWith(textScaleFactor: factor / 375),
+                                .copyWith(textScaleFactor: factor / 414),
                             child: child ?? Container());
                       },
                     );

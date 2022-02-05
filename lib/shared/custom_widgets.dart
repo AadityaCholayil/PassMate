@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:passmate/theme/theme.dart';
 
 InputDecoration customInputDecoration(
     {required BuildContext context,
@@ -240,7 +241,7 @@ class CustomElevatedButton extends StatelessWidget {
   final double fontSize;
 
   const CustomElevatedButton(
-      {Key? key, this.onPressed, this.text = 'Submit', this.style = 0, this.fontSize=19})
+      {Key? key, this.onPressed, this.text = 'Submit', this.style = 0, this.fontSize=18})
       : super(key: key);
 
   @override
@@ -249,10 +250,10 @@ class CustomElevatedButton extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         elevation: 3,
         primary:
-            style == 0 ? Theme.of(context).colorScheme.primary : Colors.white,
+            style == 0 ? CustomTheme.primary : CustomTheme.surface,
         shape: RoundedRectangleBorder(
           side: BorderSide(
-            color: Theme.of(context).colorScheme.primary,
+            color: CustomTheme.primary,
             width: 2,
           ),
           borderRadius: BorderRadius.circular(12.w),
@@ -260,13 +261,13 @@ class CustomElevatedButton extends StatelessWidget {
       ),
       child: Container(
         alignment: Alignment.center,
-        height: 55.w,
+        height: 60.w,
         child: Text(
           text,
           style: TextStyle(
               color: style == 0
-                  ? Theme.of(context).colorScheme.onPrimary
-                  : Theme.of(context).colorScheme.primary,
+                  ? CustomTheme.onPrimary
+                  : CustomTheme.primary,
               fontSize: fontSize,
               fontWeight: FontWeight.w500),
         ),
