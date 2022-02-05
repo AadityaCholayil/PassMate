@@ -90,11 +90,11 @@ class _MenuScreenState extends State<MenuScreen> {
         folderList = context.read<DatabaseBloc>().folderList ?? [];
       },
       builder: (context, state) {
-        if (state is Fetching) {
-          return Container(
-            color: colorScheme.primary,
-          );
-        }
+        // if (state is Fetching) {
+        //   return Container(
+        //     color: colorScheme.primary,
+        //   );
+        // }
         return Scaffold(
           resizeToAvoidBottomInset: false,
           backgroundColor: colorScheme.primary,
@@ -157,12 +157,12 @@ class _MenuScreenState extends State<MenuScreen> {
                   text: 'All Folders',
                   icon: Icons.folder_open_outlined,
                 ),
-                // for (int index = 0; index < folderList.length; index++)
-                //   MenuItem(
-                //     index: index + 5,
-                //     text: folderList[index].split('/').last,
-                //     icon: Icons.folder_open_outlined,
-                //   ),
+                for (int index = 0; index < (folderList.length>3?3:folderList.length); index++)
+                  MenuItem(
+                    index: index + 5,
+                    text: folderList[index].split('/').last,
+                    icon: Icons.folder_open_outlined,
+                  ),
                 Spacer(),
                 Padding(
                   padding: EdgeInsets.only(bottom: 20.w, left: 10.w, top: 35.w),
