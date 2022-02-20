@@ -1,0 +1,314 @@
+[33mcommit c1d14769b391d7b69ad357406fd893e411c36214[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m)[m
+Author: AadityaCholayil <cholayilaaditya@gmail.com>
+Date:   Sat Feb 5 19:46:02 2022 +0530
+
+    zoom drawer bug fixed
+
+[33mcommit 9fb8afcaa29cef4ac8c1e57b1a0cc850979a1edf[m
+Author: AadityaCholayil <cholayilaaditya@gmail.com>
+Date:   Sat Feb 5 18:43:56 2022 +0530
+
+    DatabaseBloc Updated
+
+[33mcommit f88ebc84bd807e18fb4907ec7f0d85e3df9edd1a[m
+Author: AadityaCholayil <cholayilaaditya@gmail.com>
+Date:   Sat Feb 5 17:30:39 2022 +0530
+
+    wrapper bug fixed, login page redone
+
+[33mcommit 5469bd55ab1a7e2f74db14a543cb25a3c9ecc314[m
+Author: AadityaCholayil <cholayilaamur@student.mes.ac.in>
+Date:   Sat Feb 5 16:50:10 2022 +0530
+
+    Screenutil size changed, bug fixed, new Theme Approach
+
+[33mcommit 0703247f80f03ebcc46418dc783510440b9a2198[m
+Author: AadityaCholayil <cholayilaamur@student.mes.ac.in>
+Date:   Thu Dec 2 01:09:46 2021 +0530
+
+    bug fixes and layout improvements,
+    secure note delete done,
+    password generator,
+    security faq page done
+
+[33mcommit c9f91b84cca8514af93affa60c74f904bfa8d2a6[m
+Author: AadityaCholayil <cholayilaamur@student.mes.ac.in>
+Date:   Wed Dec 1 14:04:47 2021 +0530
+
+    secure notes page done,
+    secure notes form done
+
+[33mcommit b6119348576855c52a822112e6346071070a4b51[m
+Author: AadityaCholayil <cholayilaamur@student.mes.ac.in>
+Date:   Sun Nov 28 10:16:33 2021 +0530
+
+    upload profile pic done,
+    update profile pic done,
+    Delete account bug fixed,
+    settings page done,
+    edit profile done,
+    welcome page done
+
+[33mcommit e49902931fc1c8fd03949bf6c334c1c2f6aa88d9[m
+Author: AadityaCholayil <cholayilaamur@student.mes.ac.in>
+Date:   Fri Nov 26 13:56:14 2021 +0530
+
+    before type and fetch recode
+
+[33mcommit 2cd054dfd86ea06c5ea17044289d3c98ce429371[m
+Author: AadityaCholayil <cholayilaamur@student.mes.ac.in>
+Date:   Wed Nov 24 17:14:56 2021 +0530
+
+    public hosting directory
+
+[33mcommit e2728725215bce8e38db76e51013c97d8914098d[m
+Author: AadityaCholayil <cholayilaamur@student.mes.ac.in>
+Date:   Wed Nov 24 17:07:13 2021 +0530
+
+    Payment card page done, payment card form updated
+
+[33mcommit cf31a2b76375cd8dbc2c84274d560eeecccf3df2[m
+Author: AadityaCholayil <cholayilaamur@student.mes.ac.in>
+Date:   Wed Nov 24 12:34:59 2021 +0530
+
+    Add payment card done
+
+[33mcommit b253ea6cdf63353c4c2ce268332ebce5e05a6dae[m
+Author: AadityaCholayil <cholayilaamur@student.mes.ac.in>
+Date:   Wed Nov 24 02:44:03 2021 +0530
+
+    payment card form updated
+
+[33mcommit 9a19a100e9205b278b9fd5d8e73482acbcc1f89b[m
+Author: AadityaCholayil <cholayilaamur@student.mes.ac.in>
+Date:   Tue Nov 23 01:51:31 2021 +0530
+
+    Loading updated, Update Password Bug fixed, API updated for favicons
+
+[33mcommit 7722e8b61b98560c2c1ed8d8769f196c3c5dd6b6[m
+Author: AadityaCholayil <cholayilaamur@student.mes.ac.in>
+Date:   Wed Nov 17 13:18:49 2021 +0530
+
+    folder structure done
+
+[33mcommit 7a07f9cb3981d2286fe61cfa21cdb48a0b9568dd[m
+Author: AadityaCholayil <cholayilaamur@student.mes.ac.in>
+Date:   Tue Nov 16 13:36:49 2021 +0530
+
+    Menu screen done
+
+[33mcommit 630eba9bbf0c8bd96b394ec6ece9ceef3c02d745[m
+Author: AadityaCholayil <cholayilaamur@student.mes.ac.in>
+Date:   Wed Oct 20 21:51:58 2021 +0530
+
+    New Signup Flow Completed with EmailInputPage
+
+[33mcommit 58cdd36855b7848a3e63a2b2865eaf6cd3a3abb2[m
+Author: AadityaCholayil <cholayilaamur@student.mes.ac.in>
+Date:   Mon Oct 11 11:43:46 2021 +0530
+
+    AppBloc SignupUser done, Signup Flow updated
+
+[33mcommit 3b0e69aae1f77aeb3db447f14d83efed403de458[m
+Author: AadityaCholayil <cholayilaamur@student.mes.ac.in>
+Date:   Fri Oct 8 19:17:48 2021 +0530
+
+    AppBloc LoginUser done
+
+[33mcommit 7c533db85a60935fde8675a55be78807142ba562[m
+Author: AadityaCholayil <cholayilaamur@student.mes.ac.in>
+Date:   Fri Oct 8 13:10:05 2021 +0530
+
+    bloc upgraded,
+    kotlin version upgraded,
+    before AppBloc rewrite
+
+[33mcommit 210cd879bd3e2adc3ada4b2dd560ebf1cc3593a7[m
+Author: AadityaCholayil <cholayilaamur@student.mes.ac.in>
+Date:   Fri Oct 8 12:09:07 2021 +0530
+
+    pub upgrade, flutter bloc upgrade, flutter_lints added to improve code quality, fixed existing code quality issues
+
+[33mcommit 521a5d2623d23427347ab2f1eee0e6e378aecce5[m
+Author: AadityaCholayil <cholayilaamur@student.mes.ac.in>
+Date:   Fri Oct 8 11:10:46 2021 +0530
+
+    refactoring AuthenticationBloc -> AppBloc
+
+[33mcommit 97a81f319a4a2b87e8a518f2fe79410d72e0f8bf[m
+Author: AadityaCholayil <cholayilaamur@student.mes.ac.in>
+Date:   Fri Oct 8 10:57:37 2021 +0530
+
+    Layout Builder for responsiveness, before Bloc revamp
+
+[33mcommit 98b2d48c8ff7cdee20d1e5a2a5cc9ec9fbd1efb0[m
+Author: AadityaCholayil <cholayilaamur@student.mes.ac.in>
+Date:   Sat Sep 4 19:52:36 2021 +0530
+
+    Login page v2
+
+[33mcommit 77ae6dfa2dbb19d5a2f807a3535e2aa4b37a21d6[m
+Author: AadityaCholayil <cholayilaamur@student.mes.ac.in>
+Date:   Sat Sep 4 18:26:30 2021 +0530
+
+    path setup changed, folder v2
+
+[33mcommit ee090170e2d66b9df3b8856c662340fe59a901a7[m
+Author: AadityaCholayil <cholayilaamur@student.mes.ac.in>
+Date:   Sat Aug 7 21:53:31 2021 +0530
+
+    payment card and secure note page done
+
+[33mcommit 6449a818bb73a313408d7e29f64ff4c79974304c[m
+Author: AadityaCholayil <cholayilaamur@student.mes.ac.in>
+Date:   Tue Jul 13 18:08:25 2021 +0530
+
+    small textformfield changes
+
+[33mcommit c1ec2bffd8ab91956b8ea311e8522cf9c1403d7a[m
+Author: AadityaCholayil <cholayilaamur@student.mes.ac.in>
+Date:   Tue Jul 13 17:18:13 2021 +0530
+
+    search v2
+
+[33mcommit 93462f1f520cc53024ec87e0de37805b04f1baa4[m
+Author: AadityaCholayil <cholayilaamur@student.mes.ac.in>
+Date:   Mon Jul 12 23:54:36 2021 +0530
+
+    sorting done and searching v1
+
+[33mcommit 9f92420171e547de6a23f74a9fa330dfa976993a[m
+Author: AadityaCholayil <cholayilaamur@student.mes.ac.in>
+Date:   Mon Jul 12 18:02:31 2021 +0530
+
+    chip category filter done
+
+[33mcommit a29397c6f0fed2a51ccf68a7ad971fa077ec0e93[m
+Author: AadityaCholayil <cholayilaamur@student.mes.ac.in>
+Date:   Sun Jul 11 22:51:41 2021 +0530
+
+    Fixed Signup bug,
+    Fixed Database Bloc bug,
+    Fixed BlocConsumer listener bug
+
+[33mcommit c0f2a89ec92dfa25b0b1eeeb5d4c9a756cf67ec1[m
+Author: AadityaCholayil <cholayilaamur@student.mes.ac.in>
+Date:   Sun Jul 11 18:19:25 2021 +0530
+
+    AuthenticationBloc Builder moved up the tree,
+    Fixed Signup bug,
+    Fixed Database Bloc bug
+
+[33mcommit 127df5695cdd6fa48d9580f15dfb0c81eaa5ac1e[m
+Author: AadityaCholayil <cholayilaamur@student.mes.ac.in>
+Date:   Sat Jul 10 23:32:07 2021 +0530
+
+    slivers done,
+    sliver appbar done,
+    category filter via chips done,
+    chip design v1
+
+[33mcommit 713b1f9fc338cdb3159d33128a46c580b9112163[m
+Author: AadityaCholayil <cholayilaamur@student.mes.ac.in>
+Date:   Sat Jul 10 14:18:57 2021 +0530
+
+    font added,
+    theme added,
+    passwords_page updated,
+    encryption done for web and android
+
+[33mcommit 070c8fbb9ce5bf0547c46acfe817317c909c10ad[m
+Author: AadityaCholayil <cholayilaamur@student.mes.ac.in>
+Date:   Fri Jul 9 01:13:07 2021 +0530
+
+    new fab,
+    password model updated,
+    google fonts,
+    password page updated
+
+[33mcommit 25875885456888ca5f743495901c66189e991153[m
+Author: AadityaCholayil <cholayilaamur@student.mes.ac.in>
+Date:   Thu Jul 8 00:21:01 2021 +0530
+
+    zoom drawer v1
+
+[33mcommit b64c007d2c4d77d7fe8d1adce6427962a9dee70b[m
+Author: AadityaCholayil <cholayilaamur@student.mes.ac.in>
+Date:   Wed Jul 7 20:33:53 2021 +0530
+
+    rerouting done, database password bloc done
+
+[33mcommit eb665503e0ab9179d5e3121b360934b4876aa914[m
+Author: AadityaCholayil <cholayilaamur@student.mes.ac.in>
+Date:   Wed Jul 7 17:46:30 2021 +0530
+
+    database password v2
+    database bloc password done
+    before rerouting
+
+[33mcommit 3cd54be6e790422d9aea46002e9ef7edc94dab1d[m
+Author: AadityaCholayil <cholayilaamur@student.mes.ac.in>
+Date:   Tue Jul 6 21:56:45 2021 +0530
+
+    database password v1
+
+[33mcommit f7c7202c913d4825eb13e0e431e8e902caf4ae89[m
+Author: AadityaCholayil <cholayilaamur@student.mes.ac.in>
+Date:   Mon Jul 5 22:21:22 2021 +0530
+
+    Encryption repository setup,
+    Secure storage setup,
+    scrypt hashing done
+
+[33mcommit c799e17a31dce54689df2df53b9548d80d8559c1[m
+Author: AadityaCholayil <cholayilaamur@student.mes.ac.in>
+Date:   Sun Jul 4 19:20:02 2021 +0530
+
+    additional details flow done
+
+[33mcommit 74359546a5db17bb5bbaa32eee0c0a75dfe2e9f0[m
+Author: AadityaCholayil <cholayilaamur@student.mes.ac.in>
+Date:   Fri Jul 2 13:55:23 2021 +0530
+
+    started database bloc.
+    defined models for password, payment card, secure notes.
+    folder structure revised
+
+[33mcommit e1e4ae61f8093ba6beb8e0da5934fbee3a38a7ac[m
+Author: AadityaCholayil <cholayilaamur@student.mes.ac.in>
+Date:   Wed Jun 30 23:29:48 2021 +0530
+
+    SignupBloc done
+
+[33mcommit 4ce32ee1478ec66a6252f14abc71cf76e336cbff[m
+Author: AadityaCholayil <cholayilaamur@student.mes.ac.in>
+Date:   Wed Jun 30 20:13:51 2021 +0530
+
+    LoginBloc done
+    SignupBloc setup done
+
+[33mcommit 42bed0f1993692190f26f742764e0820ebe902f4[m
+Author: AadityaCholayil <cholayilaamur@student.mes.ac.in>
+Date:   Tue Jun 29 23:10:04 2021 +0530
+
+    LoginBloc Setup Done
+
+[33mcommit 93a88becefbf1f00c647f226cfb401b4dc42e39f[m
+Author: AadityaCholayil <cholayilaamur@student.mes.ac.in>
+Date:   Mon Jun 28 14:23:36 2021 +0530
+
+    Authentication Bloc Done
+
+[33mcommit 5349f780aabbc75bb09be3a8981fd5ab6c7fca94[m
+Author: AadityaCholayil <cholayilaamur@student.mes.ac.in>
+Date:   Sun Jun 27 16:30:12 2021 +0530
+
+    Firebase setup done
+    Web setup done
+    Firebase hosting setup done
+
+[33mcommit 41be0f444fd3b86359de0994d94cc720d57df482[m
+Author: AadityaCholayil <cholayilaamur@student.mes.ac.in>
+Date:   Sat Jun 26 19:03:20 2021 +0530
+
+    Initial commit
