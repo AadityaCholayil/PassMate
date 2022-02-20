@@ -34,110 +34,110 @@ class _PaymentCardPageState extends State<PaymentCardPage> {
   @override
   void initState() {
     super.initState();
-    sortMethod =
-        context.read<AppBloc>().userData.sortMethod ?? SortMethod.recentlyAdded;
-    sortLabel = sortMethodMessages[sortMethod.index];
-    context.read<DatabaseBloc>().add(GetPaymentCards(
-        sortMethod: sortMethod, paymentCardType: paymentCardType));
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<DatabaseBloc, DatabaseState>(
-      listenWhen: (previous, current) => previous != current,
+    return BlocBuilder<DatabaseBloc, DatabaseState>(
       buildWhen: (previous, current) => previous != current,
-      listener: (context, state) {
-        print('widget rebuilt');
-        if (state is PaymentCardList) {
-          paymentCardList = state.list;
-          paymentCardType = state.paymentCardType;
-          favourites = state.favourites;
-          sortMethod = state.sortMethod;
-          searchLabel = state.search;
-          sortLabel = sortMethodMessages[sortMethod.index];
-          if (paymentCardType == PaymentCardType.all && !favourites) {
-            completePaymentCardList = state.completeList;
-          }
-          if (state.completeList != state.list) {
-            completePaymentCardList = state.completeList;
-          }
-        }
-      },
       builder: (context, state) {
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Padding(
-              padding: EdgeInsets.only(left: 28.w, top: 13.w),
-              child: Text(
-                'Payment Cards',
-                style: TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.w600,
-                  color: Theme.of(context).colorScheme.onBackground,
+        if(state is PaymentCardPageState){
+          if(state.pageState == PageState.loading){
+            return const FixedLoading();
+          }
+          if(state.pageState == PageState.error){
+            return const FixedLoading();
+          }
+          if (state.pageState == PageState.success){
+            paymentCardList = state.list;
+            paymentCardType = state.paymentCardType;
+            favourites = state.favourites;
+            sortMethod = state.sortMethod;
+            searchLabel = state.search;
+            sortLabel = sortMethodMessages[sortMethod.index];
+            if (paymentCardType == PaymentCardType.all && !favourites) {
+              completePaymentCardList = state.completeList;
+            }
+            if (state.completeList != state.list) {
+              completePaymentCardList = state.completeList;
+            }
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(left: 28.w, top: 13.w),
+                  child: Text(
+                    'Payment Cards',
+                    style: TextStyle(
+                      fontSize: 32,
+                      fontWeight: FontWeight.w600,
+                      color: Theme.of(context).colorScheme.onBackground,
+                    ),
+                  ),
                 ),
-              ),
-            ),
-            SizedBox(height: 13.w),
-            completePaymentCardList.isNotEmpty
-                ? Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _buildSearch(context),
-                      SizedBox(height: 15.w),
-                      _buildChipRow(),
-                      SizedBox(height: 10.w),
-                      _buildSortDropDownBox(context),
-                      SizedBox(height: 10.w),
-                    ],
-                  )
-                : const SizedBox.shrink(),
-            state is Fetching
-                ? Container(
-                    height: 180.w,
-                    alignment: Alignment.center,
-                    child: const LoadingSmall(),
-                  )
-                : completePaymentCardList.isEmpty
+                SizedBox(height: 13.w),
+                completePaymentCardList.isNotEmpty
+                    ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildSearch(context),
+                    SizedBox(height: 15.w),
+                    _buildChipRow(),
+                    SizedBox(height: 10.w),
+                    _buildSortDropDownBox(context),
+                    SizedBox(height: 10.w),
+                  ],
+                )
+                    : const SizedBox.shrink(),
+                state is Fetching
                     ? Container(
-                        alignment: Alignment.center,
-                        height: 320.w,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            Text(
-                              'Start Adding Cards',
-                              style: TextStyle(
-                                fontSize: 25,
-                                fontWeight: FontWeight.w700,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                            Text(
-                              'All your cards will be secure\nusing AES-256 encryption.',
-                              style: TextStyle(
-                                fontSize: 17,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
+                  height: 180.w,
+                  alignment: Alignment.center,
+                  child: const LoadingSmall(),
+                )
+                    : completePaymentCardList.isEmpty
+                    ? Container(
+                  alignment: Alignment.center,
+                  height: 320.w,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Text(
+                        'Start Adding Cards',
+                        style: TextStyle(
+                          fontSize: 25,
+                          fontWeight: FontWeight.w700,
                         ),
-                      )
-                    : Flexible(
-                        child: PaymentCardTileList(
-                            paymentCardList: paymentCardList),
+                        textAlign: TextAlign.center,
                       ),
-            SizedBox(
-              height: paymentCardList.length < 2
-                  ? paymentCardList.isEmpty
+                      Text(
+                        'All your cards will be secure\nusing AES-256 encryption.',
+                        style: TextStyle(
+                          fontSize: 17,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                )
+                    : Flexible(
+                  child: PaymentCardTileList(
+                      paymentCardList: paymentCardList),
+                ),
+                SizedBox(
+                  height: paymentCardList.length < 2
+                      ? paymentCardList.isEmpty
                       ? 140.h
                       : 50.h
-                  : 0,
-            ),
-          ],
-        );
+                      : 0,
+                ),
+              ],
+            );
+          }
+        }
+        return const FixedLoading();
       },
     );
   }

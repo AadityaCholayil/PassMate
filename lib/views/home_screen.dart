@@ -1,12 +1,10 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
-import 'package:passmate/bloc/app_bloc/app_bloc.dart';
 import 'package:passmate/bloc/app_bloc/app_bloc_files.dart';
 import 'package:passmate/bloc/database_bloc/database_barrel.dart';
 import 'package:passmate/model/main_screen_provider.dart';
+import 'package:passmate/model/sort_methods.dart';
 import 'package:passmate/model/user.dart';
 import 'package:passmate/views/main_screen.dart';
 import 'package:passmate/views/settings/edit_profile_page.dart';
@@ -26,46 +24,73 @@ class _HomeScreenState extends State<HomeScreen> {
   final _zoomController = ZoomDrawerController();
 
   @override
+  void initState() {
+    super.initState();
+    print('homeScreenInit');
+    SortMethod sortMethod =
+        context.read<AppBloc>().userData.sortMethod ?? SortMethod.recentlyAdded;
+    context.read<DatabaseBloc>().add(GetPasswords(sortMethod: sortMethod));
+  }
+
+  @override
   Widget build(BuildContext context) {
+    print('homeScreenBuild');
+
     return ChangeNotifierProvider<MenuProvider>(
       create: (context) => MenuProvider(),
-      child: SafeArea(
-        child: GestureDetector(
-          child: Builder(
-            builder: (context) {
-              return Consumer<MenuProvider>(
-                builder: (context, provider, child) {
-                  return LayoutBuilder(
-                    builder: (context, constraints) {
-                      // Responsive
-                      print('Layout Changed');
-                      if (constraints.maxHeight < 1.5 * constraints.maxWidth) {
-                        return const TempError(pageName: 'HomeScreen');
-                      }
-                      return ZoomDrawer(
-                        // style: DrawerStyle.Style9,
-                        controller: _zoomController,
-                        angle: 0,
-                        borderRadius: 45.w,
-                        slideWidth: MediaQuery.of(context).size.width * .535,
-                        menuScreen: MenuScreen(),
-                        mainScreen: MainScreen(),
-                      );
-                    },
+      child: Builder(
+        builder: (context) {
+          return SafeArea(
+            child: GestureDetector(
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  // Responsive
+                  print('Layout Changed');
+                  if (constraints.maxHeight < 1.5 * constraints.maxWidth) {
+                    return const TempError(pageName: 'HomeScreen');
+                  }
+                  return ZoomDrawer(
+                    // style: DrawerStyle.Style9,
+                    controller: _zoomController,
+                    angle: 0,
+                    borderRadius: 45.w,
+                    slideWidth: MediaQuery.of(context).size.width * .535,
+                    menuScreen: MenuScreen(),
+                    mainScreen: MainScreen(),
                   );
                 },
-              );
-            },
-          ),
-          onHorizontalDragUpdate: (details) {
-            int sensitivity = 8;
-            if (details.delta.dx > sensitivity) {
-              _zoomController.open!();
-            } else if (details.delta.dx < -sensitivity) {
-              _zoomController.close!();
-            }
-          },
-        ),
+              ),
+              onHorizontalDragUpdate: (details) {
+                int sensitivity = 8;
+                if (details.delta.dx > sensitivity) {
+                  _zoomController.open!();
+                } else if (details.delta.dx < -sensitivity) {
+                  SortMethod sortMethod =
+                      context.read<AppBloc>().userData.sortMethod ??
+                          SortMethod.recentlyAdded;
+                  switch (context.read<MenuProvider>().currentPage) {
+                    case 0:
+                      context
+                          .read<DatabaseBloc>()
+                          .add(GetPasswords(sortMethod: sortMethod));
+                      break;
+                    case 1:
+                      context
+                          .read<DatabaseBloc>()
+                          .add(GetPaymentCards(sortMethod: sortMethod));
+                      break;
+                    case 2:
+                      context
+                          .read<DatabaseBloc>()
+                          .add(GetSecureNotes(sortMethod: sortMethod));
+                      break;
+                  }
+                  _zoomController.close!();
+                }
+              },
+            ),
+          );
+        }
       ),
     );
   }
@@ -85,115 +110,121 @@ class _MenuScreenState extends State<MenuScreen> {
   Widget build(BuildContext context) {
     UserData userData = context.read<AppBloc>().userData;
     final colorScheme = Theme.of(context).colorScheme;
-    return BlocConsumer<DatabaseBloc, DatabaseState>(
-      listener: (context, state) {
-        folderList = context.read<DatabaseBloc>().folderList ?? [];
-      },
-      builder: (context, state) {
-        // if (state is Fetching) {
-        //   return Container(
-        //     color: colorScheme.primary,
-        //   );
-        // }
-        return Scaffold(
-          resizeToAvoidBottomInset: false,
-          backgroundColor: colorScheme.primary,
-          body: Container(
-            padding: EdgeInsets.only(left: 10.w),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildProfile(userData, colorScheme),
-                Spacer(),
-                MenuItem(
-                  index: 0,
-                  text: 'Passwords',
-                  icon: Icons.password_rounded,
-                ),
-                MenuItem(
-                  index: 1,
-                  text: 'Payment Cards',
-                  icon: Icons.credit_card_rounded,
-                ),
-                MenuItem(
-                  index: 2,
-                  text: 'Secure Notes',
-                  icon: Icons.sticky_note_2_rounded,
-                ),
-                SizedBox(height: 20.w),
-                Padding(
-                  padding: EdgeInsets.only(left: 10.w),
-                  child: Text(
-                    'Tools',
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: colorScheme.secondary,
-                      // fontWeight: FontWeight.w500,
+    return Consumer<MenuProvider>(
+      builder: (context, provider, child){
+        return BlocConsumer<DatabaseBloc, DatabaseState>(
+          listener: (context, state) {
+            folderList = context.read<DatabaseBloc>().folderList ?? [];
+          },
+          builder: (context, state) {
+            // if (state is Fetching) {
+            //   return Container(
+            //     color: colorScheme.primary,
+            //   );
+            // }
+            return Scaffold(
+              resizeToAvoidBottomInset: false,
+              backgroundColor: colorScheme.primary,
+              body: Container(
+                padding: EdgeInsets.only(left: 10.w),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildProfile(userData, colorScheme),
+                    const Spacer(),
+                    MenuItem(
+                      index: 0,
+                      text: 'Passwords',
+                      icon: Icons.password_rounded,
                     ),
-                  ),
-                ),
-                SizedBox(height: 5.w),
-                MenuItem(
-                  index: 3,
-                  text: 'Password Generator',
-                  icon: Icons.vpn_key_outlined,
-                ),
-                SizedBox(height: 15.w),
-                Padding(
-                  padding: EdgeInsets.only(left: 10.w),
-                  child: Text(
-                    'Folders',
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: colorScheme.secondary,
-                      // fontWeight: FontWeight.w500,
+                    MenuItem(
+                      index: 1,
+                      text: 'Payment Cards',
+                      icon: Icons.credit_card_rounded,
                     ),
-                  ),
-                ),
-                SizedBox(height: 5.w),
-                const MenuItem(
-                  index: 4,
-                  text: 'All Folders',
-                  icon: Icons.folder_open_outlined,
-                ),
-                for (int index = 0; index < (folderList.length>3?3:folderList.length); index++)
-                  MenuItem(
-                    index: index + 5,
-                    text: folderList[index].split('/').last,
-                    icon: Icons.folder_open_outlined,
-                  ),
-                Spacer(),
-                Padding(
-                  padding: EdgeInsets.only(bottom: 20.w, left: 10.w, top: 35.w),
-                  child: TextButton.icon(
-                    icon: Icon(
-                      Icons.settings_outlined,
-                      color: colorScheme.onPrimary,
-                      size: 30.w,
+                    MenuItem(
+                      index: 2,
+                      text: 'Secure Notes',
+                      icon: Icons.sticky_note_2_rounded,
                     ),
-                    label: Padding(
-                      padding: EdgeInsets.only(left: 18.w),
+                    SizedBox(height: 20.w),
+                    Padding(
+                      padding: EdgeInsets.only(left: 10.w),
                       child: Text(
-                        'Settings',
+                        'Tools',
                         style: TextStyle(
-                          color: colorScheme.onPrimary,
-                          fontSize: 17,
-                          fontWeight: FontWeight.w500,
+                          fontSize: 18,
+                          color: colorScheme.secondary,
+                          // fontWeight: FontWeight.w500,
                         ),
                       ),
                     ),
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const SettingsPage()));
-                    },
-                  ),
+                    SizedBox(height: 5.w),
+                    MenuItem(
+                      index: 3,
+                      text: 'Password Generator',
+                      icon: Icons.vpn_key_outlined,
+                    ),
+                    SizedBox(height: 15.w),
+                    Padding(
+                      padding: EdgeInsets.only(left: 10.w),
+                      child: Text(
+                        'Folders',
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: colorScheme.secondary,
+                          // fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 5.w),
+                    MenuItem(
+                      index: 4,
+                      text: 'All Folders',
+                      icon: Icons.folder_open_outlined,
+                    ),
+                    for (int index = 0;
+                    index < (folderList.length > 3 ? 3 : folderList.length);
+                    index++)
+                      MenuItem(
+                        index: index + 5,
+                        text: folderList[index].split('/').last,
+                        icon: Icons.folder_open_outlined,
+                      ),
+                    const Spacer(),
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 20.w, left: 10.w, top: 35.w),
+                      child: TextButton.icon(
+                        icon: Icon(
+                          Icons.settings_outlined,
+                          color: colorScheme.onPrimary,
+                          size: 30.w,
+                        ),
+                        label: Padding(
+                          padding: EdgeInsets.only(left: 18.w),
+                          child: Text(
+                            'Settings',
+                            style: TextStyle(
+                              color: colorScheme.onPrimary,
+                              fontSize: 17,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const SettingsPage()));
+                        },
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
+              ),
+            );
+          },
         );
       },
     );
@@ -202,9 +233,10 @@ class _MenuScreenState extends State<MenuScreen> {
   Widget _buildProfile(UserData userData, ColorScheme colorScheme) {
     return BlocConsumer<AppBloc, AppState>(
       listener: (context, state) {
-        userData = context.read<AppBloc>().userData;
+
       },
       builder: (context, state) {
+        UserData userData = context.read<AppBloc>().userData;
         return Padding(
           padding: EdgeInsets.only(top: 5.w, left: 10.w),
           child: Row(
@@ -270,12 +302,32 @@ class _MenuScreenState extends State<MenuScreen> {
                       ),
                     ),
                     onPressed: () async {
-                      ZoomDrawer.of(context)!.toggle();
                       await Future.delayed(const Duration(milliseconds: 200));
-                      Navigator.push(
+                      await Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => const EditProfilePage()));
+                      SortMethod sortMethod =
+                          context.read<AppBloc>().userData.sortMethod ??
+                              SortMethod.recentlyAdded;
+                      switch (context.read<MenuProvider>().currentPage) {
+                        case 0:
+                          context
+                              .read<DatabaseBloc>()
+                              .add(GetPasswords(sortMethod: sortMethod));
+                          break;
+                        case 1:
+                          context
+                              .read<DatabaseBloc>()
+                              .add(GetPaymentCards(sortMethod: sortMethod));
+                          break;
+                        case 2:
+                          context
+                              .read<DatabaseBloc>()
+                              .add(GetSecureNotes(sortMethod: sortMethod));
+                          break;
+                      }
+                      ZoomDrawer.of(context)!.close();
                     },
                   )
                 ],
@@ -332,6 +384,26 @@ class MenuItem extends StatelessWidget {
       onPressed: () {
         context.read<MenuProvider>().updateCurrentPage(index);
         print(index);
+        SortMethod sortMethod =
+            context.read<AppBloc>().userData.sortMethod ??
+                SortMethod.recentlyAdded;
+        switch (context.read<MenuProvider>().currentPage) {
+          case 0:
+            context
+                .read<DatabaseBloc>()
+                .add(GetPasswords(sortMethod: sortMethod));
+            break;
+          case 1:
+            context
+                .read<DatabaseBloc>()
+                .add(GetPaymentCards(sortMethod: sortMethod));
+            break;
+          case 2:
+            context
+                .read<DatabaseBloc>()
+                .add(GetSecureNotes(sortMethod: sortMethod));
+            break;
+        }
         ZoomDrawer.of(context)!.close();
       },
       child: Row(
@@ -339,7 +411,7 @@ class MenuItem extends StatelessWidget {
           Icon(
             icon,
             size: 27.w,
-            color: selected ? colorScheme.secondaryVariant : Colors.white,
+            color: selected ? colorScheme.secondaryContainer : Colors.white,
           ),
           SizedBox(
             width: 25.w,
@@ -347,7 +419,7 @@ class MenuItem extends StatelessWidget {
           Text(
             text,
             style: TextStyle(
-              color: selected ? colorScheme.secondaryVariant : Colors.white,
+              color: selected ? colorScheme.secondaryContainer : Colors.white,
               fontSize: 17,
               fontWeight: FontWeight.w400,
             ),

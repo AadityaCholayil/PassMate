@@ -12,69 +12,100 @@ class Fetching extends DatabaseState {
   List<Object?> get props => ['Fetching'];
 }
 
-class PasswordList extends DatabaseState {
+class PasswordPageState extends DatabaseState {
   final List<Password> list;
   final List<Password> completeList;
   final String? search;
   final PasswordCategory passwordCategory;
   final SortMethod sortMethod;
   final bool favourites;
+  final PageState pageState;
 
-  PasswordList(
-    this.list,
-    this.completeList,
-    this.search,
-    this.passwordCategory,
-    this.sortMethod,
-    this.favourites,
-  );
+  PasswordPageState({
+    this.list = const [],
+    this.completeList = const [],
+    this.search = '',
+    this.passwordCategory = PasswordCategory.all,
+    this.sortMethod = SortMethod.frequentlyUsed,
+    this.favourites = false,
+    this.pageState = PageState.init,
+  });
 
   @override
-  List<Object?> get props => [list, completeList, search, passwordCategory, sortMethod, favourites];
+  String toString() {
+    return '$list, $completeList, $search, $passwordCategory, $sortMethod, $favourites, $pageState';
+  }
+
+  @override
+  List<Object?> get props =>
+      [list, completeList, search, passwordCategory, sortMethod, favourites];
 }
 
-class PaymentCardList extends DatabaseState {
+class PaymentCardPageState extends DatabaseState {
   final List<PaymentCard> list;
   final List<PaymentCard> completeList;
   final String? search;
   final PaymentCardType paymentCardType;
   final SortMethod sortMethod;
   final bool favourites;
+  final PageState pageState;
 
-  PaymentCardList(
-    this.list,
-    this.completeList,
+  PaymentCardPageState({
+    this.list = const [],
+    this.completeList = const [],
     this.search,
-    this.paymentCardType,
-    this.sortMethod,
-    this.favourites,
-  );
+    this.paymentCardType = PaymentCardType.all,
+    this.sortMethod = SortMethod.frequentlyUsed,
+    this.favourites = false,
+    this.pageState = PageState.init,
+  });
 
   @override
-  List<Object?> get props => ['PaymentCardList'];
+  List<Object?> get props => [
+        list,
+        completeList,
+        search,
+        paymentCardType,
+        sortMethod,
+        favourites,
+      ];
 }
 
-class SecureNotesList extends DatabaseState {
+class SecureNotesPageState extends DatabaseState {
   final List<SecureNote> list;
   final List<SecureNote> completeList;
   final String? search;
   final SortMethod sortMethod;
   final bool favourites;
+  final PageState pageState;
 
-  SecureNotesList(this.list, this.completeList, this.search, this.sortMethod,
-      this.favourites);
+  SecureNotesPageState({
+    this.list = const [],
+    this.completeList = const [],
+    this.search,
+    this.sortMethod = SortMethod.frequentlyUsed,
+    this.favourites = false,
+    this.pageState = PageState.init,
+  });
 
   @override
-  List<Object?> get props => ['SecureNotesList'];
+  List<Object?> get props => [
+        list,
+        completeList,
+        search,
+        sortMethod,
+        favourites,
+      ];
 }
 
-class FolderListState extends DatabaseState {
+class FolderPageState extends DatabaseState {
   final Folder folder;
+  final PageState pageState;
 
-  FolderListState(this.folder);
+  FolderPageState({required this.folder, this.pageState = PageState.init});
 
   @override
-  List<Object?> get props => ['FolderListState'];
+  List<Object?> get props => [folder, pageState];
 }
 
 class PasswordFormState extends DatabaseState {
@@ -127,4 +158,4 @@ class SecureNoteFormState extends DatabaseState {
   List<Object?> get props => [message];
 }
 
-enum PageState{ init, loading, success, error}
+enum PageState { init, loading, success, error }

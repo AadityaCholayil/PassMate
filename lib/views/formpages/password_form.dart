@@ -589,7 +589,7 @@ class SelectFolderDialog extends StatefulWidget {
 
 class _SelectFolderDialogState extends State<SelectFolderDialog> {
   String _path = '';
-  Folder _folder = Folder.empty;
+  Folder _folder = Folder.empty();
   List<String> pathList = [];
   int selectedIndex = 999;
   String selectedPath = '';
@@ -615,7 +615,7 @@ class _SelectFolderDialogState extends State<SelectFolderDialog> {
         listenWhen: (previous, current) => previous != current,
         buildWhen: (previous, current) => previous != current,
         listener: (context, state) {
-          if (state is FolderListState) {
+          if (state is FolderPageState) {
             _folder = state.folder;
             List<String> list = _folder.path.split('/');
             pathList = [];
@@ -627,9 +627,9 @@ class _SelectFolderDialogState extends State<SelectFolderDialog> {
                 pathList.add(path.replaceRange(0, 1, path[0].toUpperCase()));
               }
             }
-          } else if (state is PasswordList ||
-              state is PaymentCardList ||
-              state is SecureNotesList) {
+          } else if (state is PasswordPageState ||
+              state is PaymentCardPageState ||
+              state is SecureNotesPageState) {
             context.read<DatabaseBloc>().add(GetFolder(path: _path));
           }
         },

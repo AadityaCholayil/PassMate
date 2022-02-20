@@ -19,12 +19,22 @@ class Folder {
     required this.secureNotesList,
   });
 
-  static Folder get empty => Folder(folderName: '',
-    path: '',
-    subFolderList: [],
-    passwordList: [],
-    paymentCardList: [],
-    secureNotesList: [],);
+  // static Folder get empty => Folder(folderName: '',
+  //   path: '',
+  //   subFolderList: [],
+  //   passwordList: [],
+  //   paymentCardList: [],
+  //   secureNotesList: [],);
+
+  Folder.empty() :
+        this(
+        folderName: '',
+        path: '',
+        subFolderList: const [],
+        passwordList: const [],
+        paymentCardList: const [],
+        secureNotesList: const [],
+      );
 }
 
 class FolderData {

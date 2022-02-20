@@ -54,3 +54,21 @@ class LoadingSmall extends StatelessWidget {
   }
 }
 
+class FixedLoading extends StatelessWidget {
+  final double? height;
+
+  const FixedLoading({
+    this.height,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: height ?? 250.w,
+      alignment: Alignment.center,
+      child: const LoadingSmall(),
+    );
+  }
+}
+

@@ -32,108 +32,101 @@ class _PasswordPageState extends State<PasswordPage> {
   @override
   void initState() {
     super.initState();
-    print('hi');
-    sortMethod =
-        context.read<AppBloc>().userData.sortMethod ?? SortMethod.recentlyAdded;
-    sortLabel = sortMethodMessages[sortMethod.index];
-    context.read<DatabaseBloc>().add(GetPasswords(
-        sortMethod: sortMethod, passwordCategory: passwordCategory));
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<DatabaseBloc, DatabaseState>(
-      listenWhen: (previous, current) => previous != current,
+    return BlocBuilder<DatabaseBloc, DatabaseState>(
       buildWhen: (previous, current) => previous != current,
-      listener: (context, state) {
-        print('widget rebuilt');
-        if (state is PasswordList) {
-          passwordList = state.list;
-          passwordCategory = state.passwordCategory;
-          favourites = state.favourites;
-          sortMethod = state.sortMethod;
-          searchLabel = state.search;
-          sortLabel = sortMethodMessages[sortMethod.index];
-          if (passwordCategory == PasswordCategory.all && !favourites) {
-            completePasswordList = state.completeList;
+      builder: (context, state) {
+        if(state is PasswordPageState){
+          if(state.pageState == PageState.loading){
+            return const FixedLoading();
           }
-          if (state.completeList != state.list) {
-            completePasswordList = state.completeList;
+          if(state.pageState == PageState.error){
+            return const FixedLoading();
+          }
+          if (state.pageState == PageState.success){
+            passwordList = state.list.toList();
+            passwordCategory = state.passwordCategory;
+            favourites = state.favourites;
+            sortMethod = state.sortMethod;
+            searchLabel = state.search;
+            sortLabel = sortMethodMessages[sortMethod.index];
+            if (passwordCategory == PasswordCategory.all && !favourites) {
+              completePasswordList = state.completeList.toList();
+            }
+            if (state.completeList != state.list) {
+              completePasswordList = state.completeList.toList();
+            }
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(left: 28.w, top: 13.w),
+                  child: Text(
+                    'Passwords',
+                    style: TextStyle(
+                      fontSize: 32,
+                      fontWeight: FontWeight.w600,
+                      color: Theme.of(context).colorScheme.onBackground,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 13.w),
+                completePasswordList.isNotEmpty
+                    ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildSearch(context),
+                    SizedBox(height: 15.w),
+                    _buildChipRow(),
+                    SizedBox(height: 10.w),
+                    _buildSortDropDownBox(context),
+                    SizedBox(height: 10.w),
+                  ],
+                )
+                    : const SizedBox.shrink(),
+                completePasswordList.isEmpty
+                    ? Container(
+                  alignment: Alignment.center,
+                  height: 320.w,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Text(
+                        'Start Adding Passwords',
+                        style: TextStyle(
+                          fontSize: 25,
+                          fontWeight: FontWeight.w700,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      Text(
+                        'All your passwords will be secure\nusing AES-256 encryption.',
+                        style: TextStyle(
+                          fontSize: 17,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                )
+                    : Flexible(
+                  child: PasswordCardList(passwordList: passwordList),
+                ),
+                SizedBox(
+                  height: passwordList.length < 3
+                      ? (3 - passwordList.length) * 70.w
+                      : 0,
+                ),
+              ],
+            );
           }
         }
-      },
-      builder: (context, state) {
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Padding(
-              padding: EdgeInsets.only(left: 28.w, top: 13.w),
-              child: Text(
-                'Passwords',
-                style: TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.w600,
-                  color: Theme.of(context).colorScheme.onBackground,
-                ),
-              ),
-            ),
-            SizedBox(height: 13.w),
-            completePasswordList.isNotEmpty
-                ? Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _buildSearch(context),
-                      SizedBox(height: 15.w),
-                      _buildChipRow(),
-                      SizedBox(height: 10.w),
-                      _buildSortDropDownBox(context),
-                      SizedBox(height: 10.w),
-                    ],
-                  )
-                : const SizedBox.shrink(),
-            state is Fetching
-                ? Container(
-                    height: 180.w,
-                    alignment: Alignment.center,
-                    child: const LoadingSmall(),
-                  )
-                : completePasswordList.isEmpty
-                    ? Container(
-                        alignment: Alignment.center,
-                        height: 320.w,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            Text(
-                              'Start Adding Passwords',
-                              style: TextStyle(
-                                fontSize: 25,
-                                fontWeight: FontWeight.w700,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                            Text(
-                              'All your passwords will be secure\nusing AES-256 encryption.',
-                              style: TextStyle(
-                                fontSize: 17,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
-                        ),
-                      )
-                    : Flexible(
-                        child: PasswordCardList(passwordList: passwordList),
-                      ),
-            SizedBox(
-              height: passwordList.length < 3
-                  ? (3 - passwordList.length) * 70.w
-                  : 0,
-            ),
-          ],
-        );
+        return const FixedLoading();
       },
     );
   }

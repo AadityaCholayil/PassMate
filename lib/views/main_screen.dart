@@ -46,10 +46,13 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     super.initState();
+    print('MainScreenInit');
+
   }
 
   @override
   Widget build(BuildContext context) {
+    print('MainScreenBuild');
     final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -59,8 +62,8 @@ class _MainScreenState extends State<MainScreen> {
           : [
               const PasswordGeneratorPage(),
               const FolderPage(),
-              // for (String path in context.read<DatabaseBloc>().folderList??[])
-              //   FolderPage(path: path),
+              for (String path in context.read<DatabaseBloc>().folderList??[])
+                FolderPage(path: path),
             ][context.read<MenuProvider>().currentPage-3],
       floatingActionButton: FabCircularMenu(
         key: fabKey,

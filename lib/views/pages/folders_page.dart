@@ -25,7 +25,7 @@ class FolderPage extends StatefulWidget {
 
 class _FolderPageState extends State<FolderPage> {
   String _path = '';
-  Folder _folder = Folder.empty;
+  Folder _folder = Folder.empty();
   List<String> pathList = [];
   final _controller = ScrollController();
 
@@ -48,108 +48,123 @@ class _FolderPageState extends State<FolderPage> {
       listenWhen: (previous, current) => previous != current,
       buildWhen: (previous, current) => previous != current,
       listener: (context, state) {
-        if (state is FolderListState) {
-          _folder = state.folder;
-          List<String> list = _folder.path.split('/');
-          pathList = [];
-          _path = _folder.path;
-          for (var path in list) {
-            if (path == 'root') {
-              pathList.add('My Folders');
-            } else {
-              pathList.add(path.replaceRange(0, 1, path[0].toUpperCase()));
-            }
-          }
-        } else if (state is PasswordList ||
-            state is PaymentCardList ||
-            state is SecureNotesList) {
+        if (state is PasswordPageState ||
+            state is PaymentCardPageState ||
+            state is SecureNotesPageState) {
           context.read<DatabaseBloc>().add(GetFolder(path: _path));
         }
       },
       builder: (context, state) {
-        return WillPopScope(
-          onWillPop: () {
-            print('pop');
-            if (_path != 'root') {
-              _path = _path.substring(
-                  0, _path.length - _folder.folderName.length - 1);
-              context.read<DatabaseBloc>().add(GetFolder(path: _path));
-              return Future.value(false);
-            } else {
-              return Future.value(true);
+        if (state is FolderPageState) {
+          if (state.pageState == PageState.loading) {
+            return const FixedLoading();
+          }
+          if (state.pageState == PageState.error) {
+            return const FixedLoading();
+          }
+          if (state.pageState == PageState.success) {
+            _folder = state.folder;
+            List<String> list = _folder.path.split('/');
+            pathList = [];
+            _path = _folder.path;
+            for (var path in list) {
+              if (path == 'root') {
+                pathList.add('My Folders');
+              } else {
+                pathList.add(path.replaceRange(0, 1, path[0].toUpperCase()));
+              }
             }
-          },
-          child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildAppBar(context),
-                state is Fetching
-                    ? Container(
-                        height: MediaQuery.of(context).size.height * 0.8,
-                        alignment: Alignment.center,
-                        child: const LoadingSmall(),
-                      )
-                    : Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.fromLTRB(22.w, 10.w, 20.w, 0),
-                            child: Text(
-                              _folder.folderName,
-                              style: TextStyle(
-                                color:
-                                    Theme.of(context).colorScheme.onBackground,
-                                fontSize: 42,
-                                fontWeight: FontWeight.w700,
+            return WillPopScope(
+              onWillPop: () {
+                print('pop');
+                if (_path != 'root') {
+                  _path = _path.substring(
+                      0, _path.length - _folder.folderName.length - 1);
+                  context.read<DatabaseBloc>().add(GetFolder(path: _path));
+                  return Future.value(false);
+                } else {
+                  return Future.value(true);
+                }
+              },
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildAppBar(context),
+                    state is Fetching
+                        ? Container(
+                            height: MediaQuery.of(context).size.height * 0.8,
+                            alignment: Alignment.center,
+                            child: const LoadingSmall(),
+                          )
+                        : Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding:
+                                    EdgeInsets.fromLTRB(22.w, 10.w, 20.w, 0),
+                                child: Text(
+                                  _folder.folderName,
+                                  style: TextStyle(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onBackground,
+                                    fontSize: 42,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
                               ),
-                            ),
+                              _buildFolderPath(),
+                              SizedBox(height: 10.w),
+                              _buildHeader(context, 'Folders'),
+                              FolderList(folder: _folder),
+                              SizedBox(height: 5.w),
+                              _folder.passwordList.isNotEmpty
+                                  ? Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        _buildHeader(context, 'Passwords'),
+                                        PasswordCardList(
+                                            passwordList: _folder.passwordList),
+                                      ],
+                                    )
+                                  : const SizedBox.shrink(),
+                              _folder.paymentCardList.isNotEmpty
+                                  ? Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        _buildHeader(context, 'Payment Cards'),
+                                        PaymentCardTileList(
+                                            paymentCardList:
+                                                _folder.paymentCardList),
+                                      ],
+                                    )
+                                  : const SizedBox.shrink(),
+                              _folder.secureNotesList.isNotEmpty
+                                  ? Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        _buildHeader(context, 'Secure Notes'),
+                                        SecureNoteCardList(
+                                            secureNoteList:
+                                                _folder.secureNotesList),
+                                      ],
+                                    )
+                                  : const SizedBox.shrink(),
+                              SizedBox(height: 100.w),
+                            ],
                           ),
-                          _buildFolderPath(),
-                          SizedBox(height: 10.w),
-                          _buildHeader(context, 'Folders'),
-                          FolderList(folder: _folder),
-                          SizedBox(height: 5.w),
-                          _folder.passwordList.isNotEmpty
-                              ? Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    _buildHeader(context, 'Passwords'),
-                                    PasswordCardList(
-                                        passwordList: _folder.passwordList),
-                                  ],
-                                )
-                              : const SizedBox.shrink(),
-                          _folder.paymentCardList.isNotEmpty
-                              ? Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    _buildHeader(context, 'Payment Cards'),
-                                    PaymentCardTileList(
-                                        paymentCardList:
-                                            _folder.paymentCardList),
-                                  ],
-                                )
-                              : const SizedBox.shrink(),
-                          _folder.secureNotesList.isNotEmpty
-                              ? Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    _buildHeader(context, 'Secure Notes'),
-                                    SecureNoteCardList(
-                                        secureNoteList:
-                                            _folder.secureNotesList),
-                                  ],
-                                )
-                              : const SizedBox.shrink(),
-                          SizedBox(height: 100.w),
-                        ],
-                      ),
-              ],
-            ),
-          ),
-        );
+                  ],
+                ),
+              ),
+            );
+          }
+        }
+        return const FixedLoading();
       },
     );
   }
