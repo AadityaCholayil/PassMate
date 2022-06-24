@@ -17,54 +17,56 @@ class MyApp extends StatelessWidget {
       create: (context) => AuthRepository(),
       child: BlocProvider<AppBloc>(
         create: (context) {
-          AppBloc appBloc = AppBloc(
-              authRepository:
-              context.read<AuthRepository>());
+          AppBloc appBloc =
+              AppBloc(authRepository: context.read<AuthRepository>());
           appBloc.add(AppStarted());
           return appBloc;
         },
         child: Builder(
           builder: (context) {
             return BlocBuilder<AppBloc, AppState>(
-              builder: (context, state) => BlocProvider<DatabaseBloc>.value(
-                value: context.read<AppBloc>().databaseBloc,
-                child: ScreenUtilInit(
-                  designSize: const Size(414, 896),
-                  builder: () {
-                    return MaterialApp(
-                      debugShowCheckedModeBanner: false,
-                      theme: ThemeData.from(
-                        textTheme: Theme.of(context)
-                            .textTheme
-                            .apply(fontFamily: 'Poppins'),
-                        colorScheme: colorScheme,
-                      ),
-                      onGenerateRoute: (settings) {
-                        return RouteGenerator.generateRoute(settings, state);
-                      },
-                      // initialRoute: RoutesName.wrapper,
-                      home: Wrapper(
-                        state: state,
-                      ),
-                      builder: (context, child) {
-                        int height = MediaQuery.of(context).size.height.toInt();
-                        int width = MediaQuery.of(context).size.width.toInt();
-                        int factor = 0;
-                        ScreenUtil.setContext(context);
-                        if(height < 1.2*width){
-                          factor = height;
-                        } else {
-                          factor = width;
-                        }
-                        return MediaQuery(
-                            data: MediaQuery.of(context)
-                                .copyWith(textScaleFactor: factor / 414),
-                            child: child ?? Container());
-                      },
-                    );
-                  },
-                ),
-              ),
+              builder: (context, state) {
+                return BlocProvider<DatabaseBloc>.value(
+                  value: context.read<AppBloc>().databaseBloc,
+                  child: ScreenUtilInit(
+                    designSize: const Size(414, 896),
+                    builder: (context, child) {
+                      return MaterialApp(
+                        debugShowCheckedModeBanner: false,
+                        theme: ThemeData.from(
+                          textTheme: Theme.of(context)
+                              .textTheme
+                              .apply(fontFamily: 'Poppins'),
+                          colorScheme: colorScheme,
+                        ),
+                        onGenerateRoute: (settings) {
+                          return RouteGenerator.generateRoute(settings, state);
+                        },
+                        // initialRoute: RoutesName.wrapper,
+                        home: Wrapper(
+                          state: state,
+                        ),
+                        builder: (context, child) {
+                          int height =
+                              MediaQuery.of(context).size.height.toInt();
+                          int width = MediaQuery.of(context).size.width.toInt();
+                          int factor = 0;
+                          ScreenUtil.init(context);
+                          if (height < 1.2 * width) {
+                            factor = height;
+                          } else {
+                            factor = width;
+                          }
+                          return MediaQuery(
+                              data: MediaQuery.of(context)
+                                  .copyWith(textScaleFactor: factor / 414),
+                              child: child ?? Container());
+                        },
+                      );
+                    },
+                  ),
+                );
+              },
             );
           },
         ),
@@ -72,4 +74,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-

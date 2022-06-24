@@ -203,7 +203,7 @@ class _DetailsPageState extends State<DetailsPage> {
                               height: 110.w,
                               width: 110.w,
                               child: Image.network(
-                                'https://www.mgretails.com/assets/img/default.png',
+                                'https://icon-library.com/images/default-user-icon/default-user-icon-13.jpg',
                                 fit: BoxFit.cover,
                               ),
                             ),

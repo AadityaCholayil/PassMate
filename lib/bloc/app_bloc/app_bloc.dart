@@ -177,11 +177,13 @@ class AppBloc extends Bloc<AppEvent, AppState> {
         if (res != null) {
           photoUrl = res;
         } else {
-          emit(EditProfilePageState.somethingWentWrong);
+          photoUrl =
+              'https://icon-library.com/images/default-user-icon/default-user-icon-13.jpg';
         }
       } else {
         // Default profile pic
-        photoUrl = 'https://www.mgretails.com/assets/img/default.png';
+        photoUrl =
+            'https://icon-library.com/images/default-user-icon/default-user-icon-13.jpg';
       }
       // Add User details to db
       UserData newUserData = UserData(
