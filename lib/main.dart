@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:passmate/bloc/app_bloc_observer.dart';
+import 'package:passmate/firebase_options.dart';
 import 'package:passmate/my_app.dart';
 import 'package:passmate/shared/error_screen.dart';
 import 'package:passmate/shared/loading.dart';
@@ -16,8 +17,7 @@ void main() async {
   Bloc.transformer = sequential<dynamic>();
   Bloc.observer = AppBlocObserver();
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  runApp(const MyApp());
+  runApp(const FlutterFireInit());
 }
 
 class FlutterFireInit extends StatefulWidget {
@@ -28,7 +28,9 @@ class FlutterFireInit extends StatefulWidget {
 }
 
 class _FlutterFireInitState extends State<FlutterFireInit> {
-  final Future<FirebaseApp> _initialization = Firebase.initializeApp();
+  final Future<FirebaseApp> _initialization = Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -52,4 +54,3 @@ class _FlutterFireInitState extends State<FlutterFireInit> {
     );
   }
 }
-

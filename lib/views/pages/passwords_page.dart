@@ -39,14 +39,14 @@ class _PasswordPageState extends State<PasswordPage> {
     return BlocBuilder<DatabaseBloc, DatabaseState>(
       buildWhen: (previous, current) => previous != current,
       builder: (context, state) {
-        if(state is PasswordPageState){
-          if(state.pageState == PageState.loading){
+        if (state is PasswordPageState) {
+          if (state.pageState == PageState.loading) {
             return const FixedLoading();
           }
-          if(state.pageState == PageState.error){
+          if (state.pageState == PageState.error) {
             return const FixedLoading();
           }
-          if (state.pageState == PageState.success){
+          if (state.pageState == PageState.success) {
             passwordList = state.list.toList();
             passwordCategory = state.passwordCategory;
             favourites = state.favourites;
@@ -78,45 +78,45 @@ class _PasswordPageState extends State<PasswordPage> {
                 SizedBox(height: 13.w),
                 completePasswordList.isNotEmpty
                     ? Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildSearch(context),
-                    SizedBox(height: 15.w),
-                    _buildChipRow(),
-                    SizedBox(height: 10.w),
-                    _buildSortDropDownBox(context),
-                    SizedBox(height: 10.w),
-                  ],
-                )
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildSearch(context),
+                          SizedBox(height: 15.w),
+                          _buildChipRow(),
+                          SizedBox(height: 10.w),
+                          _buildSortDropDownBox(context),
+                          SizedBox(height: 10.w),
+                        ],
+                      )
                     : const SizedBox.shrink(),
                 completePasswordList.isEmpty
                     ? Container(
-                  alignment: Alignment.center,
-                  height: 320.w,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Text(
-                        'Start Adding Passwords',
-                        style: TextStyle(
-                          fontSize: 25,
-                          fontWeight: FontWeight.w700,
+                        alignment: Alignment.center,
+                        height: 320.w,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const [
+                            Text(
+                              'Start Adding Passwords',
+                              style: TextStyle(
+                                fontSize: 25,
+                                fontWeight: FontWeight.w700,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                            Text(
+                              'All your passwords will be secure\nusing AES-256 encryption.',
+                              style: TextStyle(
+                                fontSize: 17,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
                         ),
-                        textAlign: TextAlign.center,
-                      ),
-                      Text(
-                        'All your passwords will be secure\nusing AES-256 encryption.',
-                        style: TextStyle(
-                          fontSize: 17,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                  ),
-                )
+                      )
                     : Flexible(
-                  child: PasswordCardList(passwordList: passwordList),
-                ),
+                        child: PasswordCardList(passwordList: passwordList),
+                      ),
                 SizedBox(
                   height: passwordList.length < 3
                       ? (3 - passwordList.length) * 70.w
@@ -507,6 +507,16 @@ class _PasswordDetailCardState extends State<PasswordDetailCard> {
                       child: Image.network(
                         password.imageUrl,
                         fit: BoxFit.cover,
+                        errorBuilder: (context, error, trace) {
+                          print(error);
+                          return Center(
+                            child: Image.asset(
+                              "assets/error.png",
+                              width: 70.w,
+                              height: 70.w,
+                            ),
+                          );
+                        },
                       ),
                     ),
                   ),

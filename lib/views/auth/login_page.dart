@@ -128,6 +128,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
               SizedBox(height: 20.w),
               Stack(
+                alignment: Alignment.center,
                 children: [
                   TextFormField(
                     decoration: customInputDecoration(
@@ -145,20 +146,20 @@ class _LoginPageState extends State<LoginPage> {
                     },
                   ),
                   Container(
-                    padding: EdgeInsets.only(right: 10.w),
-                    height: 56.w,
+                    padding: EdgeInsets.only(right: 15.w),
+                    height: 60.w,
                     alignment: Alignment.centerRight,
-                    child: IconButton(
-                      icon: Icon(
-                          showPassword
-                              ? Icons.visibility
-                              : Icons.visibility_off,
-                          size: 28.w),
-                      onPressed: () {
+                    child: InkWell(
+                      onTap: () {
                         setState(() {
                           showPassword = !showPassword;
                         });
                       },
+                      child: Icon(
+                          showPassword
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                          size: 25.w),
                     ),
                   ),
                 ],
@@ -183,16 +184,13 @@ class _LoginPageState extends State<LoginPage> {
                 children: [
                   Text(
                     "Don't have an account?",
-                    style: TextStyle(
-                        fontSize: 15,
-                        color: CustomTheme.t1),
+                    style: TextStyle(fontSize: 15, color: CustomTheme.t1),
                   ),
                   TextButton(
                     child: Text(
                       "Sign Up!",
-                      style: TextStyle(
-                          fontSize: 15,
-                          color: CustomTheme.primary),
+                      style:
+                          TextStyle(fontSize: 15, color: CustomTheme.primary),
                     ),
                     onPressed: () {
                       Navigator.of(context).pushReplacement(MaterialPageRoute(

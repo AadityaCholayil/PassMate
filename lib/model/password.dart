@@ -92,14 +92,15 @@ class Password {
     note = await encryptionRepository.decrypt(note);
   }
 
-  void printDetails(){
-    print('$id, $path, $siteName, $siteUrl, $email, $password, $imageUrl, $note,'
+  void printDetails() {
+    print(
+        '$id, $path, $siteName, $siteUrl, $email, $password, $imageUrl, $note,'
         ' $category, $favourite, $usage, $lastUsed, $timeAdded');
   }
 
   @override
   String toString() {
-    return '$path - $siteName: $email, $password Category: $category, isFav: $favourite';
+    return '$path - $siteName: $email, $password, $imageUrl, $category';
   }
 }
 
@@ -111,7 +112,6 @@ class Password {
 //
 //
 // }
-
 
 enum PasswordCategory {
   all,
@@ -135,7 +135,7 @@ Map<String, IconData> passwordCategoryIcon = {
   'Others': Icons.more_horiz
 };
 
-String getPasswordCategoryStr(PasswordCategory passwordCategory){
+String getPasswordCategoryStr(PasswordCategory passwordCategory) {
   String label = passwordCategory.toString().substring(17);
   return label.replaceRange(0, 1, label.substring(0, 1).toUpperCase());
 }
@@ -152,7 +152,7 @@ Future<String?> getFavicon(String domain) async {
     try {
       for (var icon in data['icons']) {
         String url = icon['src'];
-        if(!url.endsWith('.svg')){
+        if (!url.endsWith('.svg')) {
           print(url);
           return url;
         }

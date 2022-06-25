@@ -7,20 +7,12 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:389893666974:android:3954af99ef2f009923638f",
+        "mobilesdk_app_id": "1:389893666974:android:ce839b2054032c8223638f",
         "android_client_info": {
           "package_name": "com.mates.passmate"
         }
       },
       "oauth_client": [
-        {
-          "client_id": "389893666974-85i2eeq8eo4fb501oq52s2qhuq2m4mf4.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.mates.passmate",
-            "certificate_hash": "fa0585efe2995d3314c49360bb553f762c74e293"
-          }
-        },
         {
           "client_id": "389893666974-upcavjn6qlpcpkuk6ckjelfr30ij06cn.apps.googleusercontent.com",
           "client_type": 3
@@ -37,6 +29,13 @@
             {
               "client_id": "389893666974-upcavjn6qlpcpkuk6ckjelfr30ij06cn.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "389893666974-c80qi8o4b8pmlrbfi2ir89mtct1ejjtc.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.mates.passmate"
+              }
             }
           ]
         }
