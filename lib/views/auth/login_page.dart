@@ -185,7 +185,7 @@ class _LoginPageState extends State<LoginPage> {
                     "Don't have an account?",
                     style: TextStyle(
                         fontSize: 15,
-                        color: CustomTheme.onSurface),
+                        color: CustomTheme.t1),
                   ),
                   TextButton(
                     child: Text(

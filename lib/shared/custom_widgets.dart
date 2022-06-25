@@ -16,20 +16,19 @@ InputDecoration customInputDecoration(
             ),
           )
         : null,
-    contentPadding: EdgeInsets.fromLTRB(24.w, 17.w, 15.w, 17.w),
+    contentPadding: EdgeInsets.fromLTRB(24.w, 20.w, 22.w, 19.w),
     enabledBorder: OutlineInputBorder(
       borderSide: BorderSide(
-        color: isSearch
-            ? CustomTheme.surface
-            : CustomTheme.secondaryVariant,
+        color: isSearch ? CustomTheme.card : CustomTheme.card,
         width: 2.w,
         style: BorderStyle.solid,
       ),
-      borderRadius: BorderRadius.all(Radius.circular(15.0.w)),
+      borderRadius: BorderRadius.all(Radius.circular(15.w)),
     ),
-    fillColor: CustomTheme.surface,
+    fillColor: CustomTheme.card,
     labelText: labelText,
-    labelStyle: const TextStyle(fontSize: 16),
+    labelStyle: TextStyle(
+        fontSize: 16.w, color: CustomTheme.t2, fontWeight: FontWeight.w400),
     alignLabelWithHint: true,
     floatingLabelBehavior: FloatingLabelBehavior.never,
     helperStyle: const TextStyle(
@@ -115,124 +114,122 @@ InputDecoration customInputDecoration(
   );
 }
 
-InputDecoration customInputDecoration2(
-    {required BuildContext context,
-    String labelText = '',
-    bool isSearch = false}) {
-  return InputDecoration(
-    suffixIcon: isSearch
-        ? Padding(
-            padding: EdgeInsets.only(right: 20.w),
-            child: Icon(
-              Icons.search,
-              size: 25.w,
-            ),
-          )
-        : null,
-    contentPadding: EdgeInsets.fromLTRB(15.w, 15.w, 15.w, 15.w),
-    enabledBorder: OutlineInputBorder(
-      borderSide: BorderSide(
-        color: isSearch
-            ? CustomTheme.surface
-            : CustomTheme.secondaryVariant,
-        width: 2.w,
-        style: BorderStyle.solid,
-      ),
-      borderRadius: BorderRadius.all(Radius.circular(15.0.w)),
-    ),
-    fillColor: CustomTheme.surface,
-    labelText: labelText,
-    labelStyle: const TextStyle(fontSize: 16.5),
-    alignLabelWithHint: true,
-    floatingLabelBehavior: FloatingLabelBehavior.never,
-    helperStyle: const TextStyle(
-      color: Color(0xdd000000),
-      fontSize: 16.0,
-      fontWeight: FontWeight.w400,
-      fontStyle: FontStyle.normal,
-    ),
-    hintStyle: const TextStyle(
-      color: Color(0xdd000000),
-      fontSize: 16.0,
-      fontWeight: FontWeight.w400,
-      fontStyle: FontStyle.normal,
-    ),
-    errorStyle: const TextStyle(
-      color: Color(0xffd32f2f),
-      fontSize: 15.0,
-      fontWeight: FontWeight.w400,
-      fontStyle: FontStyle.normal,
-    ),
-    errorMaxLines: null,
-    isDense: false,
-    isCollapsed: false,
-    prefixStyle: const TextStyle(
-      color: Color(0xdd000000),
-      fontSize: 16.0,
-      fontWeight: FontWeight.w400,
-      fontStyle: FontStyle.normal,
-    ),
-    suffixStyle: const TextStyle(
-      color: Color(0xdd000000),
-      fontSize: 16.0,
-      fontWeight: FontWeight.w400,
-      fontStyle: FontStyle.normal,
-    ),
-    counterStyle: const TextStyle(
-      color: Color(0xdd000000),
-      fontSize: 16.0,
-      fontWeight: FontWeight.w400,
-      fontStyle: FontStyle.normal,
-    ),
-    filled: true,
-    errorBorder: OutlineInputBorder(
-      borderSide: BorderSide(
-        color: const Color(0xffd32f2f),
-        width: 2.w,
-        style: BorderStyle.solid,
-      ),
-      borderRadius: BorderRadius.all(Radius.circular(15.0.w)),
-    ),
-    focusedBorder: OutlineInputBorder(
-      borderSide: BorderSide(
-        color: CustomTheme.primary,
-        width: 2.w,
-        style: BorderStyle.solid,
-      ),
-      borderRadius: BorderRadius.all(Radius.circular(15.0.w)),
-    ),
-    focusedErrorBorder: OutlineInputBorder(
-      borderSide: BorderSide(
-        color: const Color(0xffd32f2f),
-        width: 2.w,
-        style: BorderStyle.solid,
-      ),
-      borderRadius: BorderRadius.all(Radius.circular(15.0.w)),
-    ),
-    disabledBorder: OutlineInputBorder(
-      borderSide: BorderSide(
-        color: const Color(0xff000000),
-        width: 2.w,
-        style: BorderStyle.solid,
-      ),
-      borderRadius: BorderRadius.all(Radius.circular(15.0.w)),
-    ),
-    border: OutlineInputBorder(
-      borderSide: BorderSide(
-        color: const Color(0xff000000),
-        width: 2.w,
-        style: BorderStyle.solid,
-      ),
-      borderRadius: BorderRadius.all(Radius.circular(15.0.w)),
-    ),
-  );
-}
+// InputDecoration customInputDecoration2(
+//     {required BuildContext context,
+//     String labelText = '',
+//     bool isSearch = false}) {
+//   return InputDecoration(
+//     suffixIcon: isSearch
+//         ? Padding(
+//             padding: EdgeInsets.only(right: 20.w),
+//             child: Icon(
+//               Icons.search,
+//               size: 25.w,
+//             ),
+//           )
+//         : null,
+//     contentPadding: EdgeInsets.fromLTRB(15.w, 15.w, 15.w, 15.w),
+//     enabledBorder: OutlineInputBorder(
+//       borderSide: BorderSide(
+//         color: isSearch ? CustomTheme.card : CustomTheme.card,
+//         width: 2.w,
+//         style: BorderStyle.solid,
+//       ),
+//       borderRadius: BorderRadius.all(Radius.circular(15.0.w)),
+//     ),
+//     fillColor: CustomTheme.card,
+//     labelText: labelText,
+//     labelStyle: const TextStyle(fontSize: 16.5),
+//     alignLabelWithHint: true,
+//     floatingLabelBehavior: FloatingLabelBehavior.never,
+//     helperStyle: const TextStyle(
+//       color: Color(0xdd000000),
+//       fontSize: 16.0,
+//       fontWeight: FontWeight.w400,
+//       fontStyle: FontStyle.normal,
+//     ),
+//     hintStyle: const TextStyle(
+//       color: Color(0xdd000000),
+//       fontSize: 16.0,
+//       fontWeight: FontWeight.w400,
+//       fontStyle: FontStyle.normal,
+//     ),
+//     errorStyle: const TextStyle(
+//       color: Color(0xffd32f2f),
+//       fontSize: 15.0,
+//       fontWeight: FontWeight.w400,
+//       fontStyle: FontStyle.normal,
+//     ),
+//     errorMaxLines: null,
+//     isDense: false,
+//     isCollapsed: false,
+//     prefixStyle: const TextStyle(
+//       color: Color(0xdd000000),
+//       fontSize: 16.0,
+//       fontWeight: FontWeight.w400,
+//       fontStyle: FontStyle.normal,
+//     ),
+//     suffixStyle: const TextStyle(
+//       color: Color(0xdd000000),
+//       fontSize: 16.0,
+//       fontWeight: FontWeight.w400,
+//       fontStyle: FontStyle.normal,
+//     ),
+//     counterStyle: const TextStyle(
+//       color: Color(0xdd000000),
+//       fontSize: 16.0,
+//       fontWeight: FontWeight.w400,
+//       fontStyle: FontStyle.normal,
+//     ),
+//     filled: true,
+//     errorBorder: OutlineInputBorder(
+//       borderSide: BorderSide(
+//         color: const Color(0xffd32f2f),
+//         width: 2.w,
+//         style: BorderStyle.solid,
+//       ),
+//       borderRadius: BorderRadius.all(Radius.circular(15.0.w)),
+//     ),
+//     focusedBorder: OutlineInputBorder(
+//       borderSide: BorderSide(
+//         color: CustomTheme.primary,
+//         width: 2.w,
+//         style: BorderStyle.solid,
+//       ),
+//       borderRadius: BorderRadius.all(Radius.circular(15.0.w)),
+//     ),
+//     focusedErrorBorder: OutlineInputBorder(
+//       borderSide: BorderSide(
+//         color: const Color(0xffd32f2f),
+//         width: 2.w,
+//         style: BorderStyle.solid,
+//       ),
+//       borderRadius: BorderRadius.all(Radius.circular(15.0.w)),
+//     ),
+//     disabledBorder: OutlineInputBorder(
+//       borderSide: BorderSide(
+//         color: const Color(0xff000000),
+//         width: 2.w,
+//         style: BorderStyle.solid,
+//       ),
+//       borderRadius: BorderRadius.all(Radius.circular(15.0.w)),
+//     ),
+//     border: OutlineInputBorder(
+//       borderSide: BorderSide(
+//         color: const Color(0xff000000),
+//         width: 2.w,
+//         style: BorderStyle.solid,
+//       ),
+//       borderRadius: BorderRadius.all(Radius.circular(15.0.w)),
+//     ),
+//   );
+// }
 
-TextStyle formTextStyle(BuildContext context) =>
-    TextStyle(fontSize: 17, color: CustomTheme.primary, fontWeight: FontWeight.w500);
+TextStyle formTextStyle(BuildContext context) => TextStyle(
+    fontSize: 16, color: CustomTheme.primary, fontWeight: FontWeight.w500);
 
-TextStyle formTextStyle2(BuildContext context) =>
-    TextStyle(fontSize: 16, color: CustomTheme.onSurface);
+// TextStyle formTextStyle2(BuildContext context) =>
+//     TextStyle(fontSize: 16, color: CustomTheme.t1);
 
 class CustomElevatedButton extends StatelessWidget {
   final void Function()? onPressed;
@@ -241,7 +238,11 @@ class CustomElevatedButton extends StatelessWidget {
   final double fontSize;
 
   const CustomElevatedButton(
-      {Key? key, this.onPressed, this.text = 'Submit', this.style = 0, this.fontSize=18})
+      {Key? key,
+      this.onPressed,
+      this.text = 'Submit',
+      this.style = 0,
+      this.fontSize = 18})
       : super(key: key);
 
   @override
@@ -249,8 +250,7 @@ class CustomElevatedButton extends StatelessWidget {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         elevation: 3,
-        primary:
-            style == 0 ? CustomTheme.primary : CustomTheme.surface,
+        primary: style == 0 ? CustomTheme.primary : CustomTheme.card,
         shape: RoundedRectangleBorder(
           side: BorderSide(
             color: CustomTheme.primary,
@@ -265,9 +265,7 @@ class CustomElevatedButton extends StatelessWidget {
         child: Text(
           text,
           style: TextStyle(
-              color: style == 0
-                  ? CustomTheme.onPrimary
-                  : CustomTheme.primary,
+              color: style == 0 ? CustomTheme.t3 : CustomTheme.primary,
               fontSize: fontSize,
               fontWeight: FontWeight.w500),
         ),
@@ -290,6 +288,43 @@ class CustomBackButton extends StatelessWidget {
       onPressed: () {
         Navigator.pop(context);
       },
+    );
+  }
+}
+
+class CustomShadow extends StatelessWidget {
+  final Widget child;
+  final double? height;
+  final double? borderRadius;
+
+  const CustomShadow({
+    Key? key,
+    required this.child,
+    this.height,
+    this.borderRadius,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Container(
+          height: height ?? 60.w,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color: CustomTheme.cardShadow,
+                blurRadius: 15,
+                offset: Offset(4.w, 4.w),
+              ),
+            ],
+            color: CustomTheme.card,
+            borderRadius: BorderRadius.circular(borderRadius ?? 20.w),
+          ),
+        ),
+        child,
+      ],
     );
   }
 }

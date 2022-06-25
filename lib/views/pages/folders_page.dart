@@ -474,7 +474,7 @@ class _AddFolderDialogState extends State<AddFolderDialog> {
                 Padding(
                   padding: EdgeInsets.only(top: 15.w, bottom: 20.w),
                   child: TextFormField(
-                    style: formTextStyle2(context),
+                    style: formTextStyle(context),
                     decoration: customInputDecoration(
                       context: context,
                       labelText: 'Name',
@@ -672,7 +672,7 @@ class _RenameFolderDialogState extends State<RenameFolderDialog> {
                   child: TextFormField(
                     initialValue: path.split('/').last.replaceRange(
                         0, 1, path.split('/').last[0].toUpperCase()),
-                    style: formTextStyle2(context),
+                    style: formTextStyle(context),
                     decoration: customInputDecoration(
                       context: context,
                       labelText: 'Name',

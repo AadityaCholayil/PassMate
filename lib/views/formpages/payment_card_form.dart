@@ -609,7 +609,7 @@ class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
       padding: EdgeInsets.fromLTRB(20.w, 7.w, 20.w, 5.w),
       child: TextFormField(
         initialValue: _bankName,
-        style: formTextStyle2(context),
+        style: formTextStyle(context),
         decoration: customInputDecoration(
           context: context,
           labelText: 'Eg. Canara',
@@ -640,8 +640,8 @@ class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
               initialValue: initialNo[0],
               keyboardType: const TextInputType.numberWithOptions(
                   signed: false, decimal: false),
-              style: formTextStyle2(context),
-              decoration: customInputDecoration2(
+              style: formTextStyle(context),
+              decoration: customInputDecoration(
                 context: context,
                 labelText: 'XXXX',
               ),
@@ -664,8 +664,8 @@ class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
               initialValue: initialNo[1],
               keyboardType: const TextInputType.numberWithOptions(
                   signed: false, decimal: false),
-              style: formTextStyle2(context),
-              decoration: customInputDecoration2(
+              style: formTextStyle(context),
+              decoration: customInputDecoration(
                 context: context,
                 labelText: 'XXXX',
               ),
@@ -691,8 +691,8 @@ class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
               initialValue: initialNo[2],
               keyboardType: const TextInputType.numberWithOptions(
                   signed: false, decimal: false),
-              style: formTextStyle2(context),
-              decoration: customInputDecoration2(
+              style: formTextStyle(context),
+              decoration: customInputDecoration(
                 context: context,
                 labelText: 'XXXX',
               ),
@@ -718,8 +718,8 @@ class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
               initialValue: initialNo[3],
               keyboardType: const TextInputType.numberWithOptions(
                   signed: false, decimal: false),
-              style: formTextStyle2(context),
-              decoration: customInputDecoration2(
+              style: formTextStyle(context),
+              decoration: customInputDecoration(
                 context: context,
                 labelText: 'XXXX',
               ),
@@ -749,7 +749,7 @@ class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
       padding: EdgeInsets.fromLTRB(20.w, 7.w, 20.w, 5.w),
       child: TextFormField(
         initialValue: _holderName,
-        style: formTextStyle2(context),
+        style: formTextStyle(context),
         decoration: customInputDecoration(
           context: context,
           labelText: 'Eg. John Smith',
@@ -777,8 +777,8 @@ class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
               initialValue: initialDate[0],
               keyboardType: const TextInputType.numberWithOptions(
                   signed: false, decimal: false),
-              style: formTextStyle2(context),
-              decoration: customInputDecoration2(
+              style: formTextStyle(context),
+              decoration: customInputDecoration(
                 context: context,
                 labelText: 'MM',
               ),
@@ -810,8 +810,8 @@ class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
               initialValue: initialDate[1],
               keyboardType: const TextInputType.numberWithOptions(
                   signed: false, decimal: false),
-              style: formTextStyle2(context),
-              decoration: customInputDecoration2(
+              style: formTextStyle(context),
+              decoration: customInputDecoration(
                 context: context,
                 labelText: 'YY',
               ),
@@ -844,7 +844,7 @@ class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
         initialValue: _cvv,
         keyboardType: const TextInputType.numberWithOptions(
             signed: false, decimal: false),
-        style: formTextStyle2(context),
+        style: formTextStyle(context),
         decoration: customInputDecoration(
           context: context,
           labelText: 'Eg. 439',
@@ -1127,7 +1127,7 @@ class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
       padding: EdgeInsets.fromLTRB(0.w, 7.w, 0.w, 5.w),
       child: TextFormField(
         initialValue: _note,
-        style: formTextStyle2(context),
+        style: formTextStyle(context),
         decoration: customInputDecoration(
           context: context,
           labelText: 'Eg. Work Card',

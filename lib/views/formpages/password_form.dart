@@ -179,7 +179,7 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
       padding: EdgeInsets.only(top: 7.w, bottom: 5.w),
       child: TextFormField(
         initialValue: _siteName,
-        style: formTextStyle2(context),
+        style: formTextStyle(context),
         decoration: customInputDecoration(
           context: context,
           labelText: 'Eg. Google',
@@ -197,7 +197,7 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
       padding: EdgeInsets.only(top: 7.w, bottom: 5.w),
       child: TextFormField(
         initialValue: _siteUrl,
-        style: formTextStyle2(context),
+        style: formTextStyle(context),
         decoration: customInputDecoration(
           context: context,
           labelText: 'Eg. www.google.com',
@@ -225,7 +225,7 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
       padding: EdgeInsets.only(top: 7.w, bottom: 5.w),
       child: TextFormField(
         initialValue: _email,
-        style: formTextStyle2(context),
+        style: formTextStyle(context),
         decoration: customInputDecoration(
           context: context,
           labelText: 'Username or Email',
@@ -243,7 +243,7 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
       padding: EdgeInsets.only(top: 7.w, bottom: 5.w),
       child: TextFormField(
         initialValue: _password,
-        style: formTextStyle2(context),
+        style: formTextStyle(context),
         decoration: customInputDecoration(
           context: context,
           labelText: 'Password',
@@ -261,7 +261,7 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
       padding: EdgeInsets.only(top: 7.w, bottom: 5.w),
       child: TextFormField(
         initialValue: _note,
-        style: formTextStyle2(context),
+        style: formTextStyle(context),
         decoration: customInputDecoration(
           context: context,
           labelText: 'Eg. For Google',

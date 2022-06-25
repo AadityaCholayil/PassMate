@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:passmate/shared/custom_widgets.dart';
 import 'package:passmate/shared/temp_error.dart';
 import 'package:passmate/theme/theme.dart';
+import 'dart:ui' as ui;
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({Key? key}) : super(key: key);
@@ -76,7 +77,7 @@ class WelcomeScreenPortrait extends StatelessWidget {
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w500,
-              color: CustomTheme.onSurface,
+              color: CustomTheme.t1,
             ),
           ),
           SizedBox(height: 20.w),
@@ -101,6 +102,18 @@ class WelcomeScreenPortrait extends StatelessWidget {
           const Spacer(
             flex: 5,
           ),
+          Column(
+            children: [
+              CustomPaint(
+                size: Size(414.w, 21.w),
+                painter: BGTopVector(),
+              ),
+              Container(
+                color: CustomTheme.secondaryVariant,
+                child: SizedBox(height: 35.w),
+              ),
+            ],
+          ),
           CustomElevatedButton(
             style: 0,
             text: 'Login',
@@ -120,5 +133,30 @@ class WelcomeScreenPortrait extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class BGTopVector extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    Path path0 = Path();
+    path0.moveTo(0, size.height * 0.9972667);
+    path0.cubicTo(size.width * 0.1457734, size.height * 0.3644471,
+        size.width * 0.3169251, 0, size.width * 0.5000000, 0);
+    path0.cubicTo(size.width * 0.6830749, 0, size.width * 0.8542271,
+        size.height * 0.3644476, size.width, size.height * 0.9972667);
+    path0.lineTo(size.width, size.height);
+    path0.lineTo(0, size.height);
+    path0.lineTo(0, size.height * 0.9972667);
+    path0.close();
+
+    Paint paint0Fill = Paint()..style = PaintingStyle.fill;
+    paint0Fill.color = const Color(0xffF8CEF1).withOpacity(1.0);
+    canvas.drawPath(path0, paint0Fill);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return true;
   }
 }
