@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
+import 'package:passmate/model/main_screen_provider.dart';
 import 'package:passmate/theme/theme.dart';
+import 'package:passmate/views/settings/settings_page.dart';
 
 InputDecoration customInputDecoration(
     {required BuildContext context,
@@ -28,7 +32,7 @@ InputDecoration customInputDecoration(
     fillColor: CustomTheme.card,
     labelText: labelText,
     labelStyle: TextStyle(
-        fontSize: 16.w, color: CustomTheme.t2, fontWeight: FontWeight.w400),
+        fontSize: 16, color: CustomTheme.t2, fontWeight: FontWeight.w400),
     alignLabelWithHint: true,
     floatingLabelBehavior: FloatingLabelBehavior.never,
     helperStyle: const TextStyle(
@@ -242,7 +246,7 @@ class CustomElevatedButton extends StatelessWidget {
       this.onPressed,
       this.text = 'Submit',
       this.style = 0,
-      this.fontSize = 18})
+      this.fontSize = 16})
       : super(key: key);
 
   @override
@@ -252,16 +256,12 @@ class CustomElevatedButton extends StatelessWidget {
         elevation: 3,
         primary: style == 0 ? CustomTheme.primary : CustomTheme.card,
         shape: RoundedRectangleBorder(
-          side: BorderSide(
-            color: CustomTheme.primary,
-            width: 2,
-          ),
           borderRadius: BorderRadius.circular(12.w),
         ),
       ),
       child: Container(
         alignment: Alignment.center,
-        height: 60.w,
+        height: 50.w,
         child: Text(
           text,
           style: TextStyle(
@@ -276,18 +276,28 @@ class CustomElevatedButton extends StatelessWidget {
 }
 
 class CustomBackButton extends StatelessWidget {
-  const CustomBackButton({Key? key}) : super(key: key);
+  final Widget? child;
+
+  const CustomBackButton({Key? key, this.child}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(
-      padding: EdgeInsets.fromLTRB(0, 9.w, 15.w, 9.w),
-      iconSize: 32.w,
-      color: CustomTheme.primary,
-      icon: const Icon(Icons.arrow_back_ios_rounded),
-      onPressed: () {
-        Navigator.pop(context);
-      },
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Padding(
+          padding: EdgeInsets.only(left: 10.w),
+          child: IconButton(
+            // padding: EdgeInsets.fromLTRB(0, 9.w, 15.w, 9.w),
+            iconSize: 32.w,
+            color: CustomTheme.primary,
+            icon: const Icon(Icons.arrow_back_ios_rounded),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        ),
+      ],
     );
   }
 }
@@ -328,3 +338,78 @@ class CustomShadow extends StatelessWidget {
     );
   }
 }
+
+class CustomAppBar extends StatelessWidget {
+  final Widget child;
+  final AppBarType type;
+
+  const CustomAppBar({
+    Key? key,
+    required this.child,
+    this.type = AppBarType.back,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          height: 90.w,
+          padding: EdgeInsets.only(
+              left: type == AppBarType.menu ? 20.w : 17.w, right: 20.w),
+          child: Row(
+            children: [
+              type == AppBarType.menu
+                  ? IconButton(
+                      onPressed: () => ZoomDrawer.of(context)!.toggle(),
+                      icon: Icon(
+                        Icons.menu_rounded,
+                        size: 34.w,
+                        color: CustomTheme.primary,
+                      ),
+                    )
+                  : IconButton(
+                      onPressed: () {
+                        if (type == AppBarType.backToHome) {
+                          // context.read<AppBloc>().add(const GetHomePageContents());
+                          context.read<MenuProvider>().updateCurrentPage(0);
+                        } else {
+                          Navigator.pop(context);
+                        }
+                      },
+                      icon: Icon(
+                        Icons.arrow_back_ios_rounded,
+                        size: 28.w,
+                        color: CustomTheme.primary,
+                      ),
+                      padding: EdgeInsets.zero,
+                    ),
+              IconButton(
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const SettingsPage(),
+                  ),
+                ),
+                icon: Icon(
+                  Icons.menu_rounded,
+                  size: 34.w,
+                  color: CustomTheme.primary,
+                ),
+              )
+            ],
+          ),
+        ),
+        child,
+      ],
+    );
+  }
+}
+
+enum AppBarType { back, menu, backToHome }
+
+// void backToHome(BuildContext context) {
+//   // context.read<AppBloc>().add(const GetHomePageContents());
+//   context.read<MenuProvider>().updateCurrentPage(0);
+// }

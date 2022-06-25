@@ -31,7 +31,7 @@ class CustomTheme {
 
   static Color get t1 => const Color(0xFF000000);
 
-  static Color get t2 => const Color(0xFF787878);
+  static Color get t2 => const Color(0xFF898989);
 
   static Color get t3 => const Color(0xFFFFFFFF);
 
