@@ -21,7 +21,7 @@ class Wrapper extends StatelessWidget {
     } else if (state is Authenticated ||
         state is DeleteAccountPageState ||
         state is EditProfilePageState) {
-      return const HomeScreen();
+      return const DrawerWrapper();
     } else {
       return const LoadingPage();
     }

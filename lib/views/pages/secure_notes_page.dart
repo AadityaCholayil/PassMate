@@ -10,6 +10,7 @@ import 'package:passmate/model/sort_methods.dart';
 import 'package:passmate/shared/custom_widgets.dart';
 import 'package:passmate/shared/loading.dart';
 import 'package:passmate/views/formpages/secure_note_form.dart';
+import 'package:passmate/views/main_screen.dart';
 
 class SecureNotesPage extends StatefulWidget {
   const SecureNotesPage({Key? key}) : super(key: key);
@@ -54,70 +55,77 @@ class _SecureNotesPageState extends State<SecureNotesPage> {
             if (state.completeList != state.list) {
               completeSecureNoteList = state.completeList;
             }
-            return Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(left: 28.w, top: 13.w),
-                  child: Text(
-                    'Secure Notes',
-                    style: TextStyle(
-                      fontSize: 32,
-                      fontWeight: FontWeight.w600,
-                      color: Theme.of(context).colorScheme.onBackground,
-                    ),
-                  ),
-                ),
-                SizedBox(height: 13.w),
-                _buildSearch(context),
-                SizedBox(height: 5.w),
-                completeSecureNoteList.isNotEmpty
-                    ? _buildSortDropDownBox(context)
-                    : const SizedBox.shrink(),
-                SizedBox(height: 5.w),
-                state is Fetching
-                    ? Container(
-                  height: 180.w,
-                  alignment: Alignment.center,
-                  child: const LoadingSmall(),
-                )
-                    : completeSecureNoteList.isEmpty
-                    ? Container(
-                  alignment: Alignment.center,
-                  height: 420.h,
+            return SafeArea(
+              child: Scaffold(
+                floatingActionButton: const CustomFAB(),
+                body: NewMainListPage(
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Text(
-                        'Start adding Notes',
-                        style: TextStyle(
-                          fontSize: 25,
-                          fontWeight: FontWeight.w700,
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(left: 28.w, top: 13.w),
+                        child: Text(
+                          'Secure Notes',
+                          style: TextStyle(
+                            fontSize: 32,
+                            fontWeight: FontWeight.w600,
+                            color: Theme.of(context).colorScheme.onBackground,
+                          ),
                         ),
-                        textAlign: TextAlign.center,
                       ),
-                      Text(
-                        'All your Notes will be secure\nusing AES-256 encryption.',
-                        style: TextStyle(
-                          fontSize: 17,
+                      SizedBox(height: 13.w),
+                      _buildSearch(context),
+                      SizedBox(height: 5.w),
+                      completeSecureNoteList.isNotEmpty
+                          ? _buildSortDropDownBox(context)
+                          : const SizedBox.shrink(),
+                      SizedBox(height: 5.w),
+                      state is Fetching
+                          ? Container(
+                        height: 180.w,
+                        alignment: Alignment.center,
+                        child: const LoadingSmall(),
+                      )
+                          : completeSecureNoteList.isEmpty
+                          ? Container(
+                        alignment: Alignment.center,
+                        height: 420.h,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const [
+                            Text(
+                              'Start adding Notes',
+                              style: TextStyle(
+                                fontSize: 25,
+                                fontWeight: FontWeight.w700,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                            Text(
+                              'All your Notes will be secure\nusing AES-256 encryption.',
+                              style: TextStyle(
+                                fontSize: 17,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
                         ),
-                        textAlign: TextAlign.center,
+                      )
+                          : Flexible(
+                        child:
+                        SecureNoteCardList(secureNoteList: secureNoteList),
+                      ),
+                      SizedBox(
+                        height: secureNoteList.length < 3
+                            ? (3 - secureNoteList.length) * 110.w
+                            : 0,
                       ),
                     ],
                   ),
-                )
-                    : Flexible(
-                  child:
-                  SecureNoteCardList(secureNoteList: secureNoteList),
                 ),
-                SizedBox(
-                  height: secureNoteList.length < 3
-                      ? (3 - secureNoteList.length) * 110.w
-                      : 0,
-                ),
-              ],
+              ),
             );
           }
         }

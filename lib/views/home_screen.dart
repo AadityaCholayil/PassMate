@@ -7,20 +7,25 @@ import 'package:passmate/model/main_screen_provider.dart';
 import 'package:passmate/model/sort_methods.dart';
 import 'package:passmate/model/user.dart';
 import 'package:passmate/views/main_screen.dart';
+import 'package:passmate/views/pages/folders_page.dart';
+import 'package:passmate/views/pages/password_generator.dart';
+import 'package:passmate/views/pages/passwords_page.dart';
+import 'package:passmate/views/pages/payment_card_page.dart';
+import 'package:passmate/views/pages/secure_notes_page.dart';
 import 'package:passmate/views/settings/edit_profile_page.dart';
 import 'package:passmate/views/settings/settings_page.dart';
 import 'package:passmate/shared/temp_error.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+class DrawerWrapper extends StatefulWidget {
+  const DrawerWrapper({Key? key}) : super(key: key);
 
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  _DrawerWrapperState createState() => _DrawerWrapperState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _DrawerWrapperState extends State<DrawerWrapper> {
   final _zoomController = ZoomDrawerController();
 
   @override
@@ -38,60 +43,71 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return ChangeNotifierProvider<MenuProvider>(
       create: (context) => MenuProvider(),
-      child: Builder(
-        builder: (context) {
-          return SafeArea(
-            child: GestureDetector(
-              child: LayoutBuilder(
-                builder: (context, constraints) {
-                  // Responsive
-                  print('Layout Changed');
-                  if (constraints.maxHeight < 1.5 * constraints.maxWidth) {
-                    return const TempError(pageName: 'HomeScreen');
-                  }
-                  return ZoomDrawer(
-                    // style: DrawerStyle.Style9,
-                    controller: _zoomController,
-                    angle: 0,
-                    borderRadius: 45.w,
-                    slideWidth: MediaQuery.of(context).size.width * .535,
-                    menuScreen: MenuScreen(),
-                    mainScreen: MainScreen(),
-                  );
-                },
-              ),
-              onHorizontalDragUpdate: (details) {
-                int sensitivity = 8;
-                if (details.delta.dx > sensitivity) {
-                  _zoomController.open!();
-                } else if (details.delta.dx < -sensitivity) {
-                  SortMethod sortMethod =
-                      context.read<AppBloc>().userData.sortMethod ??
-                          SortMethod.recentlyAdded;
-                  switch (context.read<MenuProvider>().currentPage) {
-                    case 0:
-                      context
-                          .read<DatabaseBloc>()
-                          .add(GetPasswords(sortMethod: sortMethod));
-                      break;
-                    case 1:
-                      context
-                          .read<DatabaseBloc>()
-                          .add(GetPaymentCards(sortMethod: sortMethod));
-                      break;
-                    case 2:
-                      context
-                          .read<DatabaseBloc>()
-                          .add(GetSecureNotes(sortMethod: sortMethod));
-                      break;
-                  }
-                  _zoomController.close!();
+      child: Builder(builder: (context) {
+        return SafeArea(
+          child: GestureDetector(
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                // Responsive
+                print('Layout Changed');
+                if (constraints.maxHeight < 1.5 * constraints.maxWidth) {
+                  return const TempError(pageName: 'HomeScreen');
                 }
+                return Consumer<MenuProvider>(
+                  builder: (context, menu, child) {
+                    return ZoomDrawer(
+                      // style: DrawerStyle.Style9,
+                      controller: _zoomController,
+                      angle: 0,
+                      borderRadius: 45.w,
+                      slideWidth: MediaQuery.of(context).size.width * .535,
+                      menuScreen: const MenuScreen(),
+                      mainScreen: <Widget>[
+                        const PasswordPage(),
+                        const PaymentCardPage(),
+                        const SecureNotesPage(),
+                        const PasswordGeneratorPage(),
+                        const FolderPage(),
+                        for (String path
+                            in context.read<DatabaseBloc>().folderList ?? [])
+                          FolderPage(path: path),
+                      ][menu.currentPage],
+                    );
+                  },
+                );
               },
             ),
-          );
-        }
-      ),
+            onHorizontalDragUpdate: (details) {
+              int sensitivity = 8;
+              if (details.delta.dx > sensitivity) {
+                _zoomController.open!();
+              } else if (details.delta.dx < -sensitivity) {
+                SortMethod sortMethod =
+                    context.read<AppBloc>().userData.sortMethod ??
+                        SortMethod.recentlyAdded;
+                // switch (context.read<MenuProvider>().currentPage) {
+                //   case 0:
+                //     context
+                //         .read<DatabaseBloc>()
+                //         .add(GetPasswords(sortMethod: sortMethod));
+                //     break;
+                //   case 1:
+                //     context
+                //         .read<DatabaseBloc>()
+                //         .add(GetPaymentCards(sortMethod: sortMethod));
+                //     break;
+                //   case 2:
+                //     context
+                //         .read<DatabaseBloc>()
+                //         .add(GetSecureNotes(sortMethod: sortMethod));
+                //     break;
+                // }
+                _zoomController.close!();
+              }
+            },
+          ),
+        );
+      }),
     );
   }
 }
@@ -111,7 +127,7 @@ class _MenuScreenState extends State<MenuScreen> {
     UserData userData = context.read<AppBloc>().userData;
     final colorScheme = Theme.of(context).colorScheme;
     return Consumer<MenuProvider>(
-      builder: (context, provider, child){
+      builder: (context, provider, child) {
         return BlocConsumer<DatabaseBloc, DatabaseState>(
           listener: (context, state) {
             folderList = context.read<DatabaseBloc>().folderList ?? [];
@@ -133,17 +149,17 @@ class _MenuScreenState extends State<MenuScreen> {
                   children: [
                     _buildProfile(userData, colorScheme),
                     const Spacer(),
-                    MenuItem(
+                    const MenuItem(
                       index: 0,
                       text: 'Passwords',
                       icon: Icons.password_rounded,
                     ),
-                    MenuItem(
+                    const MenuItem(
                       index: 1,
                       text: 'Payment Cards',
                       icon: Icons.credit_card_rounded,
                     ),
-                    MenuItem(
+                    const MenuItem(
                       index: 2,
                       text: 'Secure Notes',
                       icon: Icons.sticky_note_2_rounded,
@@ -161,7 +177,7 @@ class _MenuScreenState extends State<MenuScreen> {
                       ),
                     ),
                     SizedBox(height: 5.w),
-                    MenuItem(
+                    const MenuItem(
                       index: 3,
                       text: 'Password Generator',
                       icon: Icons.vpn_key_outlined,
@@ -179,14 +195,14 @@ class _MenuScreenState extends State<MenuScreen> {
                       ),
                     ),
                     SizedBox(height: 5.w),
-                    MenuItem(
+                    const MenuItem(
                       index: 4,
                       text: 'All Folders',
                       icon: Icons.folder_open_outlined,
                     ),
                     for (int index = 0;
-                    index < (folderList.length > 3 ? 3 : folderList.length);
-                    index++)
+                        index < (folderList.length > 3 ? 3 : folderList.length);
+                        index++)
                       MenuItem(
                         index: index + 5,
                         text: folderList[index].split('/').last,
@@ -194,7 +210,8 @@ class _MenuScreenState extends State<MenuScreen> {
                       ),
                     const Spacer(),
                     Padding(
-                      padding: EdgeInsets.only(bottom: 20.w, left: 10.w, top: 35.w),
+                      padding:
+                          EdgeInsets.only(bottom: 20.w, left: 10.w, top: 35.w),
                       child: TextButton.icon(
                         icon: Icon(
                           Icons.settings_outlined,
@@ -232,9 +249,7 @@ class _MenuScreenState extends State<MenuScreen> {
 
   Widget _buildProfile(UserData userData, ColorScheme colorScheme) {
     return BlocConsumer<AppBloc, AppState>(
-      listener: (context, state) {
-
-      },
+      listener: (context, state) {},
       builder: (context, state) {
         UserData userData = context.read<AppBloc>().userData;
         return Padding(
@@ -384,9 +399,8 @@ class MenuItem extends StatelessWidget {
       onPressed: () {
         context.read<MenuProvider>().updateCurrentPage(index);
         print(index);
-        SortMethod sortMethod =
-            context.read<AppBloc>().userData.sortMethod ??
-                SortMethod.recentlyAdded;
+        SortMethod sortMethod = context.read<AppBloc>().userData.sortMethod ??
+            SortMethod.recentlyAdded;
         switch (context.read<MenuProvider>().currentPage) {
           case 0:
             context

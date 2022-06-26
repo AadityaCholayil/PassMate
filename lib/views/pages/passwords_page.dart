@@ -12,6 +12,7 @@ import 'package:passmate/shared/custom_widgets.dart';
 import 'package:passmate/shared/loading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:passmate/views/formpages/password_form.dart';
+import 'package:passmate/views/main_screen.dart';
 
 class PasswordPage extends StatefulWidget {
   const PasswordPage({Key? key}) : super(key: key);
@@ -59,70 +60,77 @@ class _PasswordPageState extends State<PasswordPage> {
             if (state.completeList != state.list) {
               completePasswordList = state.completeList.toList();
             }
-            return Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(left: 28.w, top: 13.w),
-                  child: Text(
-                    'Passwords',
-                    style: TextStyle(
-                      fontSize: 32,
-                      fontWeight: FontWeight.w600,
-                      color: Theme.of(context).colorScheme.onBackground,
-                    ),
+            return SafeArea(
+              child: Scaffold(
+                floatingActionButton: const CustomFAB(),
+                body: NewMainListPage(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(left: 28.w, top: 13.w),
+                        child: Text(
+                          'Passwords',
+                          style: TextStyle(
+                            fontSize: 32,
+                            fontWeight: FontWeight.w600,
+                            color: Theme.of(context).colorScheme.onBackground,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 13.w),
+                      completePasswordList.isNotEmpty
+                          ? Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _buildSearch(context),
+                                SizedBox(height: 15.w),
+                                _buildChipRow(),
+                                SizedBox(height: 10.w),
+                                _buildSortDropDownBox(context),
+                                SizedBox(height: 10.w),
+                              ],
+                            )
+                          : const SizedBox.shrink(),
+                      completePasswordList.isEmpty
+                          ? Container(
+                              alignment: Alignment.center,
+                              height: 320.w,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: const [
+                                  Text(
+                                    'Start Adding Passwords',
+                                    style: TextStyle(
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  Text(
+                                    'All your passwords will be secure\nusing AES-256 encryption.',
+                                    style: TextStyle(
+                                      fontSize: 17,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ],
+                              ),
+                            )
+                          : Flexible(
+                              child: PasswordCardList(passwordList: passwordList),
+                            ),
+                      SizedBox(
+                        height: passwordList.length < 3
+                            ? (3 - passwordList.length) * 70.w
+                            : 0,
+                      ),
+                    ],
                   ),
                 ),
-                SizedBox(height: 13.w),
-                completePasswordList.isNotEmpty
-                    ? Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _buildSearch(context),
-                          SizedBox(height: 15.w),
-                          _buildChipRow(),
-                          SizedBox(height: 10.w),
-                          _buildSortDropDownBox(context),
-                          SizedBox(height: 10.w),
-                        ],
-                      )
-                    : const SizedBox.shrink(),
-                completePasswordList.isEmpty
-                    ? Container(
-                        alignment: Alignment.center,
-                        height: 320.w,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            Text(
-                              'Start Adding Passwords',
-                              style: TextStyle(
-                                fontSize: 25,
-                                fontWeight: FontWeight.w700,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                            Text(
-                              'All your passwords will be secure\nusing AES-256 encryption.',
-                              style: TextStyle(
-                                fontSize: 17,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
-                        ),
-                      )
-                    : Flexible(
-                        child: PasswordCardList(passwordList: passwordList),
-                      ),
-                SizedBox(
-                  height: passwordList.length < 3
-                      ? (3 - passwordList.length) * 70.w
-                      : 0,
-                ),
-              ],
+              ),
             );
           }
         }

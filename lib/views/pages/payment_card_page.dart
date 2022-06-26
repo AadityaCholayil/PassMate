@@ -14,6 +14,7 @@ import 'package:passmate/model/sort_methods.dart';
 import 'package:passmate/shared/custom_widgets.dart';
 import 'package:passmate/shared/loading.dart';
 import 'package:passmate/views/formpages/payment_card_form.dart';
+import 'package:passmate/views/main_screen.dart';
 
 class PaymentCardPage extends StatefulWidget {
   const PaymentCardPage({Key? key}) : super(key: key);
@@ -61,79 +62,86 @@ class _PaymentCardPageState extends State<PaymentCardPage> {
             if (state.completeList != state.list) {
               completePaymentCardList = state.completeList;
             }
-            return Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(left: 28.w, top: 13.w),
-                  child: Text(
-                    'Payment Cards',
-                    style: TextStyle(
-                      fontSize: 32,
-                      fontWeight: FontWeight.w600,
-                      color: Theme.of(context).colorScheme.onBackground,
-                    ),
-                  ),
-                ),
-                SizedBox(height: 13.w),
-                completePaymentCardList.isNotEmpty
-                    ? Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildSearch(context),
-                    SizedBox(height: 15.w),
-                    _buildChipRow(),
-                    SizedBox(height: 10.w),
-                    _buildSortDropDownBox(context),
-                    SizedBox(height: 10.w),
-                  ],
-                )
-                    : const SizedBox.shrink(),
-                state is Fetching
-                    ? Container(
-                  height: 180.w,
-                  alignment: Alignment.center,
-                  child: const LoadingSmall(),
-                )
-                    : completePaymentCardList.isEmpty
-                    ? Container(
-                  alignment: Alignment.center,
-                  height: 320.w,
+            return SafeArea(
+              child: Scaffold(
+                floatingActionButton: const CustomFAB(),
+                body: NewMainListPage(
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Text(
-                        'Start Adding Cards',
-                        style: TextStyle(
-                          fontSize: 25,
-                          fontWeight: FontWeight.w700,
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(left: 28.w, top: 13.w),
+                        child: Text(
+                          'Payment Cards',
+                          style: TextStyle(
+                            fontSize: 32,
+                            fontWeight: FontWeight.w600,
+                            color: Theme.of(context).colorScheme.onBackground,
+                          ),
                         ),
-                        textAlign: TextAlign.center,
                       ),
-                      Text(
-                        'All your cards will be secure\nusing AES-256 encryption.',
-                        style: TextStyle(
-                          fontSize: 17,
+                      SizedBox(height: 13.w),
+                      completePaymentCardList.isNotEmpty
+                          ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildSearch(context),
+                          SizedBox(height: 15.w),
+                          _buildChipRow(),
+                          SizedBox(height: 10.w),
+                          _buildSortDropDownBox(context),
+                          SizedBox(height: 10.w),
+                        ],
+                      )
+                          : const SizedBox.shrink(),
+                      state is Fetching
+                          ? Container(
+                        height: 180.w,
+                        alignment: Alignment.center,
+                        child: const LoadingSmall(),
+                      )
+                          : completePaymentCardList.isEmpty
+                          ? Container(
+                        alignment: Alignment.center,
+                        height: 320.w,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const [
+                            Text(
+                              'Start Adding Cards',
+                              style: TextStyle(
+                                fontSize: 25,
+                                fontWeight: FontWeight.w700,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                            Text(
+                              'All your cards will be secure\nusing AES-256 encryption.',
+                              style: TextStyle(
+                                fontSize: 17,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
                         ),
-                        textAlign: TextAlign.center,
+                      )
+                          : Flexible(
+                        child: PaymentCardTileList(
+                            paymentCardList: paymentCardList),
+                      ),
+                      SizedBox(
+                        height: paymentCardList.length < 2
+                            ? paymentCardList.isEmpty
+                            ? 140.h
+                            : 50.h
+                            : 0,
                       ),
                     ],
                   ),
-                )
-                    : Flexible(
-                  child: PaymentCardTileList(
-                      paymentCardList: paymentCardList),
                 ),
-                SizedBox(
-                  height: paymentCardList.length < 2
-                      ? paymentCardList.isEmpty
-                      ? 140.h
-                      : 50.h
-                      : 0,
-                ),
-              ],
+              ),
             );
           }
         }

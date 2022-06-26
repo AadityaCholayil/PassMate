@@ -43,7 +43,7 @@ class WelcomeScreenPortrait extends StatelessWidget {
         children: [
           const Spacer(flex: 70),
           Container(
-            padding: EdgeInsets.only(left: 30.w),
+            padding: EdgeInsets.only(left: 24.w),
             alignment: Alignment.topLeft,
             child: Text(
               'Welcome to,',
@@ -55,9 +55,8 @@ class WelcomeScreenPortrait extends StatelessWidget {
             ),
           ),
           const Spacer(flex: 16),
-          SizedBox(
-            height: 110.w,
-            width: 110.w,
+          Expanded(
+            flex: 110,
             child: Image.asset('assets/icon_without_bg.png'),
           ),
           Text(
@@ -77,7 +76,7 @@ class WelcomeScreenPortrait extends StatelessWidget {
               height: 0.9.w,
             ),
           ),
-          SizedBox(height: 10.w),
+          const Spacer(flex: 10),
           Container(
             decoration: BoxDecoration(
               color: CustomTheme.secondary,
@@ -86,7 +85,7 @@ class WelcomeScreenPortrait extends StatelessWidget {
             height: 3.w,
             width: 80.w,
           ),
-          SizedBox(height: 11.w),
+          const Spacer(flex: 10),
           Text(
             'One password to \nremember them all',
             textAlign: TextAlign.center,
@@ -94,6 +93,7 @@ class WelcomeScreenPortrait extends StatelessWidget {
               fontSize: 20,
               fontWeight: FontWeight.w500,
               color: CustomTheme.primary,
+              height: 1.1.w,
             ),
           ),
           const Spacer(flex: 25),
@@ -101,23 +101,33 @@ class WelcomeScreenPortrait extends StatelessWidget {
             size: Size(414.w, 21.w),
             painter: BGTopVector1(),
           ),
-          Stack(
-            alignment: Alignment.bottomCenter,
-            children: [
-              Container(
-                padding: EdgeInsets.only(top: 10.w),
-                color: CustomTheme.background,
-                width: 414.w,
-                child: Image.asset('assets/welcome_page_vector.png'),
-              ),
-              Container(
-                alignment: Alignment.bottomCenter,
-                child: CustomPaint(
-                  size: Size(414.w, 21.w),
-                  painter: BGTopVector2(),
+          Expanded(
+            flex: 172,
+            child: Stack(
+              fit: StackFit.expand,
+              alignment: Alignment.bottomCenter,
+              children: [
+                Container(
+                  padding: EdgeInsets.only(top: 10.w),
+                  color: CustomTheme.background,
+                  child: Image.asset(
+                    'assets/welcome_page_vector.png',
+                    fit: BoxFit.fitWidth,
+                    alignment: Alignment.topCenter,
+                  ),
                 ),
-              ),
-            ],
+                Positioned(
+                  bottom: -1.w,
+                  child: Container(
+                    alignment: Alignment.bottomCenter,
+                    child: CustomPaint(
+                      size: Size(414.w, 21.w),
+                      painter: BGTopVector2(),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
           Expanded(
             flex: 240,
