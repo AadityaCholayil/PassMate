@@ -261,8 +261,8 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState> {
         }
         if (event.paymentCardType != PaymentCardType.all) {
           list = event.list!
-              .where(
-                  (paymentCard) => paymentCard.cardType == event.paymentCardType)
+              .where((paymentCard) =>
+                  paymentCard.cardType == event.paymentCardType)
               .toList();
         }
         if (event.search != null) {
@@ -282,8 +282,14 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState> {
           return card2.lastUsed!.compareTo(card1.lastUsed!);
         }
       });
-      emit(PaymentCardPageState(list: list, completeList: completeList, search: event.search,
-          paymentCardType: event.paymentCardType, sortMethod: userData.sortMethod!, favourites: event.favourites, pageState: PageState.success));
+      emit(PaymentCardPageState(
+          list: list,
+          completeList: completeList,
+          search: event.search,
+          paymentCardType: event.paymentCardType,
+          sortMethod: userData.sortMethod!,
+          favourites: event.favourites,
+          pageState: PageState.success));
     } catch (_) {
       emit(PaymentCardPageState(pageState: PageState.error));
     }
@@ -383,8 +389,13 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState> {
           return note2.lastUsed!.compareTo(note1.lastUsed!);
         }
       });
-      emit(SecureNotesPageState(list: list, completeList: completeList, search: event.search, sortMethod: userData.sortMethod!,
-          favourites: event.favourites, pageState: PageState.success));
+      emit(SecureNotesPageState(
+          list: list,
+          completeList: completeList,
+          search: event.search,
+          sortMethod: userData.sortMethod!,
+          favourites: event.favourites,
+          pageState: PageState.success));
     } catch (_) {
       emit(SecureNotesPageState(pageState: PageState.loading));
     }
@@ -416,6 +427,7 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState> {
       } else {
         emit(SecureNoteFormState.errorOccurred);
       }
+      add(GetSecureNotes());
     } else {
       await databaseRepository.updateSecureNote(
           event.secureNote, event.oldPath);

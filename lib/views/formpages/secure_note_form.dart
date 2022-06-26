@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:passmate/bloc/database_bloc/database_barrel.dart';
 import 'package:passmate/model/secure_note.dart';
-import 'package:passmate/shared/custom_snackbar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:passmate/shared/custom_widgets.dart';
 import 'package:passmate/shared/temp_error.dart';
@@ -87,7 +86,7 @@ class _SecureNoteFormPageState extends State<SecureNoteFormPage> {
   Scaffold _buildSecureNoteFormPortrait(
       BuildContext context, ColorScheme colorScheme) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      // resizeToAvoidBottomInset: false,
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: 20.w),
         child: Form(
@@ -142,13 +141,13 @@ class _SecureNoteFormPageState extends State<SecureNoteFormPage> {
                   hintText: 'Title',
                   hintStyle: TextStyle(
                     color: Theme.of(context).disabledColor,
-                    fontSize: 32,
+                    fontSize: 26,
                     fontWeight: FontWeight.w400,
                   ),
                 ),
                 style: TextStyle(
                   color: colorScheme.primary,
-                  fontSize: 32,
+                  fontSize: 26,
                   fontWeight: FontWeight.w500,
                 ),
                 initialValue: _title,
@@ -169,13 +168,13 @@ class _SecureNoteFormPageState extends State<SecureNoteFormPage> {
                     hintText: 'Start typing here..',
                     hintStyle: TextStyle(
                       color: Theme.of(context).disabledColor,
-                      fontSize: 20,
+                      fontSize: 18,
                       fontWeight: FontWeight.w400,
                     ),
                   ),
                   style: TextStyle(
                     color: colorScheme.primary,
-                    fontSize: 20,
+                    fontSize: 18,
                     fontWeight: FontWeight.w400,
                   ),
                   // maxLines: 15,
