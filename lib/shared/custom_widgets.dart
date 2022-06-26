@@ -225,6 +225,14 @@ class CustomShadow extends StatelessWidget {
   }
 }
 
+List<BoxShadow> shadow = [
+  BoxShadow(
+    color: CustomTheme.cardShadow,
+    blurRadius: 10,
+    offset: Offset(4.w, 4.w),
+  ),
+];
+
 class CustomAppBar extends StatelessWidget {
   final Widget child;
   final AppBarType type;

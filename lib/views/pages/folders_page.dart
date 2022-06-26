@@ -9,6 +9,7 @@ import 'package:passmate/model/folder.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:passmate/shared/custom_widgets.dart';
 import 'package:passmate/shared/loading.dart';
+import 'package:passmate/theme/theme.dart';
 import 'package:passmate/views/pages/passwords_page.dart';
 import 'package:passmate/views/pages/payment_card_page.dart';
 import 'package:passmate/views/pages/secure_notes_page.dart';
@@ -44,51 +45,52 @@ class _FolderPageState extends State<FolderPage> {
       _path = widget.path;
       context.read<DatabaseBloc>().add(GetFolder(path: _path));
     }
-    return BlocConsumer<DatabaseBloc, DatabaseState>(
-      listenWhen: (previous, current) => previous != current,
-      buildWhen: (previous, current) => previous != current,
-      listener: (context, state) {
-        if (state is PasswordPageState ||
-            state is PaymentCardPageState ||
-            state is SecureNotesPageState) {
-          context.read<DatabaseBloc>().add(GetFolder(path: _path));
-        }
-      },
-      builder: (context, state) {
-        if (state is FolderPageState) {
-          if (state.pageState == PageState.loading) {
-            return const FixedLoading();
-          }
-          if (state.pageState == PageState.error) {
-            return const FixedLoading();
-          }
-          if (state.pageState == PageState.success) {
-            _folder = state.folder;
-            List<String> list = _folder.path.split('/');
-            pathList = [];
-            _path = _folder.path;
-            for (var path in list) {
-              if (path == 'root') {
-                pathList.add('My Folders');
-              } else {
-                pathList.add(path.replaceRange(0, 1, path[0].toUpperCase()));
-              }
+    return SafeArea(
+      child: Scaffold(
+        body: BlocConsumer<DatabaseBloc, DatabaseState>(
+          listenWhen: (previous, current) => previous != current,
+          buildWhen: (previous, current) => previous != current,
+          listener: (context, state) {
+            if (state is PasswordPageState ||
+                state is PaymentCardPageState ||
+                state is SecureNotesPageState) {
+              context.read<DatabaseBloc>().add(GetFolder(path: _path));
             }
-            return WillPopScope(
-              onWillPop: () {
-                print('pop');
-                if (_path != 'root') {
-                  _path = _path.substring(
-                      0, _path.length - _folder.folderName.length - 1);
-                  context.read<DatabaseBloc>().add(GetFolder(path: _path));
-                  return Future.value(false);
-                } else {
-                  return Future.value(true);
+          },
+          builder: (context, state) {
+            if (state is FolderPageState) {
+              if (state.pageState == PageState.loading) {
+                return const FixedLoading();
+              }
+              if (state.pageState == PageState.error) {
+                return const FixedLoading();
+              }
+              if (state.pageState == PageState.success) {
+                _folder = state.folder;
+                List<String> list = _folder.path.split('/');
+                pathList = [];
+                _path = _folder.path;
+                for (var path in list) {
+                  if (path == 'root') {
+                    pathList.add('My Folders');
+                  } else {
+                    pathList
+                        .add(path.replaceRange(0, 1, path[0].toUpperCase()));
+                  }
                 }
-              },
-              child: SafeArea(
-                child: Scaffold(
-                  body: SingleChildScrollView(
+                return WillPopScope(
+                  onWillPop: () {
+                    print('pop');
+                    if (_path != 'root') {
+                      _path = _path.substring(
+                          0, _path.length - _folder.folderName.length - 1);
+                      context.read<DatabaseBloc>().add(GetFolder(path: _path));
+                      return Future.value(false);
+                    } else {
+                      return Future.value(true);
+                    }
+                  },
+                  child: SingleChildScrollView(
                     physics: const BouncingScrollPhysics(),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -96,7 +98,8 @@ class _FolderPageState extends State<FolderPage> {
                         _buildAppBar(context),
                         state is Fetching
                             ? Container(
-                                height: MediaQuery.of(context).size.height * 0.8,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.8,
                                 alignment: Alignment.center,
                                 child: const LoadingSmall(),
                               )
@@ -104,15 +107,15 @@ class _FolderPageState extends State<FolderPage> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Padding(
-                                    padding:
-                                        EdgeInsets.fromLTRB(22.w, 10.w, 20.w, 0),
+                                    padding: EdgeInsets.fromLTRB(
+                                        28.w, 10.w, 20.w, 0),
                                     child: Text(
                                       _folder.folderName,
                                       style: TextStyle(
                                         color: Theme.of(context)
                                             .colorScheme
                                             .onBackground,
-                                        fontSize: 42,
+                                        fontSize: 40,
                                         fontWeight: FontWeight.w700,
                                       ),
                                     ),
@@ -129,7 +132,8 @@ class _FolderPageState extends State<FolderPage> {
                                           children: [
                                             _buildHeader(context, 'Passwords'),
                                             PasswordCardList(
-                                                passwordList: _folder.passwordList),
+                                                passwordList:
+                                                    _folder.passwordList),
                                           ],
                                         )
                                       : const SizedBox.shrink(),
@@ -138,7 +142,8 @@ class _FolderPageState extends State<FolderPage> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            _buildHeader(context, 'Payment Cards'),
+                                            _buildHeader(
+                                                context, 'Payment Cards'),
                                             PaymentCardTileList(
                                                 paymentCardList:
                                                     _folder.paymentCardList),
@@ -150,7 +155,8 @@ class _FolderPageState extends State<FolderPage> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            _buildHeader(context, 'Secure Notes'),
+                                            _buildHeader(
+                                                context, 'Secure Notes'),
                                             SecureNoteCardList(
                                                 secureNoteList:
                                                     _folder.secureNotesList),
@@ -163,13 +169,13 @@ class _FolderPageState extends State<FolderPage> {
                       ],
                     ),
                   ),
-                ),
-              ),
-            );
-          }
-        }
-        return const FixedLoading();
-      },
+                );
+              }
+            }
+            return const FixedLoading();
+          },
+        ),
+      ),
     );
   }
 
@@ -212,12 +218,12 @@ class _FolderPageState extends State<FolderPage> {
 
   Padding _buildHeader(BuildContext context, String text) {
     return Padding(
-      padding: EdgeInsets.only(left: 22.w, top: 7.w, bottom: 11.w),
+      padding: EdgeInsets.only(left: 28.w, top: 7.w, bottom: 11.w),
       child: Text(
         text,
         style: TextStyle(
           color: Theme.of(context).colorScheme.secondary,
-          fontSize: 21,
+          fontSize: 20,
           fontWeight: FontWeight.w600,
         ),
       ),
@@ -226,7 +232,7 @@ class _FolderPageState extends State<FolderPage> {
 
   Widget _buildFolderPath() {
     return Container(
-      padding: EdgeInsets.only(left: 22.w),
+      padding: EdgeInsets.only(left: 28.w),
       height: 30.w,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -311,7 +317,7 @@ class FolderList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
-      padding: EdgeInsets.fromLTRB(20.w, 1.w, 20.w, 10.w),
+      padding: EdgeInsets.fromLTRB(24.w, 1.w, 24.w, 10.w),
       primary: false,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -376,58 +382,55 @@ class FolderList extends StatelessWidget {
           );
         } else {
           String folderName = folder.subFolderList[index].split('/').last;
-          return Card(
-            elevation: 3,
-            clipBehavior: Clip.antiAliasWithSaveLayer,
-            margin: EdgeInsets.zero,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20.w),
-            ),
-            child: InkWell(
-              onTap: () {
-                context
-                    .read<DatabaseBloc>()
-                    .add(GetFolder(path: folder.subFolderList[index]));
-              },
-              onLongPress: () async {
-                await showModalBottomSheet(
-                  context: context,
-                  barrierColor: Colors.black.withOpacity(0.25),
-                  backgroundColor: Colors.transparent,
-                  builder: (context) {
-                    return FolderDetails(
-                        currentPath: folder.path,
-                        path: folder.subFolderList[index]);
-                  },
-                );
-              },
-              child: Container(
-                padding: EdgeInsets.fromLTRB(18.w, 18.w, 18.w, 5.w),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Image.asset(
-                      'assets/folderIcon.png',
-                      height: 27.w,
-                      width: 34.w,
+          return InkWell(
+            onTap: () {
+              context
+                  .read<DatabaseBloc>()
+                  .add(GetFolder(path: folder.subFolderList[index]));
+            },
+            onLongPress: () async {
+              await showModalBottomSheet(
+                context: context,
+                barrierColor: Colors.black.withOpacity(0.25),
+                backgroundColor: Colors.transparent,
+                builder: (context) {
+                  return FolderDetails(
+                      currentPath: folder.path,
+                      path: folder.subFolderList[index]);
+                },
+              );
+            },
+            child: Container(
+              padding: EdgeInsets.fromLTRB(18.w, 18.w, 18.w, 5.w),
+              decoration: BoxDecoration(
+                color: CustomTheme.card,
+                borderRadius: BorderRadius.circular(20.w),
+                boxShadow: shadow,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Image.asset(
+                    'assets/folderIcon.png',
+                    height: 27.w,
+                    width: 34.w,
+                  ),
+                  // SizedBox(
+                  //   height: 14.w,
+                  // ),
+                  const Spacer(),
+                  Text(
+                    folderName.replaceRange(0, 1, folderName[0].toUpperCase()),
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500,
                     ),
-                    SizedBox(
-                      height: 14.w,
-                    ),
-                    Text(
-                      folderName.replaceRange(
-                          0, 1, folderName[0].toUpperCase()),
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.fade,
-                      softWrap: false,
-                    ),
-                  ],
-                ),
+                    maxLines: 1,
+                    overflow: TextOverflow.fade,
+                    softWrap: false,
+                  ),
+                ],
               ),
             ),
           );
