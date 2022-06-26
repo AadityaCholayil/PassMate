@@ -5,7 +5,7 @@ import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:passmate/repositories/encryption_repository.dart';
 import 'package:passmate/shared/custom_widgets.dart';
 import 'package:passmate/shared/temp_error.dart';
-import 'package:passmate/views/main_screen.dart';
+import 'package:passmate/shared/custom_animated_app_bar.dart';
 import 'package:passmate/views/settings/settings_page.dart';
 
 class PasswordGeneratorPage extends StatefulWidget {

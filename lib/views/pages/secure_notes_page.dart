@@ -10,7 +10,7 @@ import 'package:passmate/model/sort_methods.dart';
 import 'package:passmate/shared/custom_widgets.dart';
 import 'package:passmate/shared/loading.dart';
 import 'package:passmate/views/formpages/secure_note_form.dart';
-import 'package:passmate/views/main_screen.dart';
+import 'package:passmate/shared/custom_animated_app_bar.dart';
 
 class SecureNotesPage extends StatefulWidget {
   const SecureNotesPage({Key? key}) : super(key: key);
@@ -30,36 +30,39 @@ class _SecureNotesPageState extends State<SecureNotesPage> {
   @override
   void initState() {
     super.initState();
+    SortMethod sortMethod =
+        context.read<AppBloc>().userData.sortMethod ?? SortMethod.recentlyAdded;
+    context.read<DatabaseBloc>().add(GetSecureNotes(sortMethod: sortMethod));
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<DatabaseBloc, DatabaseState>(
-      buildWhen: (previous, current) => previous != current,
-      builder: (context, state) {
-        if(state is SecureNotesPageState){
-          if(state.pageState == PageState.loading){
-            return const FixedLoading();
-          }
-          if(state.pageState == PageState.error){
-            return const FixedLoading();
-          }
-          if (state.pageState == PageState.success){
-            secureNoteList = state.list;
-            favourites = state.favourites;
-            sortMethod = state.sortMethod;
-            sortLabel = sortMethodMessages[sortMethod.index];
-            if (!favourites) {
-              completeSecureNoteList = state.completeList;
-            }
-            if (state.completeList != state.list) {
-              completeSecureNoteList = state.completeList;
-            }
-            return SafeArea(
-              child: Scaffold(
-                floatingActionButton: const CustomFAB(),
-                body: NewMainListPage(
-                  child: Column(
+    return SafeArea(
+      child: Scaffold(
+        floatingActionButton: const CustomFAB(),
+        body: CustomAnimatedAppBar(
+          child: BlocBuilder<DatabaseBloc, DatabaseState>(
+            buildWhen: (previous, current) => previous != current,
+            builder: (context, state) {
+              if (state is SecureNotesPageState) {
+                if (state.pageState == PageState.loading) {
+                  return const FixedLoading();
+                }
+                if (state.pageState == PageState.error) {
+                  return const FixedLoading();
+                }
+                if (state.pageState == PageState.success) {
+                  secureNoteList = state.list;
+                  favourites = state.favourites;
+                  sortMethod = state.sortMethod;
+                  sortLabel = sortMethodMessages[sortMethod.index];
+                  if (!favourites) {
+                    completeSecureNoteList = state.completeList;
+                  }
+                  if (state.completeList != state.list) {
+                    completeSecureNoteList = state.completeList;
+                  }
+                  return Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -84,53 +87,53 @@ class _SecureNotesPageState extends State<SecureNotesPage> {
                       SizedBox(height: 5.w),
                       state is Fetching
                           ? Container(
-                        height: 180.w,
-                        alignment: Alignment.center,
-                        child: const LoadingSmall(),
-                      )
+                              height: 180.w,
+                              alignment: Alignment.center,
+                              child: const LoadingSmall(),
+                            )
                           : completeSecureNoteList.isEmpty
-                          ? Container(
-                        alignment: Alignment.center,
-                        height: 420.h,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            Text(
-                              'Start adding Notes',
-                              style: TextStyle(
-                                fontSize: 25,
-                                fontWeight: FontWeight.w700,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                            Text(
-                              'All your Notes will be secure\nusing AES-256 encryption.',
-                              style: TextStyle(
-                                fontSize: 17,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
-                        ),
-                      )
-                          : Flexible(
-                        child:
-                        SecureNoteCardList(secureNoteList: secureNoteList),
-                      ),
+                              ? Container(
+                                  alignment: Alignment.center,
+                                  height: 420.h,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: const [
+                                      Text(
+                                        'Start adding Notes',
+                                        style: TextStyle(
+                                          fontSize: 25,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      Text(
+                                        'All your Notes will be secure\nusing AES-256 encryption.',
+                                        style: TextStyle(
+                                          fontSize: 17,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              : Flexible(
+                                  child: SecureNoteCardList(
+                                      secureNoteList: secureNoteList),
+                                ),
                       SizedBox(
                         height: secureNoteList.length < 3
                             ? (3 - secureNoteList.length) * 110.w
                             : 0,
                       ),
                     ],
-                  ),
-                ),
-              ),
-            );
-          }
-        }
-        return const FixedLoading();
-      },
+                  );
+                }
+              }
+              return const FixedLoading();
+            },
+          ),
+        ),
+      ),
     );
   }
 
@@ -266,9 +269,9 @@ class SecureNoteCard extends StatelessWidget {
                     builder: (context) =>
                         SecureNoteFormPage(secureNote: secureNote)),
               );
-              if(res == 'Updated'){
+              if (res == 'Updated') {
                 context.read<DatabaseBloc>().add(GetSecureNotes());
-              } else if(res!='Deleted') {
+              } else if (res != 'Deleted') {
                 print('Updating');
                 context
                     .read<DatabaseBloc>()

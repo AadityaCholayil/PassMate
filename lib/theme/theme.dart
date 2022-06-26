@@ -19,7 +19,7 @@ ColorScheme colorScheme = const ColorScheme(
 class CustomTheme {
   static Color get primary => const Color(0xFF4C154D);
 
-  static Color get primaryVariant => const Color(0xFF5E2D5C);
+  static Color get primaryVariant => const Color(0xFF5D1359);
 
   static Color get secondary => const Color(0xFFDB88CD);
 
@@ -35,5 +35,5 @@ class CustomTheme {
 
   static Color get t3 => const Color(0xFFFFFFFF);
 
-  static Color get cardShadow => const Color(0xFFFFD0F6).withOpacity(0.3);
+  static Color get cardShadow => const Color(0xFFFFD0F6).withOpacity(0.4);
 }

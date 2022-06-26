@@ -20,7 +20,7 @@ InputDecoration customInputDecoration(
             ),
           )
         : null,
-    contentPadding: EdgeInsets.fromLTRB(24.w, 20.w, 22.w, 19.w),
+    contentPadding: EdgeInsets.fromLTRB(24.w, 20.w, 22.w, 20.w),
     enabledBorder: OutlineInputBorder(
       borderSide: BorderSide(
         color: isSearch ? CustomTheme.card : CustomTheme.card,
@@ -325,7 +325,7 @@ class CustomShadow extends StatelessWidget {
             boxShadow: [
               BoxShadow(
                 color: CustomTheme.cardShadow,
-                blurRadius: 15,
+                blurRadius: 10,
                 offset: Offset(4.w, 4.w),
               ),
             ],

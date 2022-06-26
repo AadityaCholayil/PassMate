@@ -33,7 +33,8 @@ class PasswordPageState extends DatabaseState {
 
   @override
   String toString() {
-    return '$list, $completeList, $search, $passwordCategory, $sortMethod, $favourites, $pageState';
+    // return '$list, $completeList, $search, $passwordCategory, $sortMethod, $favourites, $pageState';
+    return 'PasswordPageState';
   }
 
   @override
@@ -69,6 +70,12 @@ class PaymentCardPageState extends DatabaseState {
         sortMethod,
         favourites,
       ];
+  
+  @override
+  String toString() {
+    // return '$list, $completeList, $search, $passwordCategory, $sortMethod, $favourites, $pageState';
+    return 'PaymentCardPageState';
+  }
 }
 
 class SecureNotesPageState extends DatabaseState {
@@ -96,6 +103,12 @@ class SecureNotesPageState extends DatabaseState {
         sortMethod,
         favourites,
       ];
+
+  @override
+  String toString() {
+    // return '$list, $completeList, $search, $passwordCategory, $sortMethod, $favourites, $pageState';
+    return 'SecureNotesPageState';
+  }
 }
 
 class FolderPageState extends DatabaseState {

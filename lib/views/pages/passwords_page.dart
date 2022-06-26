@@ -11,8 +11,9 @@ import 'package:passmate/model/sort_methods.dart';
 import 'package:passmate/shared/custom_widgets.dart';
 import 'package:passmate/shared/loading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:passmate/theme/theme.dart';
 import 'package:passmate/views/formpages/password_form.dart';
-import 'package:passmate/views/main_screen.dart';
+import 'package:passmate/shared/custom_animated_app_bar.dart';
 
 class PasswordPage extends StatefulWidget {
   const PasswordPage({Key? key}) : super(key: key);
@@ -33,48 +34,51 @@ class _PasswordPageState extends State<PasswordPage> {
   @override
   void initState() {
     super.initState();
+    SortMethod sortMethod =
+        context.read<AppBloc>().userData.sortMethod ?? SortMethod.recentlyAdded;
+    context.read<DatabaseBloc>().add(GetPasswords(sortMethod: sortMethod));
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<DatabaseBloc, DatabaseState>(
-      buildWhen: (previous, current) => previous != current,
-      builder: (context, state) {
-        if (state is PasswordPageState) {
-          if (state.pageState == PageState.loading) {
-            return const FixedLoading();
-          }
-          if (state.pageState == PageState.error) {
-            return const FixedLoading();
-          }
-          if (state.pageState == PageState.success) {
-            passwordList = state.list.toList();
-            passwordCategory = state.passwordCategory;
-            favourites = state.favourites;
-            sortMethod = state.sortMethod;
-            searchLabel = state.search;
-            sortLabel = sortMethodMessages[sortMethod.index];
-            if (passwordCategory == PasswordCategory.all && !favourites) {
-              completePasswordList = state.completeList.toList();
-            }
-            if (state.completeList != state.list) {
-              completePasswordList = state.completeList.toList();
-            }
-            return SafeArea(
-              child: Scaffold(
-                floatingActionButton: const CustomFAB(),
-                body: NewMainListPage(
-                  child: Column(
+    return SafeArea(
+      child: Scaffold(
+        floatingActionButton: const CustomFAB(),
+        body: CustomAnimatedAppBar(
+          child: BlocBuilder<DatabaseBloc, DatabaseState>(
+            buildWhen: (previous, current) => previous != current,
+            builder: (context, state) {
+              if (state is PasswordPageState) {
+                if (state.pageState == PageState.loading) {
+                  return const FixedLoading();
+                }
+                if (state.pageState == PageState.error) {
+                  return const FixedLoading();
+                }
+                if (state.pageState == PageState.success) {
+                  passwordList = state.list.toList();
+                  passwordCategory = state.passwordCategory;
+                  favourites = state.favourites;
+                  sortMethod = state.sortMethod;
+                  searchLabel = state.search;
+                  sortLabel = sortMethodMessages[sortMethod.index];
+                  if (passwordCategory == PasswordCategory.all && !favourites) {
+                    completePasswordList = state.completeList.toList();
+                  }
+                  if (state.completeList != state.list) {
+                    completePasswordList = state.completeList.toList();
+                  }
+                  return Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Padding(
-                        padding: EdgeInsets.only(left: 28.w, top: 13.w),
+                        padding: EdgeInsets.only(left: 28.w, top: 20.w),
                         child: Text(
                           'Passwords',
                           style: TextStyle(
-                            fontSize: 32,
+                            fontSize: 27,
                             fontWeight: FontWeight.w600,
                             color: Theme.of(context).colorScheme.onBackground,
                           ),
@@ -86,11 +90,11 @@ class _PasswordPageState extends State<PasswordPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 _buildSearch(context),
-                                SizedBox(height: 15.w),
+                                SizedBox(height: 20.w),
                                 _buildChipRow(),
-                                SizedBox(height: 10.w),
+                                // SizedBox(height: 5.w),
                                 _buildSortDropDownBox(context),
-                                SizedBox(height: 10.w),
+                                SizedBox(height: 5.w),
                               ],
                             )
                           : const SizedBox.shrink(),
@@ -120,7 +124,8 @@ class _PasswordPageState extends State<PasswordPage> {
                               ),
                             )
                           : Flexible(
-                              child: PasswordCardList(passwordList: passwordList),
+                              child:
+                                  PasswordCardList(passwordList: passwordList),
                             ),
                       SizedBox(
                         height: passwordList.length < 3
@@ -128,24 +133,21 @@ class _PasswordPageState extends State<PasswordPage> {
                             : 0,
                       ),
                     ],
-                  ),
-                ),
-              ),
-            );
-          }
-        }
-        return const FixedLoading();
-      },
+                  );
+                }
+              }
+              return const FixedLoading();
+            },
+          ),
+        ),
+      ),
     );
   }
 
   Widget _buildSearch(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20.w),
-      child: Material(
-        borderRadius: BorderRadius.circular(15.w),
-        clipBehavior: Clip.antiAliasWithSaveLayer,
-        elevation: 2,
+      child: CustomShadow(
         child: TextFormField(
           initialValue: searchLabel,
           decoration: customInputDecoration(
@@ -170,7 +172,7 @@ class _PasswordPageState extends State<PasswordPage> {
     bool isDefault =
         passwordCategory == PasswordCategory.all && favourites == false;
     return SizedBox(
-      height: 45.w,
+      height: 50.w,
       child: ListView.builder(
         padding: EdgeInsets.only(left: 20.w),
         scrollDirection: Axis.horizontal,
@@ -225,7 +227,7 @@ class _PasswordPageState extends State<PasswordPage> {
             }
           }
           return Container(
-            margin: EdgeInsets.only(right: 9.w),
+            margin: EdgeInsets.only(right: 15.w, bottom: 10.w),
             child: InkWell(
               onTap: () {
                 print(category);
@@ -236,39 +238,59 @@ class _PasswordPageState extends State<PasswordPage> {
                       list: completePasswordList,
                     ));
               },
-              child: Chip(
-                elevation: 2,
-                side: selected
-                    ? BorderSide(
+              child: Container(
+                height: 40.w,
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: CustomTheme.cardShadow,
+                      blurRadius: 8,
+                      offset: Offset(4.w, 4.w),
+                    ),
+                  ],
+                  border: Border.all(
+                      color:
+                          selected ? CustomTheme.secondary : Colors.transparent,
+                      width: 2.w),
+                  color: CustomTheme.card,
+                  borderRadius: BorderRadius.circular(40.w),
+                ),
+                child: Row(
+                  children: [
+                    SizedBox(width: 14.w),
+                    Icon(
+                      passwordCategoryIcon[label],
+                      size: 19.w,
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
+                    SizedBox(width: 10.w),
+                    Text(
+                      label,
+                      style: TextStyle(
                         color: Theme.of(context).colorScheme.secondary,
-                        width: 2)
-                    : null,
-                avatar: Icon(
-                  passwordCategoryIcon[label],
-                  size: 23.w,
-                  color: Theme.of(context).colorScheme.secondary,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    selected
+                        ? Padding(
+                            padding: EdgeInsets.only(left: 6.w, right: 8.w),
+                            child: InkWell(
+                              onTap: () {
+                                context
+                                    .read<DatabaseBloc>()
+                                    .add(GetPasswords());
+                              },
+                              child: Icon(
+                                Icons.highlight_remove,
+                                size: 25.w,
+                                color: Theme.of(context).colorScheme.secondary,
+                              ),
+                            ),
+                          )
+                        : SizedBox(width: 18.w),
+                  ],
                 ),
-                backgroundColor: Theme.of(context).cardColor,
-                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 7.w),
-                // padding: EdgeInsets.fromLTRB(12.w, 7.w, 12.w, 7.w),
-                labelPadding: EdgeInsets.fromLTRB(10.w, 0, 6.w, 0),
-                label: Text(
-                  label,
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.secondary,
-                    fontSize: 15,
-                  ),
-                ),
-                deleteIcon: Icon(
-                  Icons.highlight_remove,
-                  size: 25.w,
-                  color: Theme.of(context).colorScheme.secondary,
-                ),
-                onDeleted: !selected
-                    ? null
-                    : () {
-                        context.read<DatabaseBloc>().add(GetPasswords());
-                      },
               ),
             ),
           );
@@ -284,7 +306,7 @@ class _PasswordPageState extends State<PasswordPage> {
       ),
       child: DropdownButton<SortMethod>(
         value: sortMethod,
-        itemHeight: 55.w,
+        itemHeight: 50.w,
         items: <SortMethod>[
           SortMethod.values[0],
           SortMethod.values[1],
@@ -294,17 +316,17 @@ class _PasswordPageState extends State<PasswordPage> {
           return DropdownMenuItem(
             value: value,
             child: Container(
-              padding: EdgeInsets.fromLTRB(0, 7.w, 10.w, 7.w),
+              padding: EdgeInsets.fromLTRB(0, 2.w, 10.w, 2.w),
               child: Text(
                 label,
                 style: value == sortMethod
                     ? TextStyle(
-                        fontSize: 26,
+                        fontSize: 22,
                         fontWeight: FontWeight.w600,
                         color: Theme.of(context).colorScheme.onBackground,
                       )
                     : TextStyle(
-                        fontSize: 24,
+                        fontSize: 21,
                         fontWeight: FontWeight.w400,
                         color: Theme.of(context).colorScheme.onBackground,
                       ),

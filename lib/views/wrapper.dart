@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:passmate/views/auth/welcome_screen.dart';
 import 'package:passmate/bloc/app_bloc/app_bloc_files.dart';
-import 'package:passmate/views/home_screen.dart';
+import 'package:passmate/views/drawer_wrapper.dart';
 import 'package:passmate/shared/loading.dart';
 
 class Wrapper extends StatelessWidget {
