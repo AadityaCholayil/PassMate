@@ -172,10 +172,10 @@ class CustomBackButton extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Padding(
-          padding: EdgeInsets.only(left: 10.w),
+          padding: EdgeInsets.only(left: 0.w),
           child: IconButton(
-            // padding: EdgeInsets.fromLTRB(0, 9.w, 15.w, 9.w),
-            iconSize: 32.w,
+            padding: EdgeInsets.fromLTRB(0, 9.w, 15.w, 9.w),
+            iconSize: 30.w,
             color: CustomTheme.primary,
             icon: const Icon(Icons.arrow_back_ios_rounded),
             onPressed: () {

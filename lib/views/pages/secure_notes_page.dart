@@ -9,6 +9,7 @@ import 'package:passmate/model/secure_note.dart';
 import 'package:passmate/model/sort_methods.dart';
 import 'package:passmate/shared/custom_widgets.dart';
 import 'package:passmate/shared/loading.dart';
+import 'package:passmate/theme/theme.dart';
 import 'package:passmate/views/formpages/secure_note_form.dart';
 import 'package:passmate/shared/custom_animated_app_bar.dart';
 
@@ -68,11 +69,11 @@ class _SecureNotesPageState extends State<SecureNotesPage> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Padding(
-                        padding: EdgeInsets.only(left: 28.w, top: 13.w),
+                        padding: EdgeInsets.only(left: 32.w, top: 20.w),
                         child: Text(
                           'Secure Notes',
                           style: TextStyle(
-                            fontSize: 32,
+                            fontSize: 27,
                             fontWeight: FontWeight.w600,
                             color: Theme.of(context).colorScheme.onBackground,
                           ),
@@ -80,7 +81,7 @@ class _SecureNotesPageState extends State<SecureNotesPage> {
                       ),
                       SizedBox(height: 13.w),
                       _buildSearch(context),
-                      SizedBox(height: 5.w),
+                      SizedBox(height: 8.w),
                       completeSecureNoteList.isNotEmpty
                           ? _buildSortDropDownBox(context)
                           : const SizedBox.shrink(),
@@ -139,11 +140,8 @@ class _SecureNotesPageState extends State<SecureNotesPage> {
 
   Padding _buildSearch(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20.w),
-      child: Material(
-        borderRadius: BorderRadius.circular(15.w),
-        clipBehavior: Clip.antiAliasWithSaveLayer,
-        elevation: 2,
+      padding: EdgeInsets.symmetric(horizontal: 24.w),
+      child: CustomShadow(
         child: TextFormField(
           initialValue: searchLabel,
           decoration: customInputDecoration(
@@ -166,11 +164,11 @@ class _SecureNotesPageState extends State<SecureNotesPage> {
   Widget _buildSortDropDownBox(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
-        left: 28.w,
+        left: 32.w,
       ),
       child: DropdownButton<SortMethod>(
         value: sortMethod,
-        itemHeight: 55.w,
+        itemHeight: 50.w,
         items: <SortMethod>[
           SortMethod.values[0],
           SortMethod.values[1],
@@ -185,12 +183,12 @@ class _SecureNotesPageState extends State<SecureNotesPage> {
                 label,
                 style: value == sortMethod
                     ? TextStyle(
-                        fontSize: 26,
+                        fontSize: 22,
                         fontWeight: FontWeight.w600,
                         color: Theme.of(context).colorScheme.onBackground,
                       )
                     : TextStyle(
-                        fontSize: 24,
+                        fontSize: 21,
                         fontWeight: FontWeight.w400,
                         color: Theme.of(context).colorScheme.onBackground,
                       ),
@@ -223,18 +221,39 @@ class SecureNoteCardList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      physics: const NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      itemCount: secureNoteList.length,
-      itemBuilder: (context, index) {
-        SecureNote secureNote = secureNoteList[index];
-        return Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.w),
-          child: SecureNoteCard(secureNote: secureNote),
-        );
-      },
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 24.w),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Column(
+            children: [
+              for (int i = 0; i < secureNoteList.length; i++)
+                if (i % 2 == 0) SecureNoteCard(secureNote: secureNoteList[i]),
+            ],
+          ),
+          SizedBox(width: 20.w),
+          Column(
+            children: [
+              for (int i = 0; i < secureNoteList.length; i++)
+                if (i % 2 == 1) SecureNoteCard(secureNote: secureNoteList[i]),
+            ],
+          ),
+        ],
+      ),
     );
+    // return Padding(
+    //   padding: EdgeInsets.symmetric(horizontal: 14.w),
+    //   child: Wrap(
+    //     children: [
+    //       for (var secureNote in secureNoteList)
+    //         Padding(
+    //           padding: EdgeInsets.symmetric(horizontal: 10.w),
+    //           child: SecureNoteCard(secureNote: secureNote),
+    //         ),
+    //     ],
+    //   ),
+    // );
   }
 }
 
@@ -248,65 +267,58 @@ class SecureNoteCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(bottom: 13.w),
-      // height: 110.w,
-      child: Card(
-        elevation: 2,
-        margin: EdgeInsets.zero,
-        clipBehavior: Clip.antiAliasWithSaveLayer,
-        shape: RoundedRectangleBorder(
+    return InkWell(
+      onTap: () async {
+        if (!ZoomDrawer.of(context)!.isOpen()) {
+          secureNote.lastUsed = Timestamp.now();
+          secureNote.usage++;
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    SecureNoteFormPage(secureNote: secureNote)),
+          );
+        }
+      },
+      child: Container(
+        width: 173.w,
+        padding: EdgeInsets.fromLTRB(15.w, 13.w, 15.w, 17.w),
+        margin: EdgeInsets.only(bottom: 20.w),
+        decoration: BoxDecoration(
+          color: CustomTheme.card,
           borderRadius: BorderRadius.circular(20.w),
+          boxShadow: [
+            BoxShadow(
+              color: CustomTheme.cardShadow,
+              blurRadius: 10,
+              offset: Offset(4.w, 4.w),
+            ),
+          ],
         ),
-        child: InkWell(
-          onTap: () async {
-            if (!ZoomDrawer.of(context)!.isOpen()) {
-              secureNote.lastUsed = Timestamp.now();
-              secureNote.usage++;
-              var res = await Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        SecureNoteFormPage(secureNote: secureNote)),
-              );
-              if (res == 'Updated') {
-                context.read<DatabaseBloc>().add(GetSecureNotes());
-              } else if (res != 'Deleted') {
-                print('Updating');
-                context
-                    .read<DatabaseBloc>()
-                    .add(UpdateSecureNote(secureNote, false, secureNote.path));
-              }
-            }
-          },
-          child: Container(
-            padding: EdgeInsets.symmetric(vertical: 14.w, horizontal: 18.w),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20.w),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              secureNote.title,
+              style: const TextStyle(
+                fontWeight: FontWeight.w500,
+                fontSize: 17,
+              ),
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  secureNote.title,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 22,
-                  ),
-                ),
-                SizedBox(height: 3.w),
-                Text(
-                  secureNote.content,
-                  softWrap: true,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 2,
-                  style: const TextStyle(fontSize: 14),
-                ),
-                SizedBox(height: 4.w),
-              ],
+            SizedBox(height: 6.w),
+            Text(
+              secureNote.content,
+              softWrap: true,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 5,
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w300,
+              ),
             ),
-          ),
+            SizedBox(height: 4.w),
+          ],
         ),
       ),
     );

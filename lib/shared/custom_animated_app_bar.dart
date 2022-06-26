@@ -37,10 +37,13 @@ class _CustomFABState extends State<CustomFAB> {
           icon: Icons.sticky_note_2_rounded,
           onPressed: () {
             Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const SecureNoteFormPage())).then(
-                (value) => context.read<DatabaseBloc>().add(GetSecureNotes()));
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const SecureNoteFormPage()))
+                .then((value) {
+              context.read<DatabaseBloc>().add(GetSecureNotes());
+              context.read<MenuProvider>().updateCurrentPage(2);
+            });
             fabKey.currentState!.close();
           },
         ),
@@ -48,10 +51,13 @@ class _CustomFABState extends State<CustomFAB> {
           icon: Icons.credit_card_rounded,
           onPressed: () {
             Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const PaymentCardFormPage())).then(
-                (value) => context.read<DatabaseBloc>().add(GetPaymentCards()));
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const PaymentCardFormPage()))
+                .then((value) {
+              context.read<DatabaseBloc>().add(GetPaymentCards());
+              context.read<MenuProvider>().updateCurrentPage(1);
+            });
             fabKey.currentState!.close();
           },
         ),
@@ -59,10 +65,13 @@ class _CustomFABState extends State<CustomFAB> {
           icon: Icons.password_rounded,
           onPressed: () {
             Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const PasswordFormPage())).then(
-                (value) => context.read<DatabaseBloc>().add(GetPasswords()));
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const PasswordFormPage()))
+                .then((value) {
+              context.read<DatabaseBloc>().add(GetPasswords());
+              context.read<MenuProvider>().updateCurrentPage(0);
+            });
             fabKey.currentState!.close();
           },
         )
