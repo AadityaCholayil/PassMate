@@ -101,11 +101,8 @@ class CustomAnimatedAppBar extends StatefulWidget {
 }
 
 class _CustomAnimatedAppBarState extends State<CustomAnimatedAppBar> {
-  String fName = '';
-
   @override
   Widget build(BuildContext context) {
-    fName = context.read<AppBloc>().userData.firstName ?? '';
     return RefreshIndicator(
       onRefresh: () async => BlocProvider.of<DatabaseBloc>(context).add([
         GetPasswords(),
@@ -177,15 +174,19 @@ class _CustomAnimatedAppBarState extends State<CustomAnimatedAppBar> {
                           height: 0.9,
                         ),
                       ),
-                      Text(
-                        fName,
-                        style: TextStyle(
-                          height: 1.25,
-                          fontSize: 44,
-                          fontWeight: FontWeight.w700,
-                          color: colorScheme.onBackground,
-                        ),
-                      ),
+                      BlocBuilder<AppBloc, AppState>(builder: (context, state) {
+                        String fName =
+                            context.read<AppBloc>().userData.firstName ?? '';
+                        return Text(
+                          fName,
+                          style: TextStyle(
+                            height: 1.25,
+                            fontSize: 44,
+                            fontWeight: FontWeight.w700,
+                            color: colorScheme.onBackground,
+                          ),
+                        );
+                      }),
                     ],
                   ),
                 ),

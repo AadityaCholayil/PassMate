@@ -74,7 +74,7 @@ class _PasswordPageState extends State<PasswordPage> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Padding(
-                        padding: EdgeInsets.only(left: 28.w, top: 20.w),
+                        padding: EdgeInsets.only(left: 32.w, top: 20.w),
                         child: Text(
                           'Passwords',
                           style: TextStyle(
@@ -146,7 +146,7 @@ class _PasswordPageState extends State<PasswordPage> {
 
   Widget _buildSearch(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20.w),
+      padding: EdgeInsets.symmetric(horizontal: 24.w),
       child: CustomShadow(
         child: TextFormField(
           initialValue: searchLabel,
@@ -172,9 +172,9 @@ class _PasswordPageState extends State<PasswordPage> {
     bool isDefault =
         passwordCategory == PasswordCategory.all && favourites == false;
     return SizedBox(
-      height: 50.w,
+      height: 54.w,
       child: ListView.builder(
-        padding: EdgeInsets.only(left: 20.w),
+        padding: EdgeInsets.only(left: 24.w),
         scrollDirection: Axis.horizontal,
         shrinkWrap: true,
         itemCount: (!isDefault && !favourites)
@@ -239,7 +239,7 @@ class _PasswordPageState extends State<PasswordPage> {
                     ));
               },
               child: Container(
-                height: 40.w,
+                height: 44.w,
                 decoration: BoxDecoration(
                   boxShadow: [
                     BoxShadow(
@@ -257,10 +257,10 @@ class _PasswordPageState extends State<PasswordPage> {
                 ),
                 child: Row(
                   children: [
-                    SizedBox(width: 14.w),
+                    SizedBox(width: 16.w),
                     Icon(
                       passwordCategoryIcon[label],
-                      size: 19.w,
+                      size: 24.w,
                       color: Theme.of(context).colorScheme.secondary,
                     ),
                     SizedBox(width: 10.w),
@@ -274,7 +274,7 @@ class _PasswordPageState extends State<PasswordPage> {
                     ),
                     selected
                         ? Padding(
-                            padding: EdgeInsets.only(left: 6.w, right: 8.w),
+                            padding: EdgeInsets.only(left: 6.w, right: 10.w),
                             child: InkWell(
                               onTap: () {
                                 context
@@ -288,7 +288,7 @@ class _PasswordPageState extends State<PasswordPage> {
                               ),
                             ),
                           )
-                        : SizedBox(width: 18.w),
+                        : SizedBox(width: 22.w),
                   ],
                 ),
               ),
@@ -302,7 +302,7 @@ class _PasswordPageState extends State<PasswordPage> {
   Widget _buildSortDropDownBox(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
-        left: 28.w,
+        left: 32.w,
       ),
       child: DropdownButton<SortMethod>(
         value: sortMethod,
@@ -366,7 +366,7 @@ class PasswordCardList extends StatelessWidget {
       itemBuilder: (context, index) {
         Password password = passwordList[index];
         return Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.w),
+          padding: EdgeInsets.symmetric(horizontal: 24.w),
           child: PasswordCard(password: password),
         );
       },
@@ -384,14 +384,13 @@ class PasswordCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(bottom: 15.w),
-      height: 87.w,
-      child: Card(
-        elevation: 2,
-        margin: EdgeInsets.zero,
-        clipBehavior: Clip.antiAliasWithSaveLayer,
-        shape: RoundedRectangleBorder(
+    return CustomShadow(
+      height: 96.w,
+      child: Container(
+        margin: EdgeInsets.only(bottom: 20.w),
+        height: 96.w,
+        decoration: BoxDecoration(
+          color: CustomTheme.card,
           borderRadius: BorderRadius.circular(23.w),
         ),
         child: InkWell(
@@ -423,8 +422,8 @@ class PasswordCard extends StatelessWidget {
             child: Row(
               children: [
                 Container(
-                  height: 65.w,
-                  width: 65.w,
+                  height: 78.w,
+                  width: 78.w,
                   clipBehavior: Clip.antiAliasWithSaveLayer,
                   decoration: BoxDecoration(
                       color: Theme.of(context).backgroundColor,
@@ -459,12 +458,10 @@ class PasswordCard extends StatelessWidget {
                         fontSize: 22,
                       ),
                     ),
+                    const SizedBox(height: 3),
                     Text(
                       password.email,
-                      style: const TextStyle(fontSize: 13),
-                    ),
-                    const SizedBox(
-                      height: 3,
+                      style: const TextStyle(fontSize: 14),
                     ),
                   ],
                 ),

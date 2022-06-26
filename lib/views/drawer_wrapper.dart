@@ -107,7 +107,7 @@ class _MenuScreenState extends State<MenuScreen> {
           resizeToAvoidBottomInset: false,
           backgroundColor: colorScheme.primary,
           body: Container(
-            padding: EdgeInsets.only(left: 10.w),
+            padding: EdgeInsets.only(left: 11.w),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -313,8 +313,8 @@ class MenuItem extends StatelessWidget {
       builder: (context, menu, child) {
         bool selected = menu.currentPage == index;
         return Container(
-          width: 260.w,
-          height: 50.w,
+          width: 290.w,
+          height: 60.w,
           padding: EdgeInsets.only(left: 9.w),
           decoration: BoxDecoration(
             color: selected ? CustomTheme.primaryVariant : Colors.transparent,
@@ -335,20 +335,19 @@ class MenuItem extends StatelessWidget {
       },
       child: Row(
         children: [
+          SizedBox(width: 5.w),
           Icon(
             icon,
-            size: 27.w,
+            size: 26.w,
             color: selected ? colorScheme.secondaryContainer : Colors.white,
           ),
-          SizedBox(
-            width: 25.w,
-          ),
+          SizedBox(width: 18.w),
           Text(
             text,
             style: TextStyle(
               color: selected ? colorScheme.secondaryContainer : Colors.white,
               fontSize: 17,
-              fontWeight: FontWeight.w400,
+              fontWeight: FontWeight.w500,
             ),
           ),
         ],

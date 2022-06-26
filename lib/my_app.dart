@@ -51,7 +51,7 @@ class MyApp extends StatelessWidget {
                               MediaQuery.of(context).size.height.toInt();
                           int width = MediaQuery.of(context).size.width.toInt();
                           int factor = 0;
-                          ScreenUtil.init(context);
+                          // ScreenUtil.init(context);
                           if (height < 1.2 * width) {
                             factor = height;
                           } else {

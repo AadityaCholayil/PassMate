@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flip_card/flip_card.dart';
 import 'package:flip_card/flip_card_controller.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,6 +12,7 @@ import 'package:passmate/model/payment_card.dart';
 import 'package:passmate/model/sort_methods.dart';
 import 'package:passmate/shared/custom_widgets.dart';
 import 'package:passmate/shared/loading.dart';
+import 'package:passmate/theme/theme.dart';
 import 'package:passmate/views/formpages/payment_card_form.dart';
 import 'package:passmate/shared/custom_animated_app_bar.dart';
 
@@ -35,10 +35,11 @@ class _PaymentCardPageState extends State<PaymentCardPage> {
   @override
   void initState() {
     super.initState();
+    print('initState1');
     SortMethod sortMethod =
         context.read<AppBloc>().userData.sortMethod ?? SortMethod.recentlyAdded;
     context.read<DatabaseBloc>().add(GetPaymentCards(sortMethod: sortMethod));
-    print('initState');
+    print('initState2');
   }
 
   @override
@@ -76,11 +77,11 @@ class _PaymentCardPageState extends State<PaymentCardPage> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Padding(
-                        padding: EdgeInsets.only(left: 28.w, top: 13.w),
+                        padding: EdgeInsets.only(left: 32.w, top: 20.w),
                         child: Text(
                           'Payment Cards',
                           style: TextStyle(
-                            fontSize: 32,
+                            fontSize: 27,
                             fontWeight: FontWeight.w600,
                             color: Theme.of(context).colorScheme.onBackground,
                           ),
@@ -92,11 +93,11 @@ class _PaymentCardPageState extends State<PaymentCardPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 _buildSearch(context),
-                                SizedBox(height: 15.w),
+                                SizedBox(height: 20.w),
                                 _buildChipRow(),
-                                SizedBox(height: 10.w),
+                                // SizedBox(height: 10.w),
                                 _buildSortDropDownBox(context),
-                                SizedBox(height: 10.w),
+                                SizedBox(height: 5.w),
                               ],
                             )
                           : const SizedBox.shrink(),
@@ -156,11 +157,8 @@ class _PaymentCardPageState extends State<PaymentCardPage> {
 
   Padding _buildSearch(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20.w),
-      child: Material(
-        borderRadius: BorderRadius.circular(15.w),
-        clipBehavior: Clip.antiAliasWithSaveLayer,
-        elevation: 2,
+      padding: EdgeInsets.symmetric(horizontal: 24.w),
+      child: CustomShadow(
         child: TextFormField(
           initialValue: searchLabel,
           decoration: customInputDecoration(
@@ -185,9 +183,9 @@ class _PaymentCardPageState extends State<PaymentCardPage> {
     bool isDefault =
         paymentCardType == PaymentCardType.all && favourites == false;
     return SizedBox(
-      height: 45.w,
+      height: 54.w,
       child: ListView.builder(
-        padding: EdgeInsets.only(left: 20.w),
+        padding: EdgeInsets.only(left: 24.w),
         scrollDirection: Axis.horizontal,
         shrinkWrap: true,
         itemCount: (!isDefault && !favourites)
@@ -240,50 +238,69 @@ class _PaymentCardPageState extends State<PaymentCardPage> {
             }
           }
           return Container(
-            margin: EdgeInsets.only(right: 9.w),
+            margin: EdgeInsets.only(right: 15.w, bottom: 10.w),
             child: InkWell(
               onTap: () {
                 print(category);
                 context.read<DatabaseBloc>().add(GetPaymentCards(
-                      search: searchLabel,
-                      paymentCardType: category,
-                      favourites: fav,
-                      list: completePaymentCardList,
-                    ));
+                    search: searchLabel,
+                    paymentCardType: category,
+                    favourites: fav,
+                    list: completePaymentCardList));
               },
-              child: Chip(
-                elevation: 2,
-                side: selected
-                    ? BorderSide(
+              child: Container(
+                height: 44.w,
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: CustomTheme.cardShadow,
+                      blurRadius: 8,
+                      offset: Offset(4.w, 4.w),
+                    ),
+                  ],
+                  border: Border.all(
+                      color:
+                          selected ? CustomTheme.secondary : Colors.transparent,
+                      width: 2.w),
+                  color: CustomTheme.card,
+                  borderRadius: BorderRadius.circular(40.w),
+                ),
+                child: Row(
+                  children: [
+                    SizedBox(width: 16.w),
+                    Icon(
+                      paymentCardCategoryIcon[label],
+                      size: 24.w,
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
+                    SizedBox(width: 10.w),
+                    Text(
+                      label,
+                      style: TextStyle(
                         color: Theme.of(context).colorScheme.secondary,
-                        width: 2)
-                    : null,
-                avatar: Icon(
-                  paymentCardCategoryIcon[label],
-                  size: 23.w,
-                  color: Theme.of(context).colorScheme.secondary,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    selected
+                        ? Padding(
+                            padding: EdgeInsets.only(left: 6.w, right: 10.w),
+                            child: InkWell(
+                              onTap: () {
+                                context
+                                    .read<DatabaseBloc>()
+                                    .add(GetPasswords());
+                              },
+                              child: Icon(
+                                Icons.highlight_remove,
+                                size: 25.w,
+                                color: Theme.of(context).colorScheme.secondary,
+                              ),
+                            ),
+                          )
+                        : SizedBox(width: 22.w),
+                  ],
                 ),
-                backgroundColor: Colors.white,
-                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 7.w),
-                // padding: EdgeInsets.fromLTRB(12.w, 7.w, 12.w, 7.w),
-                labelPadding: EdgeInsets.fromLTRB(10.w, 0, 6.w, 0),
-                label: Text(
-                  label,
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.secondary,
-                    fontSize: 15,
-                  ),
-                ),
-                deleteIcon: Icon(
-                  Icons.highlight_remove,
-                  size: 25.w,
-                  color: Theme.of(context).colorScheme.secondary,
-                ),
-                onDeleted: !selected
-                    ? null
-                    : () {
-                        context.read<DatabaseBloc>().add(GetPaymentCards());
-                      },
               ),
             ),
           );
@@ -295,11 +312,11 @@ class _PaymentCardPageState extends State<PaymentCardPage> {
   Widget _buildSortDropDownBox(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
-        left: 28.w,
+        left: 32.w,
       ),
       child: DropdownButton<SortMethod>(
         value: sortMethod,
-        itemHeight: 55.w,
+        itemHeight: 50.w,
         items: <SortMethod>[
           SortMethod.values[0],
           SortMethod.values[1],
@@ -309,17 +326,17 @@ class _PaymentCardPageState extends State<PaymentCardPage> {
           return DropdownMenuItem(
             value: value,
             child: Container(
-              padding: EdgeInsets.fromLTRB(0, 7.w, 10.w, 7.w),
+              padding: EdgeInsets.fromLTRB(0, 2.w, 10.w, 2.w),
               child: Text(
                 label,
                 style: value == sortMethod
                     ? TextStyle(
-                        fontSize: 26,
+                        fontSize: 22,
                         fontWeight: FontWeight.w600,
                         color: Theme.of(context).colorScheme.onBackground,
                       )
                     : TextStyle(
-                        fontSize: 24,
+                        fontSize: 21,
                         fontWeight: FontWeight.w400,
                         color: Theme.of(context).colorScheme.onBackground,
                       ),
@@ -358,10 +375,7 @@ class PaymentCardTileList extends StatelessWidget {
       itemCount: paymentCardList.length,
       itemBuilder: (context, index) {
         PaymentCard paymentCard = paymentCardList[index];
-        return Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.w),
-          child: PaymentCardTile(paymentCard: paymentCard),
-        );
+        return PaymentCardTile(paymentCard: paymentCard);
       },
     );
   }
@@ -377,101 +391,104 @@ class PaymentCardTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(23.w)),
-      clipBehavior: Clip.antiAliasWithSaveLayer,
-      margin: EdgeInsets.only(bottom: 18.w),
-      child: InkWell(
-        onTap: () async {
-          if (!ZoomDrawer.of(context)!.isOpen()) {
-            paymentCard.lastUsed = Timestamp.now();
-            paymentCard.usage++;
-            dynamic res = await showModalBottomSheet(
-              context: context,
-              barrierColor: Colors.black.withOpacity(0.25),
-              backgroundColor: Colors.transparent,
-              builder: (context) {
-                return PaymentCardDetailCard(paymentCard: paymentCard);
-              },
-            );
-            if (res != 'Deleted' && res != 'Updated') {
-              context
-                  .read<DatabaseBloc>()
-                  .add(UpdatePaymentCard(paymentCard, false, paymentCard.path));
-            }
+    return InkWell(
+      onTap: () async {
+        if (!ZoomDrawer.of(context)!.isOpen()) {
+          paymentCard.lastUsed = Timestamp.now();
+          paymentCard.usage++;
+          dynamic res = await showModalBottomSheet(
+            context: context,
+            barrierColor: Colors.black.withOpacity(0.25),
+            backgroundColor: Colors.transparent,
+            builder: (context) {
+              return PaymentCardDetailCard(paymentCard: paymentCard);
+            },
+          );
+          if (res != 'Deleted' && res != 'Updated') {
+            context
+                .read<DatabaseBloc>()
+                .add(UpdatePaymentCard(paymentCard, false, paymentCard.path));
           }
-        },
-        child: Container(
-          padding: EdgeInsets.fromLTRB(20.w, 20.w, 20.w, 16.w),
-          height: 186.w,
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-                fit: BoxFit.cover,
-                image: AssetImage('assets/payment_card_bg.png')),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  SizedBox(
-                    height: 36.w,
-                    width: 36.w,
-                    child: Image.asset('assets/card_asset1.png'),
+        }
+      },
+      child: Container(
+        padding: EdgeInsets.fromLTRB(20.w, 20.w, 20.w, 16.w),
+        height: 202.w,
+        margin: EdgeInsets.only(bottom: 20.w, left: 24.w, right: 24.w),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(25.w),
+          image: const DecorationImage(
+              fit: BoxFit.cover,
+              image: AssetImage('assets/payment_card_bg.png')),
+          boxShadow: [
+            BoxShadow(
+              color: CustomTheme.cardShadow,
+              blurRadius: 2,
+              offset: Offset(4.w, 4.w),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                SizedBox(
+                  height: 39.w,
+                  width: 39.w,
+                  child: Image.asset('assets/card_asset1.png'),
+                ),
+                SizedBox(width: 15.w),
+                Text(
+                  paymentCard.bankName,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 21,
+                    fontWeight: FontWeight.w600,
                   ),
-                  SizedBox(width: 15.w),
-                  Text(
-                    paymentCard.bankName,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 21,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ),
-              const Spacer(),
-              Row(
-                children: [
-                  for (int i = 0; i < 4; i++)
-                    Padding(
-                      padding: EdgeInsets.only(right: 5.w),
-                      child: Text(
-                        paymentCard.cardNo.substring(i * 4, i * 4 + 4),
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 27,
-                          fontWeight: FontWeight.w600,
-                        ),
+                ),
+              ],
+            ),
+            const Spacer(),
+            Row(
+              children: [
+                for (int i = 0; i < 4; i++)
+                  Padding(
+                    padding: EdgeInsets.only(right: 5.w),
+                    child: Text(
+                      paymentCard.cardNo.substring(i * 4, i * 4 + 4),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 27,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
-                ],
-              ),
-              Row(
-                children: [
-                  Text(
-                    paymentCard.holderName,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400,
-                    ),
                   ),
-                  const Spacer(),
-                  Text(
-                    paymentCard.expiryDate,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400,
-                    ),
+              ],
+            ),
+            Row(
+              children: [
+                Text(
+                  paymentCard.holderName,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 17,
+                    fontWeight: FontWeight.w400,
                   ),
-                  // SizedBox(width: .w),
-                ],
-              ),
-            ],
-          ),
+                ),
+                const Spacer(),
+                Text(
+                  paymentCard.expiryDate,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 17,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                // SizedBox(width: .w),
+              ],
+            ),
+          ],
         ),
       ),
     );
