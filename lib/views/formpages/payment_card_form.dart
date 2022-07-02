@@ -10,6 +10,7 @@ import 'package:passmate/model/payment_card.dart';
 import 'package:passmate/shared/custom_snackbar.dart';
 import 'package:passmate/shared/custom_widgets.dart';
 import 'package:passmate/shared/temp_error.dart';
+import 'package:passmate/theme/theme.dart';
 import 'package:passmate/views/formpages/password_form.dart';
 
 class PaymentCardFormPage extends StatefulWidget {
@@ -91,17 +92,15 @@ class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
       },
       builder: (context, state) {
         return SafeArea(
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              // Responsive
-              print('Layout Changed');
-              if (constraints.maxHeight < 1.2 * constraints.maxWidth) {
-                // LandScape
-                return const TempError(pageName: 'Payment Card Form Screen');
-              }
-              return _buildPaymentCardFormPortrait(context);
+          child: LayoutBuilder(builder: (context, constraints) {
+            // Responsive
+            print('Layout Changed');
+            if (constraints.maxHeight < 1.2 * constraints.maxWidth) {
+              // LandScape
+              return const TempError(pageName: 'Payment Card Form Screen');
             }
-          ),
+            return _buildPaymentCardFormPortrait(context);
+          }),
         );
       },
     );
@@ -118,7 +117,7 @@ class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.w),
+                padding: EdgeInsets.symmetric(horizontal: 24.w),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -131,7 +130,7 @@ class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
                         'Add Card',
                         style: TextStyle(
                           color: Theme.of(context).colorScheme.onBackground,
-                          fontSize: 42,
+                          fontSize: 40,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -146,7 +145,7 @@ class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
               ),
               _buildCardForms(context),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.w),
+                padding: EdgeInsets.symmetric(horizontal: 24.w),
                 child: Column(
                   children: [
                     _buildHeader('Path', Icons.folder_outlined),
@@ -502,13 +501,8 @@ class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
 
   Widget _buildCardForms(BuildContext context) {
     return ConstraintsTransformBox(
-      // constraints: BoxConstraints(
-      //   minHeight: 105.w,
-      //   maxHeight: 140.w,
-      // ),
       constraintsTransform: (BoxConstraints constraints) {
-        // print(constraints);
-        return constraints.tighten(height: 102.w);
+        return constraints.tighten(height: 107.w);
       },
       child: PageView(
         controller: pageController,
@@ -606,20 +600,22 @@ class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
 
   Widget _buildBankName(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.fromLTRB(20.w, 7.w, 20.w, 5.w),
-      child: TextFormField(
-        initialValue: _bankName,
-        style: formTextStyle(context),
-        decoration: customInputDecoration(
-          context: context,
-          labelText: 'Eg. Canara',
+      padding: EdgeInsets.fromLTRB(24.w, 7.w, 24.w, 5.w),
+      child: CustomShadow(
+        child: TextFormField(
+          initialValue: _bankName,
+          style: formTextStyle(context),
+          decoration: customInputDecoration(
+            context: context,
+            labelText: 'Eg. Canara',
+          ),
+          onChanged: (value) {
+            setState(() {
+              _bankName = value;
+            });
+          },
+          validator: validateText,
         ),
-        onChanged: (value) {
-          setState(() {
-            _bankName = value;
-          });
-        },
-        validator: validateText,
       ),
     );
   }
@@ -632,111 +628,127 @@ class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
 
   Widget _buildCardNo(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.fromLTRB(20.w, 7.w, 20.w, 5.w),
+      padding: EdgeInsets.fromLTRB(24.w, 7.w, 24.w, 5.w),
       child: Row(
         children: [
           Flexible(
-            child: TextFormField(
-              initialValue: initialNo[0],
-              keyboardType: const TextInputType.numberWithOptions(
-                  signed: false, decimal: false),
-              style: formTextStyle(context),
-              decoration: customInputDecoration(
-                context: context,
-                labelText: 'XXXX',
+            child: CustomShadow(
+              child: TextFormField(
+                initialValue: initialNo[0],
+                keyboardType: const TextInputType.numberWithOptions(
+                    signed: false, decimal: false),
+                style: formTextStyle(context),
+                decoration: customInputDecoration(
+                  context: context,
+                  labelText: 'XXXX',
+                  leftPadding: 20.w,
+                ),
+                onChanged: (value) {
+                  setState(() {
+                    initialNo[0] = value;
+                    _cardNo =
+                        value + initialNo[1] + initialNo[2] + initialNo[3];
+                    if (value.length == 4) {
+                      FocusScope.of(context).nextFocus();
+                    }
+                  });
+                },
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                validator: validateNo,
               ),
-              onChanged: (value) {
-                setState(() {
-                  initialNo[0] = value;
-                  _cardNo = value + initialNo[1] + initialNo[2] + initialNo[3];
-                  if (value.length == 4) {
-                    FocusScope.of(context).nextFocus();
-                  }
-                });
-              },
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              validator: validateNo,
             ),
           ),
           SizedBox(width: 10.w),
           Flexible(
-            child: TextFormField(
-              initialValue: initialNo[1],
-              keyboardType: const TextInputType.numberWithOptions(
-                  signed: false, decimal: false),
-              style: formTextStyle(context),
-              decoration: customInputDecoration(
-                context: context,
-                labelText: 'XXXX',
+            child: CustomShadow(
+              child: TextFormField(
+                initialValue: initialNo[1],
+                keyboardType: const TextInputType.numberWithOptions(
+                    signed: false, decimal: false),
+                style: formTextStyle(context),
+                decoration: customInputDecoration(
+                  context: context,
+                  labelText: 'XXXX',
+                  leftPadding: 20.w,
+                ),
+                onChanged: (value) {
+                  setState(() {
+                    initialNo[1] = value;
+                    _cardNo =
+                        initialNo[0] + value + initialNo[2] + initialNo[3];
+                    if (value.length == 4) {
+                      FocusScope.of(context).nextFocus();
+                    }
+                    if (value.isEmpty || value == '') {
+                      FocusScope.of(context).previousFocus();
+                    }
+                  });
+                },
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                validator: validateNo,
               ),
-              onChanged: (value) {
-                setState(() {
-                  initialNo[1] = value;
-                  _cardNo = initialNo[0] + value + initialNo[2] + initialNo[3];
-                  if (value.length == 4) {
-                    FocusScope.of(context).nextFocus();
-                  }
-                  if (value.isEmpty || value == '') {
-                    FocusScope.of(context).previousFocus();
-                  }
-                });
-              },
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              validator: validateNo,
             ),
           ),
           SizedBox(width: 10.w),
           Flexible(
-            child: TextFormField(
-              initialValue: initialNo[2],
-              keyboardType: const TextInputType.numberWithOptions(
-                  signed: false, decimal: false),
-              style: formTextStyle(context),
-              decoration: customInputDecoration(
-                context: context,
-                labelText: 'XXXX',
+            child: CustomShadow(
+              child: TextFormField(
+                initialValue: initialNo[2],
+                keyboardType: const TextInputType.numberWithOptions(
+                    signed: false, decimal: false),
+                style: formTextStyle(context),
+                decoration: customInputDecoration(
+                  context: context,
+                  labelText: 'XXXX',
+                  leftPadding: 20.w,
+                ),
+                onChanged: (value) {
+                  setState(() {
+                    initialNo[2] = value;
+                    _cardNo =
+                        initialNo[0] + initialNo[1] + value + initialNo[3];
+                    if (value.length == 4) {
+                      FocusScope.of(context).nextFocus();
+                    }
+                    if (value.isEmpty || value == '') {
+                      FocusScope.of(context).previousFocus();
+                    }
+                  });
+                },
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                validator: validateNo,
               ),
-              onChanged: (value) {
-                setState(() {
-                  initialNo[2] = value;
-                  _cardNo = initialNo[0] + initialNo[1] + value + initialNo[3];
-                  if (value.length == 4) {
-                    FocusScope.of(context).nextFocus();
-                  }
-                  if (value.isEmpty || value == '') {
-                    FocusScope.of(context).previousFocus();
-                  }
-                });
-              },
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              validator: validateNo,
             ),
           ),
           SizedBox(width: 10.w),
           Flexible(
-            child: TextFormField(
-              initialValue: initialNo[3],
-              keyboardType: const TextInputType.numberWithOptions(
-                  signed: false, decimal: false),
-              style: formTextStyle(context),
-              decoration: customInputDecoration(
-                context: context,
-                labelText: 'XXXX',
+            child: CustomShadow(
+              child: TextFormField(
+                initialValue: initialNo[3],
+                keyboardType: const TextInputType.numberWithOptions(
+                    signed: false, decimal: false),
+                style: formTextStyle(context),
+                decoration: customInputDecoration(
+                  context: context,
+                  labelText: 'XXXX',
+                  leftPadding: 20.w,
+                ),
+                onChanged: (value) {
+                  setState(() {
+                    initialNo[3] = value;
+                    _cardNo =
+                        initialNo[0] + initialNo[1] + initialNo[2] + value;
+                    if (value.length == 4) {
+                      FocusScope.of(context).unfocus();
+                    }
+                    if (value.isEmpty || value == '') {
+                      FocusScope.of(context).previousFocus();
+                    }
+                  });
+                },
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                validator: validateNo,
               ),
-              onChanged: (value) {
-                setState(() {
-                  initialNo[3] = value;
-                  _cardNo = initialNo[0] + initialNo[1] + initialNo[2] + value;
-                  if (value.length == 4) {
-                    FocusScope.of(context).unfocus();
-                  }
-                  if (value.isEmpty || value == '') {
-                    FocusScope.of(context).previousFocus();
-                  }
-                });
-              },
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              validator: validateNo,
             ),
           ),
         ],
@@ -746,20 +758,22 @@ class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
 
   Widget _buildHolderName(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.fromLTRB(20.w, 7.w, 20.w, 5.w),
-      child: TextFormField(
-        initialValue: _holderName,
-        style: formTextStyle(context),
-        decoration: customInputDecoration(
-          context: context,
-          labelText: 'Eg. John Smith',
+      padding: EdgeInsets.fromLTRB(24.w, 7.w, 24.w, 5.w),
+      child: CustomShadow(
+        child: TextFormField(
+          initialValue: _holderName,
+          style: formTextStyle(context),
+          decoration: customInputDecoration(
+            context: context,
+            labelText: 'Eg. John Smith',
+          ),
+          onChanged: (value) {
+            setState(() {
+              _holderName = value;
+            });
+          },
+          validator: validateText,
         ),
-        onChanged: (value) {
-          setState(() {
-            _holderName = value;
-          });
-        },
-        validator: validateText,
       ),
     );
   }
@@ -768,31 +782,33 @@ class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
 
   Widget _buildExpiryDate(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.fromLTRB(20.w, 7.w, 20.w, 5.w),
+      padding: EdgeInsets.fromLTRB(24.w, 7.w, 24.w, 5.w),
       child: Row(
         children: [
           // const Spacer(),
           Flexible(
-            child: TextFormField(
-              initialValue: initialDate[0],
-              keyboardType: const TextInputType.numberWithOptions(
-                  signed: false, decimal: false),
-              style: formTextStyle(context),
-              decoration: customInputDecoration(
-                context: context,
-                labelText: 'MM',
+            child: CustomShadow(
+              child: TextFormField(
+                initialValue: initialDate[0],
+                keyboardType: const TextInputType.numberWithOptions(
+                    signed: false, decimal: false),
+                style: formTextStyle(context),
+                decoration: customInputDecoration(
+                  context: context,
+                  labelText: 'MM',
+                ),
+                onChanged: (value) {
+                  setState(() {
+                    if (value.length == 2) {
+                      FocusScope.of(context).nextFocus();
+                    }
+                    initialDate[0] = value;
+                    _expiryDate = value + '/' + initialDate[1];
+                  });
+                },
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                validator: validateNo,
               ),
-              onChanged: (value) {
-                setState(() {
-                  if (value.length == 2) {
-                    FocusScope.of(context).nextFocus();
-                  }
-                  initialDate[0] = value;
-                  _expiryDate = value + '/' + initialDate[1];
-                });
-              },
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              validator: validateNo,
             ),
           ),
           SizedBox(width: 10.w),
@@ -806,29 +822,31 @@ class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
           ),
           SizedBox(width: 10.w),
           Flexible(
-            child: TextFormField(
-              initialValue: initialDate[1],
-              keyboardType: const TextInputType.numberWithOptions(
-                  signed: false, decimal: false),
-              style: formTextStyle(context),
-              decoration: customInputDecoration(
-                context: context,
-                labelText: 'YY',
+            child: CustomShadow(
+              child: TextFormField(
+                initialValue: initialDate[1],
+                keyboardType: const TextInputType.numberWithOptions(
+                    signed: false, decimal: false),
+                style: formTextStyle(context),
+                decoration: customInputDecoration(
+                  context: context,
+                  labelText: 'YY',
+                ),
+                onChanged: (value) {
+                  setState(() {
+                    initialDate[1] = value;
+                    _expiryDate = initialDate[0] + '/' + value;
+                    if (value.length == 2) {
+                      FocusScope.of(context).unfocus();
+                    }
+                    if (value.isEmpty || value == '') {
+                      FocusScope.of(context).previousFocus();
+                    }
+                  });
+                },
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                validator: validateNo,
               ),
-              onChanged: (value) {
-                setState(() {
-                  initialDate[1] = value;
-                  _expiryDate = initialDate[0] + '/' + value;
-                  if (value.length == 2) {
-                    FocusScope.of(context).unfocus();
-                  }
-                  if (value.isEmpty || value == '') {
-                    FocusScope.of(context).previousFocus();
-                  }
-                });
-              },
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              validator: validateNo,
             ),
           ),
           // const Spacer(),
@@ -839,38 +857,40 @@ class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
 
   Widget _buildCVV(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.fromLTRB(20.w, 7.w, 20.w, 5.w),
-      child: TextFormField(
-        initialValue: _cvv,
-        keyboardType: const TextInputType.numberWithOptions(
-            signed: false, decimal: false),
-        style: formTextStyle(context),
-        decoration: customInputDecoration(
-          context: context,
-          labelText: 'Eg. 439',
+      padding: EdgeInsets.fromLTRB(24.w, 7.w, 24.w, 5.w),
+      child: CustomShadow(
+        child: TextFormField(
+          initialValue: _cvv,
+          keyboardType: const TextInputType.numberWithOptions(
+              signed: false, decimal: false),
+          style: formTextStyle(context),
+          decoration: customInputDecoration(
+            context: context,
+            labelText: 'Eg. 439',
+          ),
+          onChanged: (value) {
+            setState(() {
+              if (value.length <= 3) {
+                _cvv = value;
+              }
+              if (value.length == 3) {
+                FocusScope.of(context).unfocus();
+              }
+            });
+          },
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Invalid!';
+            }
+            if (int.tryParse(value) == null) {
+              return "Invalid!";
+            }
+            if (int.tryParse(value)! > 999) {
+              return "Invalid!";
+            }
+          },
         ),
-        onChanged: (value) {
-          setState(() {
-            if (value.length <= 3) {
-              _cvv = value;
-            }
-            if (value.length == 3) {
-              FocusScope.of(context).unfocus();
-            }
-          });
-        },
-        autovalidateMode: AutovalidateMode.onUserInteraction,
-        validator: (value) {
-          if (value == null || value.isEmpty) {
-            return 'Invalid!';
-          }
-          if (int.tryParse(value) == null) {
-            return "Invalid!";
-          }
-          if (int.tryParse(value)! > 999) {
-            return "Invalid!";
-          }
-        },
       ),
     );
   }
@@ -904,66 +924,62 @@ class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
             });
           }
         },
-        child: Container(
-          alignment: Alignment.centerLeft,
-          height: 55.w,
-          padding: EdgeInsets.only(left: 18.w, right: 7.w),
-          // padding: EdgeInsets.fromLTRB(18.w, 11.w, 15.w, 11.w),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(15.w),
-            border: Border.all(
-              color: Theme.of(context).colorScheme.secondaryVariant,
-              width: 2.w,
-              style: BorderStyle.solid,
+        child: CustomShadow(
+          child: Container(
+            alignment: Alignment.centerLeft,
+            height: 60.w,
+            padding: EdgeInsets.only(left: 24.w, right: 15.w),
+            decoration: BoxDecoration(
+              color: CustomTheme.card,
+              borderRadius: BorderRadius.circular(20.w),
             ),
-          ),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Expanded(
-                child: ListView.separated(
-                  shrinkWrap: true,
-                  padding: EdgeInsets.zero,
-                  physics: const BouncingScrollPhysics(),
-                  itemCount: pathList.length,
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) {
-                    if (pathList.length == index) {
-                      return SizedBox(
-                        width: 10.w,
-                      );
-                    } else {
-                      return Center(
-                        child: Text(
-                          pathList[index],
-                          style: const TextStyle(
-                            fontSize: 18,
-                            // fontWeight: FontWeight.w500,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Expanded(
+                  child: ListView.separated(
+                    shrinkWrap: true,
+                    padding: EdgeInsets.zero,
+                    physics: const BouncingScrollPhysics(),
+                    itemCount: pathList.length,
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (context, index) {
+                      if (pathList.length == index) {
+                        return SizedBox(
+                          width: 10.w,
+                        );
+                      } else {
+                        return Center(
+                          child: Text(
+                            pathList[index],
+                            style: const TextStyle(
+                              fontSize: 16,
+                              // fontWeight: FontWeight.w500,
+                            ),
                           ),
+                        );
+                      }
+                    },
+                    separatorBuilder: (context, index) {
+                      return Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 5.w),
+                        child: Icon(
+                          Icons.arrow_forward_ios,
+                          size: 18.w,
                         ),
                       );
-                    }
-                  },
-                  separatorBuilder: (context, index) {
-                    return Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 5.w),
-                      child: Icon(
-                        Icons.arrow_forward_ios,
-                        size: 18.w,
-                      ),
-                    );
-                  },
+                    },
+                  ),
                 ),
-              ),
-              SizedBox(width: 5.w),
-              const Icon(
-                Icons.expand_more,
-                size: 35,
-              )
-            ],
+                SizedBox(width: 5.w),
+                const Icon(
+                  Icons.expand_more,
+                  size: 35,
+                )
+              ],
+            ),
           ),
         ),
       ),
@@ -991,40 +1007,36 @@ class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
             });
           }
         },
-        child: Container(
-          alignment: Alignment.centerLeft,
-          height: 55.w,
-          padding: EdgeInsets.only(left: 18.w, right: 7.w),
-          // padding: EdgeInsets.fromLTRB(18.w, 11.w, 15.w, 11.w),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(15.w),
-            border: Border.all(
-              color: Theme.of(context).colorScheme.secondaryVariant,
-              width: 2.w,
-              style: BorderStyle.solid,
+        child: CustomShadow(
+          child: Container(
+            alignment: Alignment.centerLeft,
+            height: 60.w,
+            padding: EdgeInsets.only(left: 24.w, right: 15.w),
+            decoration: BoxDecoration(
+              color: CustomTheme.card,
+              borderRadius: BorderRadius.circular(20.w),
             ),
-          ),
-          child: Row(
-            children: [
-              Icon(
-                paymentCardCategoryIcon[label],
-                size: 23.w,
-              ),
-              SizedBox(width: 10.w),
-              Text(
-                label,
-                style: const TextStyle(
-                  fontSize: 17,
+            child: Row(
+              children: [
+                Icon(
+                  paymentCardCategoryIcon[label],
+                  size: 23.w,
                 ),
-              ),
-              const Spacer(),
-              SizedBox(width: 5.w),
-              const Icon(
-                Icons.expand_more,
-                size: 35,
-              )
-            ],
+                SizedBox(width: 10.w),
+                Text(
+                  label,
+                  style: const TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
+                const Spacer(),
+                SizedBox(width: 5.w),
+                const Icon(
+                  Icons.expand_more,
+                  size: 35,
+                )
+              ],
+            ),
           ),
         ),
       ),
@@ -1125,20 +1137,23 @@ class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
   Widget _buildNote(BuildContext context) {
     return Padding(
       padding: EdgeInsets.fromLTRB(0.w, 7.w, 0.w, 5.w),
-      child: TextFormField(
-        initialValue: _note,
-        style: formTextStyle(context),
-        decoration: customInputDecoration(
-          context: context,
-          labelText: 'Eg. Work Card',
+      child: CustomShadow(
+        height: 106.w,
+        child: TextFormField(
+          initialValue: _note,
+          style: formTextStyle(context),
+          decoration: customInputDecoration(
+            context: context,
+            labelText: 'Eg. Work Card',
+          ),
+          maxLines: 3,
+          onChanged: (value) {
+            setState(() {
+              _note = value;
+            });
+          },
+          validator: validateText,
         ),
-        maxLines: 3,
-        onChanged: (value) {
-          setState(() {
-            _note = value;
-          });
-        },
-        validator: validateText,
       ),
     );
   }
