@@ -1,9 +1,6 @@
 import 'dart:io';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:passmate/bloc/app_bloc/app_bloc.dart';
 import 'package:passmate/bloc/app_bloc/app_bloc_files.dart';
 import 'package:passmate/model/user.dart';
 import 'package:passmate/shared/custom_snackbar.dart';
@@ -11,6 +8,7 @@ import 'package:passmate/shared/custom_widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:passmate/shared/temp_error.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:passmate/theme/theme.dart';
 
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({Key? key}) : super(key: key);
@@ -79,7 +77,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 20.w),
+        padding: EdgeInsets.symmetric(horizontal: 24.w),
         child: Form(
           key: _formKey,
           child: Column(
@@ -96,7 +94,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     'Edit Profile',
                     style: TextStyle(
                       height: 1.25,
-                      fontSize: 43.5,
+                      fontSize: 40,
                       fontWeight: FontWeight.bold,
                       color: colors.onBackground,
                     ),
@@ -105,20 +103,17 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   _buildProfile(colors, context),
                   SizedBox(height: 20.w),
                   Padding(
-                    padding: EdgeInsets.only(left: 12.w, bottom: 4.w),
+                    padding: EdgeInsets.only(left: 14.w, bottom: 4.w),
                     child: Text(
                       'First Name',
                       style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w500,
-                        color: colors.secondaryVariant,
+                        color: CustomTheme.secondary,
                       ),
                     ),
                   ),
-                  Material(
-                    borderRadius: BorderRadius.circular(15.w),
-                    clipBehavior: Clip.antiAliasWithSaveLayer,
-                    elevation: 2,
+                  CustomShadow(
                     child: TextFormField(
                       initialValue: firstName,
                       decoration: customInputDecoration(
@@ -136,20 +131,17 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   ),
                   SizedBox(height: 12.w),
                   Padding(
-                    padding: EdgeInsets.only(left: 12.w, bottom: 4.w),
+                    padding: EdgeInsets.only(left: 14.w, bottom: 4.w),
                     child: Text(
                       'Last Name',
                       style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w500,
-                        color: colors.secondaryVariant,
+                        color: CustomTheme.secondary,
                       ),
                     ),
                   ),
-                  Material(
-                    borderRadius: BorderRadius.circular(15.w),
-                    clipBehavior: Clip.antiAliasWithSaveLayer,
-                    elevation: 2,
+                  CustomShadow(
                     child: TextFormField(
                       initialValue: lastName,
                       decoration: customInputDecoration(
