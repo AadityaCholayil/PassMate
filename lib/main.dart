@@ -7,6 +7,7 @@ import 'package:passmate/firebase_options.dart';
 import 'package:passmate/my_app.dart';
 import 'package:passmate/shared/error_screen.dart';
 import 'package:passmate/shared/loading.dart';
+import 'package:url_strategy/url_strategy.dart';
 
 // import 'dart:html' as html;
 
@@ -14,6 +15,7 @@ void main() async {
   // html.window.onBeforeUnload.listen((event) async{
   //   print('u sure bruv?');
   // });
+  setPathUrlStrategy();
   Bloc.transformer = sequential<dynamic>();
   Bloc.observer = AppBlocObserver();
   WidgetsFlutterBinding.ensureInitialized();
