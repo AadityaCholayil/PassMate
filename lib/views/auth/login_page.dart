@@ -42,6 +42,7 @@ class _LoginPageState extends State<LoginPage> {
           stateMessage = 'Success!';
           ScaffoldMessenger.of(context).hideCurrentSnackBar();
           print('Navigating..');
+          await Future.delayed(const Duration(milliseconds: 600));
           Navigator.popUntil(context, ModalRoute.withName(RoutesName.wrapper));
         }
       },
@@ -70,7 +71,7 @@ class _LoginPageState extends State<LoginPage> {
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 20.w),
+        padding: EdgeInsets.symmetric(horizontal: 24.w),
         child: Form(
           key: _formKey,
           child: Column(
@@ -80,70 +81,82 @@ class _LoginPageState extends State<LoginPage> {
               SizedBox(height: 25.w),
               const CustomBackButton(),
               SizedBox(height: 90.h),
-              Text(
-                'Welcome to,',
-                style: TextStyle(
-                  fontSize: 30,
-                  fontWeight: FontWeight.normal,
-                  color: CustomTheme.primary,
-                  height: 0.9,
-                ),
-              ),
-              Text(
-                'PassMate',
-                style: TextStyle(
-                  height: 1.25,
-                  fontSize: 43.5,
-                  fontWeight: FontWeight.bold,
-                  color: CustomTheme.primary,
-                ),
-              ),
-              SizedBox(height: 60.h),
-              Text(
-                'Login to continue',
-                style: TextStyle(
-                  height: 1.25.w,
-                  fontSize: 25,
-                  fontWeight: FontWeight.w600,
-                  color: CustomTheme.primary,
+              Padding(
+                padding: EdgeInsets.only(left: 8.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Welcome to,',
+                      style: TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.normal,
+                        color: CustomTheme.primary,
+                        height: 0.9,
+                      ),
+                    ),
+                    Text(
+                      'PassMate',
+                      style: TextStyle(
+                        height: 1.25,
+                        fontSize: 43.5,
+                        fontWeight: FontWeight.bold,
+                        color: CustomTheme.primary,
+                      ),
+                    ),
+                    SizedBox(height: 60.h),
+                    Text(
+                      'Login to continue',
+                      style: TextStyle(
+                        height: 1.25.w,
+                        fontSize: 25,
+                        fontWeight: FontWeight.w600,
+                        color: CustomTheme.primary,
+                      ),
+                    ),
+                  ],
                 ),
               ),
               SizedBox(height: 25.h),
-              TextFormField(
-                decoration:
-                    customInputDecoration(context: context, labelText: 'Email'),
-                style: formTextStyle(context),
-                onSaved: (value) {
-                  email = value ?? '';
-                },
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your email';
-                  }
-                  if (!AuthEmail(value).isValid) {
-                    return 'Invalid email format';
-                  }
-                  return null;
-                },
+              CustomShadow(
+                child: TextFormField(
+                  decoration: customInputDecoration(
+                      context: context, labelText: 'Email'),
+                  style: formTextStyle(context),
+                  onSaved: (value) {
+                    email = value ?? '';
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your email';
+                    }
+                    if (!AuthEmail(value).isValid) {
+                      return 'Invalid email format';
+                    }
+                    return null;
+                  },
+                ),
               ),
               SizedBox(height: 20.w),
               Stack(
-                alignment: Alignment.center,
+                alignment: Alignment.topCenter,
                 children: [
-                  TextFormField(
-                    decoration: customInputDecoration(
-                        context: context, labelText: 'Password'),
-                    style: formTextStyle(context),
-                    obscureText: !showPassword,
-                    onSaved: (value) {
-                      password = value ?? '';
-                    },
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your password';
-                      }
-                      return null;
-                    },
+                  CustomShadow(
+                    child: TextFormField(
+                      decoration: customInputDecoration(
+                          context: context, labelText: 'Password'),
+                      style: formTextStyle(context),
+                      obscureText: !showPassword,
+                      onSaved: (value) {
+                        password = value ?? '';
+                      },
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your password';
+                        }
+                        return null;
+                      },
+                    ),
                   ),
                   Container(
                     padding: EdgeInsets.only(right: 15.w),
