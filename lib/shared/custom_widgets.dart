@@ -9,18 +9,23 @@ import 'package:passmate/views/settings/settings_page.dart';
 InputDecoration customInputDecoration(
     {required BuildContext context,
     String labelText = '',
-    bool isSearch = false}) {
+    bool isSearch = false,
+    double? leftPadding}) {
+  double size = 16;
   return InputDecoration(
-    suffixIcon: isSearch
-        ? Padding(
-            padding: EdgeInsets.only(right: 20.w),
-            child: Icon(
-              Icons.search,
-              size: 25.w,
-            ),
-          )
-        : null,
-    contentPadding: EdgeInsets.fromLTRB(24.w, 20.w, 22.w, 20.w),
+    // constraints: BoxConstraints(
+    //   minHeight: 200.w,
+    // ),
+    // suffixIcon: isSearch
+    //     ? Padding(
+    //         padding: EdgeInsets.only(right: 20.w),
+    //         child: Icon(
+    //           Icons.search,
+    //           size: 25.w,
+    //         ),
+    //       )
+    //     : null,
+    contentPadding: EdgeInsets.fromLTRB(leftPadding ?? 24.w, 22.w, 22.w, 22.w),
     enabledBorder: OutlineInputBorder(
       borderSide: BorderSide(
         color: isSearch ? CustomTheme.card : CustomTheme.card,
@@ -32,48 +37,56 @@ InputDecoration customInputDecoration(
     fillColor: CustomTheme.card,
     labelText: labelText,
     labelStyle: TextStyle(
-        fontSize: 16, color: CustomTheme.t2, fontWeight: FontWeight.w400),
-    alignLabelWithHint: true,
+      fontSize: size,
+      color: CustomTheme.t2,
+      fontWeight: FontWeight.w400,
+      // height: 1.w,
+    ),
+    // alignLabelWithHint: true,
     floatingLabelBehavior: FloatingLabelBehavior.never,
-    helperStyle: const TextStyle(
-      color: Color(0xdd000000),
-      fontSize: 16.0,
-      fontWeight: FontWeight.w400,
-      fontStyle: FontStyle.normal,
-    ),
-    hintStyle: const TextStyle(
-      color: Color(0xdd000000),
-      fontSize: 16.0,
-      fontWeight: FontWeight.w400,
-      fontStyle: FontStyle.normal,
-    ),
-    errorStyle: const TextStyle(
-      color: Color(0xffd32f2f),
-      fontSize: 15.0,
-      fontWeight: FontWeight.w400,
-      fontStyle: FontStyle.normal,
-    ),
+    // helperStyle: TextStyle(
+    //   color: Color(0xdd000000),
+    //   fontSize: size,
+    //   fontWeight: FontWeight.w400,
+    //   fontStyle: FontStyle.normal,
+    //   height: 1.5.w,
+    // ),
+    // hintStyle: TextStyle(
+    //   color: Color(0xdd000000),
+    //   fontSize: size,
+    //   fontWeight: FontWeight.w400,
+    //   fontStyle: FontStyle.normal,
+    //   height: 1.5.w,
+    // ),
+    // errorStyle: TextStyle(
+    //   color: Color(0xffd32f2f),
+    //   fontSize: size - 1,
+    //   fontWeight: FontWeight.w400,
+    //   fontStyle: FontStyle.normal,
+    //   height: 1.5.w,
+    // ),
     errorMaxLines: null,
     isDense: false,
     isCollapsed: false,
-    prefixStyle: const TextStyle(
-      color: Color(0xdd000000),
-      fontSize: 16.0,
-      fontWeight: FontWeight.w400,
-      fontStyle: FontStyle.normal,
-    ),
-    suffixStyle: const TextStyle(
-      color: Color(0xdd000000),
-      fontSize: 16.0,
-      fontWeight: FontWeight.w400,
-      fontStyle: FontStyle.normal,
-    ),
-    counterStyle: const TextStyle(
-      color: Color(0xdd000000),
-      fontSize: 16.0,
-      fontWeight: FontWeight.w400,
-      fontStyle: FontStyle.normal,
-    ),
+    // prefixStyle: TextStyle(
+    //   color: Color(0xdd000000),
+    //   fontSize: size,
+    //   fontWeight: FontWeight.w400,
+    //   fontStyle: FontStyle.normal,
+    //   height: 1.5.w,
+    // ),
+    // suffixStyle: TextStyle(
+    //   color: Color(0xdd000000),
+    //   fontSize: size,
+    //   fontWeight: FontWeight.w400,
+    //   fontStyle: FontStyle.normal,
+    // ),
+    // counterStyle: TextStyle(
+    //   color: Color(0xdd000000),
+    //   fontSize: size,
+    //   fontWeight: FontWeight.w400,
+    //   fontStyle: FontStyle.normal,
+    // ),
     filled: true,
     errorBorder: OutlineInputBorder(
       borderSide: BorderSide(
@@ -119,7 +132,11 @@ InputDecoration customInputDecoration(
 }
 
 TextStyle formTextStyle(BuildContext context) => TextStyle(
-    fontSize: 16, color: CustomTheme.primary, fontWeight: FontWeight.w500);
+      fontSize: 16,
+      color: CustomTheme.primary,
+      fontWeight: FontWeight.w500,
+      // height: 1.3.w,
+    );
 
 class CustomElevatedButton extends StatelessWidget {
   final void Function()? onPressed;
@@ -142,7 +159,7 @@ class CustomElevatedButton extends StatelessWidget {
         elevation: 3,
         primary: style == 0 ? CustomTheme.primary : CustomTheme.card,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12.w),
+          borderRadius: BorderRadius.circular(20.w),
         ),
       ),
       child: Container(
@@ -208,14 +225,15 @@ class CustomShadow extends StatelessWidget {
           height: height ?? 60.w,
           alignment: Alignment.center,
           decoration: BoxDecoration(
+            color: Colors.red,
             boxShadow: [
               BoxShadow(
                 color: CustomTheme.cardShadow,
-                blurRadius: 10,
+                blurRadius: 10.w,
                 offset: Offset(4.w, 4.w),
               ),
             ],
-            color: CustomTheme.card,
+            // color: CustomTheme.card,
             borderRadius: BorderRadius.circular(borderRadius ?? 20.w),
           ),
         ),
