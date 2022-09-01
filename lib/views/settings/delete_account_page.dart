@@ -7,6 +7,7 @@ import 'package:passmate/shared/custom_snackbar.dart';
 import 'package:passmate/shared/custom_widgets.dart';
 import 'package:passmate/shared/temp_error.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:passmate/theme/theme.dart';
 
 class DeleteAccountPage extends StatefulWidget {
   const DeleteAccountPage({Key? key}) : super(key: key);
@@ -65,7 +66,7 @@ class _DeleteAccountPageState extends State<DeleteAccountPage> {
 
   Container _buildDeleteAccountPortrait(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20.w),
+      padding: EdgeInsets.symmetric(horizontal: 24.w),
       child: Form(
         key: _formKey,
         child: Column(
@@ -79,54 +80,64 @@ class _DeleteAccountPageState extends State<DeleteAccountPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    'Delete Account',
-                    style: TextStyle(
-                      height: 1.25.w,
-                      fontSize: 40,
-                      fontWeight: FontWeight.w700,
-                      color: Theme.of(context).colorScheme.onBackground,
+                  Padding(
+                    padding: EdgeInsets.only(left: 8.w),
+                    child: Text(
+                      'Delete Account',
+                      style: TextStyle(
+                        height: 1.25.w,
+                        fontSize: 40,
+                        fontWeight: FontWeight.w700,
+                        color: Theme.of(context).colorScheme.onBackground,
+                      ),
                     ),
                   ),
                   SizedBox(height: 15.h),
-                  Text(
-                    'Please re-enter your credentials',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      color: Theme.of(context).colorScheme.secondaryVariant,
+                  Padding(
+                    padding: EdgeInsets.only(left: 10.w),
+                    child: Text(
+                      'Please re-enter your credentials',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: CustomTheme.secondary,
+                      ),
                     ),
                   ),
                   SizedBox(height: 20.h),
-                  TextFormField(
-                    decoration: customInputDecoration(
-                        context: context, labelText: 'Email'),
-                    style: formTextStyle(context),
-                    onSaved: (value) {
-                      email = value ?? '';
-                    },
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your email';
-                      }
-                      if (!AuthEmail(value).isValid) {
-                        return 'Invalid email format';
-                      }
-                    },
+                  CustomShadow(
+                    child: TextFormField(
+                      decoration: customInputDecoration(
+                          context: context, labelText: 'Email'),
+                      style: formTextStyle(context),
+                      onSaved: (value) {
+                        email = value ?? '';
+                      },
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your email';
+                        }
+                        if (!AuthEmail(value).isValid) {
+                          return 'Invalid email format';
+                        }
+                      },
+                    ),
                   ),
                   SizedBox(height: 20.w),
-                  TextFormField(
-                    decoration: customInputDecoration(
-                        context: context, labelText: 'Master Password'),
-                    style: formTextStyle(context),
-                    onSaved: (value) {
-                      password = value ?? '';
-                    },
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your password';
-                      }
-                    },
+                  CustomShadow(
+                    child: TextFormField(
+                      decoration: customInputDecoration(
+                          context: context, labelText: 'Master Password'),
+                      style: formTextStyle(context),
+                      onSaved: (value) {
+                        password = value ?? '';
+                      },
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your password';
+                        }
+                      },
+                    ),
                   ),
                   SizedBox(height: 25.w),
                   CustomElevatedButton(
@@ -146,7 +157,7 @@ class _DeleteAccountPageState extends State<DeleteAccountPage> {
                                   'All your credentials will be deleted permanently. This action cannot be undone!');
                         },
                       );
-                      if(res=='confirm'){
+                      if (res == 'confirm') {
                         // print('delete acc');
                         BlocProvider.of<AppBloc>(context)
                             .add(DeleteUser(email: email, password: password));
