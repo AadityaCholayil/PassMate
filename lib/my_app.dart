@@ -59,7 +59,7 @@ class MyApp extends StatelessWidget {
                           }
                           return MediaQuery(
                               data: MediaQuery.of(context)
-                                  .copyWith(textScaleFactor: factor / 414),
+                                  .copyWith(textScaleFactor: width / 414),
                               child: child ?? Container());
                         },
                       );
