@@ -339,13 +339,13 @@ class MenuItem extends StatelessWidget {
           Icon(
             icon,
             size: 26.w,
-            color: selected ? colorScheme.secondaryContainer : Colors.white,
+            color: selected ? CustomTheme.secondary : CustomTheme.t3,
           ),
           SizedBox(width: 18.w),
           Text(
             text,
             style: TextStyle(
-              color: selected ? colorScheme.secondaryContainer : Colors.white,
+              color: selected ? CustomTheme.secondary : CustomTheme.t3,
               fontSize: 17,
               fontWeight: FontWeight.w500,
             ),
