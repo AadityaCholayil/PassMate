@@ -10,6 +10,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:passmate/shared/custom_widgets.dart';
 import 'package:passmate/shared/loading.dart';
 import 'package:passmate/shared/temp_error.dart';
+import 'package:passmate/theme/theme.dart';
 
 class PasswordFormPage extends StatefulWidget {
   final Password? password;
@@ -97,7 +98,7 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 20.w),
+          padding: EdgeInsets.symmetric(horizontal: 24.w),
           child: Form(
             key: _formKey,
             child: Column(
@@ -112,7 +113,7 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
                     'Add Password',
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.onBackground,
-                      fontSize: 42,
+                      fontSize: 40,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -145,7 +146,7 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
 
   Widget _buildHeader(String title, IconData iconData) {
     return Container(
-      padding: EdgeInsets.only(top: 10.w, left: 5.w),
+      padding: EdgeInsets.only(top: 10.w, left: 8.w),
       child: Row(
         children: [
           Icon(
@@ -177,17 +178,19 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
   Widget _buildSiteName(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(top: 7.w, bottom: 5.w),
-      child: TextFormField(
-        initialValue: _siteName,
-        style: formTextStyle(context),
-        decoration: customInputDecoration(
-          context: context,
-          labelText: 'Eg. Google',
+      child: CustomShadow(
+        child: TextFormField(
+          initialValue: _siteName,
+          style: formTextStyle(context),
+          decoration: customInputDecoration(
+            context: context,
+            labelText: 'Eg. Google',
+          ),
+          onSaved: (value) {
+            _siteName = value ?? '';
+          },
+          validator: validateText,
         ),
-        onSaved: (value) {
-          _siteName = value ?? '';
-        },
-        validator: validateText,
       ),
     );
   }
@@ -195,27 +198,29 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
   Widget _buildSiteUrl(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(top: 7.w, bottom: 5.w),
-      child: TextFormField(
-        initialValue: _siteUrl,
-        style: formTextStyle(context),
-        decoration: customInputDecoration(
-          context: context,
-          labelText: 'Eg. www.google.com',
+      child: CustomShadow(
+        child: TextFormField(
+          initialValue: _siteUrl,
+          style: formTextStyle(context),
+          decoration: customInputDecoration(
+            context: context,
+            labelText: 'Eg. www.google.com',
+          ),
+          onSaved: (value) {
+            _siteUrl = value ?? '';
+          },
+          autovalidateMode: AutovalidateMode.always,
+          validator: (value) {
+            if (value == null) {
+              return 'This field cannot be empty!';
+            }
+            if (value.isNotEmpty &&
+                !RegExp(r'[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)')
+                    .hasMatch(value)) {
+              return 'Invalid URL format';
+            }
+          },
         ),
-        onSaved: (value) {
-          _siteUrl = value ?? '';
-        },
-        autovalidateMode: AutovalidateMode.always,
-        validator: (value) {
-          if (value == null) {
-            return 'This field cannot be empty!';
-          }
-          if (value.isNotEmpty &&
-              !RegExp(r'[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)')
-                  .hasMatch(value)) {
-            return 'Invalid URL format';
-          }
-        },
       ),
     );
   }
@@ -223,17 +228,19 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
   Widget _buildEmail(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(top: 7.w, bottom: 5.w),
-      child: TextFormField(
-        initialValue: _email,
-        style: formTextStyle(context),
-        decoration: customInputDecoration(
-          context: context,
-          labelText: 'Username or Email',
+      child: CustomShadow(
+        child: TextFormField(
+          initialValue: _email,
+          style: formTextStyle(context),
+          decoration: customInputDecoration(
+            context: context,
+            labelText: 'Username or Email',
+          ),
+          onSaved: (value) {
+            _email = value ?? '';
+          },
+          validator: validateText,
         ),
-        onSaved: (value) {
-          _email = value ?? '';
-        },
-        validator: validateText,
       ),
     );
   }
@@ -241,17 +248,19 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
   Widget _buildPassword(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(top: 7.w, bottom: 5.w),
-      child: TextFormField(
-        initialValue: _password,
-        style: formTextStyle(context),
-        decoration: customInputDecoration(
-          context: context,
-          labelText: 'Password',
+      child: CustomShadow(
+        child: TextFormField(
+          initialValue: _password,
+          style: formTextStyle(context),
+          decoration: customInputDecoration(
+            context: context,
+            labelText: 'Password',
+          ),
+          onSaved: (value) {
+            _password = value ?? '';
+          },
+          validator: validateText,
         ),
-        onSaved: (value) {
-          _password = value ?? '';
-        },
-        validator: validateText,
       ),
     );
   }
@@ -259,17 +268,20 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
   Widget _buildNote(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(top: 7.w, bottom: 5.w),
-      child: TextFormField(
-        initialValue: _note,
-        style: formTextStyle(context),
-        decoration: customInputDecoration(
-          context: context,
-          labelText: 'Eg. For Google',
+      child: CustomShadow(
+        height: 106.w,
+        child: TextFormField(
+          initialValue: _note,
+          style: formTextStyle(context),
+          decoration: customInputDecoration(
+            context: context,
+            labelText: 'Eg. For Google',
+          ),
+          maxLines: 3,
+          onSaved: (value) {
+            _note = value ?? '';
+          },
         ),
-        maxLines: 3,
-        onSaved: (value) {
-          _note = value ?? '';
-        },
       ),
     );
   }
@@ -295,40 +307,42 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
             });
           }
         },
-        child: Container(
-          alignment: Alignment.centerLeft,
-          height: 55.w,
-          padding: EdgeInsets.only(left: 18.w, right: 7.w),
-          // padding: EdgeInsets.fromLTRB(18.w, 11.w, 15.w, 11.w),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(15.w),
-            border: Border.all(
-              color: Theme.of(context).colorScheme.secondaryVariant,
-              width: 2.w,
-              style: BorderStyle.solid,
-            ),
-          ),
-          child: Row(
-            children: [
-              Icon(
-                passwordCategoryIcon[getPasswordCategoryStr(_category)],
-                size: 23.w,
-              ),
-              SizedBox(width: 10.w),
-              Text(
-                label,
-                style: const TextStyle(
-                  fontSize: 17,
+        child: CustomShadow(
+          child: Container(
+            alignment: Alignment.centerLeft,
+            height: 60.w,
+            padding: EdgeInsets.only(left: 24.w, right: 15.w),
+            // padding: EdgeInsets.fromLTRB(18.w, 11.w, 15.w, 11.w),
+            // decoration: BoxDecoration(
+            //   color: Colors.white,
+            //   borderRadius: BorderRadius.circular(15.w),
+            //   border: Border.all(
+            //     color: Theme.of(context).colorScheme.secondaryVariant,
+            //     width: 2.w,
+            //     style: BorderStyle.solid,
+            //   ),
+            // ),
+            child: Row(
+              children: [
+                Icon(
+                  passwordCategoryIcon[getPasswordCategoryStr(_category)],
+                  size: 23.w,
                 ),
-              ),
-              const Spacer(),
-              SizedBox(width: 5.w),
-              const Icon(
-                Icons.expand_more,
-                size: 35,
-              )
-            ],
+                SizedBox(width: 10.w),
+                Text(
+                  label,
+                  style: const TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
+                const Spacer(),
+                SizedBox(width: 5.w),
+                const Icon(
+                  Icons.expand_more,
+                  size: 35,
+                )
+              ],
+            ),
           ),
         ),
       ),
@@ -457,66 +471,63 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
             });
           }
         },
-        child: Container(
-          alignment: Alignment.centerLeft,
-          height: 55.w,
-          padding: EdgeInsets.only(left: 18.w, right: 7.w),
-          // padding: EdgeInsets.fromLTRB(18.w, 11.w, 15.w, 11.w),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(15.w),
-            border: Border.all(
-              color: Theme.of(context).colorScheme.secondaryVariant,
-              width: 2.w,
-              style: BorderStyle.solid,
+        child: CustomShadow(
+          child: Container(
+            alignment: Alignment.centerLeft,
+            height: 60.w,
+            padding: EdgeInsets.only(left: 24.w, right: 15.w),
+            // padding: EdgeInsets.fromLTRB(18.w, 11.w, 15.w, 11.w),
+            decoration: BoxDecoration(
+              color: CustomTheme.card,
+              borderRadius: BorderRadius.circular(20.w),
             ),
-          ),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Expanded(
-                child: ListView.separated(
-                  shrinkWrap: true,
-                  padding: EdgeInsets.zero,
-                  physics: const BouncingScrollPhysics(),
-                  itemCount: pathList.length,
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) {
-                    if (pathList.length == index) {
-                      return SizedBox(
-                        width: 10.w,
-                      );
-                    } else {
-                      return Center(
-                        child: Text(
-                          pathList[index],
-                          style: const TextStyle(
-                            fontSize: 18,
-                            // fontWeight: FontWeight.w500,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Expanded(
+                  child: ListView.separated(
+                    shrinkWrap: true,
+                    padding: EdgeInsets.zero,
+                    physics: const BouncingScrollPhysics(),
+                    itemCount: pathList.length,
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (context, index) {
+                      if (pathList.length == index) {
+                        return SizedBox(
+                          width: 10.w,
+                        );
+                      } else {
+                        return Center(
+                          child: Text(
+                            pathList[index],
+                            style: const TextStyle(
+                              fontSize: 16,
+                              // fontWeight: FontWeight.w500,
+                            ),
                           ),
+                        );
+                      }
+                    },
+                    separatorBuilder: (context, index) {
+                      return Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 5.w),
+                        child: Icon(
+                          Icons.arrow_forward_ios,
+                          size: 18.w,
                         ),
                       );
-                    }
-                  },
-                  separatorBuilder: (context, index) {
-                    return Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 5.w),
-                      child: Icon(
-                        Icons.arrow_forward_ios,
-                        size: 18.w,
-                      ),
-                    );
-                  },
+                    },
+                  ),
                 ),
-              ),
-              SizedBox(width: 5.w),
-              const Icon(
-                Icons.expand_more,
-                size: 35,
-              )
-            ],
+                SizedBox(width: 5.w),
+                const Icon(
+                  Icons.expand_more,
+                  size: 35,
+                )
+              ],
+            ),
           ),
         ),
       ),
@@ -669,7 +680,7 @@ class _SelectFolderDialogState extends State<SelectFolderDialog> {
                                       color: Theme.of(context)
                                           .colorScheme
                                           .onBackground,
-                                      fontSize: 36,
+                                      fontSize: 30,
                                       fontWeight: FontWeight.w700,
                                     ),
                                   ),
