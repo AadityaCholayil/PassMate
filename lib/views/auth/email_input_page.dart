@@ -15,7 +15,10 @@ class EmailInputPage extends StatefulWidget {
   final File? image;
 
   const EmailInputPage(
-      {required this.firstName, required this.lastName, required this.image, Key? key})
+      {required this.firstName,
+      required this.lastName,
+      required this.image,
+      Key? key})
       : super(key: key);
 
   @override
@@ -68,71 +71,82 @@ class _EmailInputPageState extends State<EmailInputPage> {
           children: [
             SizedBox(height: 25.w),
             const CustomBackButton(),
-            SizedBox(height: 15.w),
+            SizedBox(height: 20.w),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Create an Account',
-                  style: TextStyle(
-                    height: 1.25,
-                    fontSize: 43.5,
-                    fontWeight: FontWeight.bold,
-                    color: Theme.of(context).colorScheme.onBackground,
-                  ),
-                ),
-                SizedBox(height: 15.w),
-                Text(
-                  'Enter your email',
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                    color: Theme.of(context).colorScheme.secondaryVariant,
+                Padding(
+                  padding: EdgeInsets.only(left: 8.w),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Create an Account',
+                        style: TextStyle(
+                          height: 1.25,
+                          fontSize: 40,
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.onBackground,
+                        ),
+                      ),
+                      SizedBox(height: 15.w),
+                      Text(
+                        'Enter your email',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: Theme.of(context).colorScheme.secondaryVariant,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 SizedBox(height: 20.w),
                 Stack(
                   children: [
-                    TextFormField(
-                      decoration: emailStatus == EmailStatus.valid
-                          ? customInputDecoration(
-                              context: context, labelText: 'Email').copyWith(
-                        enabledBorder: greenBorder,
-                        focusedBorder: greenBorder,
-                      )
-                          : customInputDecoration(
-                              context: context, labelText: 'Email'),
-                      style: formTextStyle(context),
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter your email';
-                        }
-                        if (!AuthEmail(value).isValid) {
-                          return 'Invalid email format';
-                        }
-                        if (emailStatus == EmailStatus.invalid) {
-                          return 'This email is already taken!';
-                        }
-                      },
-                      onChanged: (value) {
-                        setState(() {
-                          email.email = value;
-                        });
-                        if (value.isNotEmpty && AuthEmail(value).isValid) {
-                          context
-                              .read<AppBloc>()
-                              .add(CheckEmailStatus(email: value));
-                        } else {
+                    CustomShadow(
+                      child: TextFormField(
+                        decoration: emailStatus == EmailStatus.valid
+                            ? customInputDecoration(
+                                    context: context, labelText: 'Email')
+                                .copyWith(
+                                enabledBorder: greenBorder,
+                                focusedBorder: greenBorder,
+                              )
+                            : customInputDecoration(
+                                context: context, labelText: 'Email'),
+                        style: formTextStyle(context),
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your email';
+                          }
+                          if (!AuthEmail(value).isValid) {
+                            return 'Invalid email format';
+                          }
+                          if (emailStatus == EmailStatus.invalid) {
+                            return 'This email is already taken!';
+                          }
+                        },
+                        onChanged: (value) {
                           setState(() {
-                            emailStatus = EmailStatus.invalid;
+                            email.email = value;
                           });
-                        }
-                      },
+                          if (value.isNotEmpty && AuthEmail(value).isValid) {
+                            context
+                                .read<AppBloc>()
+                                .add(CheckEmailStatus(email: value));
+                          } else {
+                            setState(() {
+                              emailStatus = EmailStatus.invalid;
+                            });
+                          }
+                        },
+                      ),
                     ),
                     Container(
                       padding: EdgeInsets.only(right: 15.w),
-                      height: 55.w,
+                      height: 60.w,
                       alignment: Alignment.centerRight,
                       child: emailStatus == EmailStatus.loading
                           ? const CircularProgressIndicator()
@@ -189,8 +203,10 @@ class _EmailInputPageState extends State<EmailInputPage> {
                         color: Theme.of(context).colorScheme.primary),
                   ),
                   onPressed: () {
-                    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
-                        builder: (context) => const LoginPage()), ModalRoute.withName('/'));
+                    Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(
+                            builder: (context) => const LoginPage()),
+                        ModalRoute.withName('/'));
                   },
                 ),
               ],
