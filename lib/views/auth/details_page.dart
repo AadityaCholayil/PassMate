@@ -44,7 +44,7 @@ class _DetailsPageState extends State<DetailsPage> {
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 20.w),
+        padding: EdgeInsets.symmetric(horizontal: 24.w),
         child: Form(
           key: _formKey,
           child: Column(
@@ -56,22 +56,22 @@ class _DetailsPageState extends State<DetailsPage> {
               SizedBox(height: 15.w),
               Column(
                 children: [
-                  Text(
-                    'Create an Account',
-                    style: TextStyle(
-                      height: 1.25,
-                      fontSize: 43.5,
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.onBackground,
+                  Padding(
+                    padding: EdgeInsets.only(left: 8.w),
+                    child: Text(
+                      'Create an Account',
+                      style: TextStyle(
+                        height: 1.25,
+                        fontSize: 40,
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).colorScheme.onBackground,
+                      ),
                     ),
                   ),
                   SizedBox(height: 20.w),
                   _buildProfile(Theme.of(context).colorScheme, context),
                   SizedBox(height: 25.w),
-                  Material(
-                    borderRadius: BorderRadius.circular(15.w),
-                    clipBehavior: Clip.antiAliasWithSaveLayer,
-                    elevation: 2,
+                  CustomShadow(
                     child: TextFormField(
                       decoration: customInputDecoration(
                           context: context, labelText: 'First Name'),
@@ -87,10 +87,7 @@ class _DetailsPageState extends State<DetailsPage> {
                     ),
                   ),
                   SizedBox(height: 20.w),
-                  Material(
-                    borderRadius: BorderRadius.circular(15.w),
-                    clipBehavior: Clip.antiAliasWithSaveLayer,
-                    elevation: 2,
+                  CustomShadow(
                     child: TextFormField(
                       decoration: customInputDecoration(
                           context: context, labelText: 'Last Name'),
@@ -132,14 +129,14 @@ class _DetailsPageState extends State<DetailsPage> {
                   Text(
                     "Already have an account?",
                     style: TextStyle(
-                        fontSize: 14,
+                        fontSize: 15,
                         color: Theme.of(context).colorScheme.onSurface),
                   ),
                   TextButton(
                     child: Text(
                       "Login!",
                       style: TextStyle(
-                          fontSize: 14,
+                          fontSize: 15,
                           color: Theme.of(context).colorScheme.primary),
                     ),
                     onPressed: () {
