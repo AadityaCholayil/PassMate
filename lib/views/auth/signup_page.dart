@@ -80,7 +80,7 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget _buildSignUpPortrait(BuildContext context) {
     return Container(
       height: MediaQuery.of(context).size.height,
-      padding: EdgeInsets.symmetric(horizontal: 20.w),
+      padding: EdgeInsets.symmetric(horizontal: 24.w),
       child: Form(
         key: _formKey,
         child: Column(
@@ -94,22 +94,30 @@ class _SignUpPageState extends State<SignUpPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  'Set Master Password',
-                  style: TextStyle(
-                    height: 1.25,
-                    fontSize: 43.5,
-                    fontWeight: FontWeight.bold,
-                    color: Theme.of(context).colorScheme.onBackground,
-                  ),
-                ),
-                SizedBox(height: 10.w),
-                Text(
-                  'The only password you’ll have to remember',
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                    color: Theme.of(context).colorScheme.secondaryVariant,
+                Padding(
+                  padding: EdgeInsets.only(left: 8.w),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Set Master Password',
+                        style: TextStyle(
+                          height: 1.25,
+                          fontSize: 40,
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.onBackground,
+                        ),
+                      ),
+                      SizedBox(height: 10.w),
+                      Text(
+                        'The only password you’ll have to remember',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Theme.of(context).colorScheme.secondaryVariant,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 SizedBox(height: 15.w),
@@ -130,7 +138,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     ),
                     Container(
                       padding: EdgeInsets.only(right: 10.w),
-                      height: 56.w,
+                      height: 60.w,
                       alignment: Alignment.centerRight,
                       child: IconButton(
                         icon: Icon(
@@ -150,40 +158,44 @@ class _SignUpPageState extends State<SignUpPage> {
                 _buildPasswordStrength(),
                 passwordStrength.list.isEmpty
                     ? Stack(
-                      children: [
-                        TextFormField(
-                            decoration: customInputDecoration(
-                                context: context, labelText: 'Confirm Password'),
-                            style: formTextStyle(context),
-                            obscureText: !showConfirmPassword,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'This field is required!';
-                              }
-                              if (value != password.password) {
-                                return 'Passwords do not match!';
-                              }
-                            },
+                        children: [
+                          CustomShadow(
+                            child: TextFormField(
+                              decoration: customInputDecoration(
+                                  context: context,
+                                  labelText: 'Confirm Password'),
+                              style: formTextStyle(context),
+                              obscureText: !showConfirmPassword,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'This field is required!';
+                                }
+                                if (value != password.password) {
+                                  return 'Passwords do not match!';
+                                }
+                                return '';
+                              },
+                            ),
                           ),
-                        Container(
-                          padding: EdgeInsets.only(right: 10.w),
-                          height: 56.w,
-                          alignment: Alignment.centerRight,
-                          child: IconButton(
-                            icon: Icon(
-                                showConfirmPassword
-                                    ? Icons.visibility
-                                    : Icons.visibility_off,
-                                size: 28.w),
-                            onPressed: () {
-                              setState(() {
-                                showConfirmPassword = !showConfirmPassword;
-                              });
-                            },
+                          Container(
+                            padding: EdgeInsets.only(right: 10.w),
+                            height: 56.w,
+                            alignment: Alignment.centerRight,
+                            child: IconButton(
+                              icon: Icon(
+                                  showConfirmPassword
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
+                                  size: 28.w),
+                              onPressed: () {
+                                setState(() {
+                                  showConfirmPassword = !showConfirmPassword;
+                                });
+                              },
+                            ),
                           ),
-                        ),
-                      ],
-                    )
+                        ],
+                      )
                     : const SizedBox.shrink(),
                 SizedBox(height: 20.w),
                 CustomElevatedButton(
@@ -231,8 +243,10 @@ class _SignUpPageState extends State<SignUpPage> {
                         color: Theme.of(context).colorScheme.primary),
                   ),
                   onPressed: () {
-                    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
-                        builder: (context) => const LoginPage()), ModalRoute.withName('/'));
+                    Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(
+                            builder: (context) => const LoginPage()),
+                        ModalRoute.withName('/'));
                   },
                 ),
               ],
@@ -267,14 +281,12 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget _buildPasswordStrength() {
     int strength = passwordStrength.strength;
     return Padding(
-      padding: EdgeInsets.only(left: 7.w, right: 7.w),
+      padding: EdgeInsets.only(left: 8.w, right: 8.w),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          SizedBox(
-            height: 10.w,
-          ),
+          SizedBox(height: 15.w),
           Row(
             children: [
               Flexible(
