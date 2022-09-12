@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:passmate/bloc/database_bloc/database_barrel.dart';
@@ -37,6 +38,15 @@ class _FolderPageState extends State<FolderPage> {
       _path = widget.path;
     }
     context.read<DatabaseBloc>().add(GetFolder(path: _path));
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      Timer(
+          const Duration(milliseconds: 100),
+          () => _controller.animateTo(
+                _controller.position.maxScrollExtent,
+                duration: const Duration(milliseconds: 500),
+                curve: Curves.fastOutSlowIn,
+              ));
+    });
   }
 
   @override
@@ -283,15 +293,7 @@ class _FolderPageState extends State<FolderPage> {
                 }
               },
               separatorBuilder: (context, index) {
-                if (index == pathList.length - 1) {
-                  Timer(
-                      const Duration(milliseconds: 100),
-                      () => _controller.animateTo(
-                            _controller.position.maxScrollExtent,
-                            duration: const Duration(milliseconds: 500),
-                            curve: Curves.fastOutSlowIn,
-                          ));
-                }
+                if (index == pathList.length - 1) {}
                 return Padding(
                   padding: EdgeInsets.symmetric(horizontal: 5.w),
                   child: Icon(
@@ -357,7 +359,7 @@ class FolderList extends StatelessWidget {
                     children: [
                       Icon(
                         Icons.add_circle_outline_rounded,
-                        size: 32.w,
+                        size: 26.w,
                         color: Theme.of(context).colorScheme.onBackground,
                       ),
                       SizedBox(
@@ -366,7 +368,7 @@ class FolderList extends StatelessWidget {
                       Text(
                         'New',
                         style: TextStyle(
-                          fontSize: 20,
+                          fontSize: 19,
                           fontWeight: FontWeight.w500,
                           color: Theme.of(context).colorScheme.onBackground,
                         ),
@@ -401,7 +403,7 @@ class FolderList extends StatelessWidget {
               );
             },
             child: Container(
-              padding: EdgeInsets.fromLTRB(18.w, 18.w, 18.w, 5.w),
+              padding: EdgeInsets.fromLTRB(18.w, 18.w, 18.w, 14.w),
               decoration: BoxDecoration(
                 color: CustomTheme.card,
                 borderRadius: BorderRadius.circular(20.w),
@@ -413,12 +415,9 @@ class FolderList extends StatelessWidget {
                 children: [
                   Image.asset(
                     'assets/folderIcon.png',
-                    height: 27.w,
-                    width: 34.w,
+                    height: 30.w,
+                    // width: 34.w,
                   ),
-                  // SizedBox(
-                  //   height: 14.w,
-                  // ),
                   const Spacer(),
                   Text(
                     folderName.replaceRange(0, 1, folderName[0].toUpperCase()),
@@ -459,6 +458,7 @@ class _AddFolderDialogState extends State<AddFolderDialog> {
     final colorScheme = Theme.of(context).colorScheme;
     return Center(
       child: Card(
+        color: CustomTheme.background,
         margin: EdgeInsets.all(10.w),
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.w)),
@@ -470,31 +470,36 @@ class _AddFolderDialogState extends State<AddFolderDialog> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Add Folder',
-                  style: TextStyle(
-                    color: colorScheme.primary,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 25,
+                Padding(
+                  padding: EdgeInsets.only(left: 15.w),
+                  child: Text(
+                    'Add Folder',
+                    style: TextStyle(
+                      color: colorScheme.primary,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 25,
+                    ),
                   ),
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: 15.w, bottom: 20.w),
-                  child: TextFormField(
-                    style: formTextStyle(context),
-                    decoration: customInputDecoration(
-                      context: context,
-                      labelText: 'Name',
+                  child: CustomShadow(
+                    child: TextFormField(
+                      style: formTextStyle(context),
+                      decoration: customInputDecoration(
+                        context: context,
+                        labelText: 'Name',
+                      ),
+                      validator: (value) {
+                        if (value == null || value == '') {
+                          return 'This field cannot be empty!';
+                        }
+                        return null;
+                      },
+                      onSaved: (value) {
+                        folderName = value ?? '';
+                      },
                     ),
-                    validator: (value) {
-                      if (value == null || value == '') {
-                        return 'This field cannot be empty!';
-                      }
-                      return null;
-                    },
-                    onSaved: (value) {
-                      folderName = value ?? '';
-                    },
                   ),
                 ),
                 CustomElevatedButton(
@@ -553,15 +558,18 @@ class _FolderDetailsState extends State<FolderDetails> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              path
-                  .split('/')
-                  .last
-                  .replaceRange(0, 1, path.split('/').last[0].toUpperCase()),
-              style: TextStyle(
-                color: colorScheme.primary,
-                fontWeight: FontWeight.w600,
-                fontSize: 22,
+            Padding(
+              padding: EdgeInsets.only(left: 3.w),
+              child: Text(
+                path
+                    .split('/')
+                    .last
+                    .replaceRange(0, 1, path.split('/').last[0].toUpperCase()),
+                style: TextStyle(
+                  color: colorScheme.primary,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 22,
+                ),
               ),
             ),
             SizedBox(height: 10.w),
@@ -655,6 +663,7 @@ class _RenameFolderDialogState extends State<RenameFolderDialog> {
     final colorScheme = Theme.of(context).colorScheme;
     return Center(
       child: Card(
+        color: CustomTheme.background,
         margin: EdgeInsets.all(10.w),
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.w)),
@@ -666,33 +675,38 @@ class _RenameFolderDialogState extends State<RenameFolderDialog> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Rename Folder',
-                  style: TextStyle(
-                    color: colorScheme.primary,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 25,
+                Padding(
+                  padding: EdgeInsets.only(left: 15.w),
+                  child: Text(
+                    'Rename Folder',
+                    style: TextStyle(
+                      color: colorScheme.primary,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 25,
+                    ),
                   ),
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: 15.w, bottom: 20.w),
-                  child: TextFormField(
-                    initialValue: path.split('/').last.replaceRange(
-                        0, 1, path.split('/').last[0].toUpperCase()),
-                    style: formTextStyle(context),
-                    decoration: customInputDecoration(
-                      context: context,
-                      labelText: 'Name',
+                  child: CustomShadow(
+                    child: TextFormField(
+                      initialValue: path.split('/').last.replaceRange(
+                          0, 1, path.split('/').last[0].toUpperCase()),
+                      style: formTextStyle(context),
+                      decoration: customInputDecoration(
+                        context: context,
+                        labelText: 'Name',
+                      ),
+                      validator: (value) {
+                        if (value == null || value == '') {
+                          return 'This field cannot be empty!';
+                        }
+                        return null;
+                      },
+                      onSaved: (value) {
+                        newFolderName = value ?? '';
+                      },
                     ),
-                    validator: (value) {
-                      if (value == null || value == '') {
-                        return 'This field cannot be empty!';
-                      }
-                      return null;
-                    },
-                    onSaved: (value) {
-                      newFolderName = value ?? '';
-                    },
                   ),
                 ),
                 CustomElevatedButton(
