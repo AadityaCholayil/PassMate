@@ -501,7 +501,7 @@ class _PasswordDetailCardState extends State<PasswordDetailCard> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 700.w,
+      height: 450.w,
       child: Card(
         margin: EdgeInsets.all(10.w),
         shape:
@@ -573,7 +573,7 @@ class _PasswordDetailCardState extends State<PasswordDetailCard> {
               ),
               SizedBox(height: 13.w),
               SizedBox(
-                height: 195.w,
+                height: 245.w,
                 child: Scrollbar(
                   isAlwaysShown: true,
                   child: SingleChildScrollView(
