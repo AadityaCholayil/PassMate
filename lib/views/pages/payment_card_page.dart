@@ -534,7 +534,7 @@ class _PaymentCardDetailCardState extends State<PaymentCardDetailCard> {
         child: Column(
           children: [
             SizedBox(
-              height: 275.w,
+              height: 325.w,
               child: Scrollbar(
                 isAlwaysShown: true,
                 child: SingleChildScrollView(
