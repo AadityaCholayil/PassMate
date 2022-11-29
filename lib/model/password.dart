@@ -1,168 +1,130 @@
 import 'dart:convert';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
-import 'package:http/http.dart';
-import 'package:passmate/model/auth_credentials.dart';
-import 'package:passmate/repositories/encryption_repository.dart';
+import 'package:equatable/equatable.dart';
 
-class Password {
-  String id;
-  String path;
-  String siteName;
-  String siteUrl;
-  String email;
-  String password;
-  String imageUrl;
-  String note;
-  PasswordCategory category;
-  bool favourite;
-  int usage;
-  Timestamp? lastUsed;
-  Timestamp? timeAdded;
+class Password extends Equatable {
+  final String? path;
+  final String? siteName;
+  final String? siteUrl;
+  final String? email;
+  final String? password;
+  final String? imageUrl;
+  final String? note;
+  final int? category;
+  final bool? favourite;
+  final int? usage;
+  final DateTime? lastUsed;
+  final DateTime? timeAdded;
 
-  Password({
-    this.id = '',
-    this.path = '',
-    this.siteName = '',
-    this.siteUrl = '',
-    this.email = '',
-    this.password = '',
-    this.imageUrl = '',
-    this.note = '',
-    this.category = PasswordCategory.others,
-    this.favourite = false,
-    this.usage = 0,
+  const Password({
+    this.path,
+    this.siteName,
+    this.siteUrl,
+    this.email,
+    this.password,
+    this.imageUrl,
+    this.note,
+    this.category,
+    this.favourite,
+    this.usage,
     this.lastUsed,
     this.timeAdded,
   });
 
-  Password.fromJson(Map<String, Object?> json, String id)
-      : this(
-          id: id,
-          path: json['path']! as String,
-          siteName: json['siteName']! as String,
-          siteUrl: json['siteUrl']! as String,
-          email: json['email']! as String,
-          password: json['password']! as String,
-          imageUrl: json['imageUrl']! as String,
-          note: json['note']! as String,
-          category: PasswordCategory.values[json['category']! as int],
-          favourite: json['favourite']! as bool,
-          usage: json['usage']! as int,
-          lastUsed: json['lastUsed'] as Timestamp,
-          timeAdded: json['timeAdded'] as Timestamp,
-        );
+  factory Password.fromMap(Map<String, dynamic> data) => Password(
+        path: data['path'] as String?,
+        siteName: data['siteName'] as String?,
+        siteUrl: data['siteUrl'] as String?,
+        email: data['email'] as String?,
+        password: data['password'] as String?,
+        imageUrl: data['imageUrl'] as String?,
+        note: data['note'] as String?,
+        category: data['category'] as int?,
+        favourite: data['favourite'] as bool?,
+        usage: data['usage'] as int?,
+        lastUsed: data['lastUsed'] == null
+            ? null
+            : DateTime.parse(data['lastUsed'] as String),
+        timeAdded: data['timeAdded'] == null
+            ? null
+            : DateTime.parse(data['timeAdded'] as String),
+      );
 
-  Map<String, Object?> toJson() {
-    return {
-      'path': path,
-      'siteName': siteName,
-      'siteUrl': siteUrl,
-      'email': email,
-      'password': password,
-      'imageUrl': imageUrl,
-      'note': note,
-      'category': category.index,
-      'favourite': favourite,
-      'usage': usage,
-      'lastUsed': lastUsed,
-      'timeAdded': timeAdded
-    };
+  Map<String, dynamic> toMap() => {
+        'path': path,
+        'siteName': siteName,
+        'siteUrl': siteUrl,
+        'email': email,
+        'password': password,
+        'imageUrl': imageUrl,
+        'note': note,
+        'category': category,
+        'favourite': favourite,
+        'usage': usage,
+        'lastUsed': lastUsed?.toIso8601String(),
+        'timeAdded': timeAdded?.toIso8601String(),
+      };
+
+  /// `dart:convert`
+  ///
+  /// Parses the string and returns the resulting Json object as [Password].
+  factory Password.fromJson(String data) {
+    return Password.fromMap(json.decode(data) as Map<String, dynamic>);
   }
 
-  PasswordStrength get passwordStrength =>
-      PasswordStrength.fromPassword(password);
+  /// `dart:convert`
+  ///
+  /// Converts [Password] to a JSON string.
+  String toJson() => json.encode(toMap());
 
-  Future encrypt(EncryptionRepository encryptionRepository) async {
-    siteName = await encryptionRepository.encrypt(siteName);
-    siteUrl = await encryptionRepository.encrypt(siteUrl);
-    email = await encryptionRepository.encrypt(email);
-    password = await encryptionRepository.encrypt(password);
-    imageUrl = await encryptionRepository.encrypt(imageUrl);
-    note = await encryptionRepository.encrypt(note);
-  }
-
-  Future decrypt(EncryptionRepository encryptionRepository) async {
-    siteName = await encryptionRepository.decrypt(siteName);
-    siteUrl = await encryptionRepository.decrypt(siteUrl);
-    email = await encryptionRepository.decrypt(email);
-    password = await encryptionRepository.decrypt(password);
-    imageUrl = await encryptionRepository.decrypt(imageUrl);
-    note = await encryptionRepository.decrypt(note);
-  }
-
-  void printDetails() {
-    print(
-        '$id, $path, $siteName, $siteUrl, $email, $password, $imageUrl, $note,'
-        ' $category, $favourite, $usage, $lastUsed, $timeAdded');
+  Password copyWith({
+    String? path,
+    String? siteName,
+    String? siteUrl,
+    String? email,
+    String? password,
+    String? imageUrl,
+    String? note,
+    int? category,
+    bool? favourite,
+    int? usage,
+    DateTime? lastUsed,
+    DateTime? timeAdded,
+  }) {
+    return Password(
+      path: path ?? this.path,
+      siteName: siteName ?? this.siteName,
+      siteUrl: siteUrl ?? this.siteUrl,
+      email: email ?? this.email,
+      password: password ?? this.password,
+      imageUrl: imageUrl ?? this.imageUrl,
+      note: note ?? this.note,
+      category: category ?? this.category,
+      favourite: favourite ?? this.favourite,
+      usage: usage ?? this.usage,
+      lastUsed: lastUsed ?? this.lastUsed,
+      timeAdded: timeAdded ?? this.timeAdded,
+    );
   }
 
   @override
-  String toString() {
-    return '$path - $siteName: $email, $password, $imageUrl, $category';
-  }
-}
+  bool get stringify => true;
 
-// class PasswordCategory {
-//   final String label;
-//   final String icon;
-//
-//   PasswordCategory({required this.label, required this.icon});
-//
-//
-// }
-
-enum PasswordCategory {
-  all,
-  social,
-  work,
-  entertainment,
-  finance,
-  education,
-  ecommerce,
-  others,
-}
-
-Map<String, IconData> passwordCategoryIcon = {
-  'Favourites': Icons.favorite_border_rounded,
-  'Social': Icons.people_alt_outlined,
-  'Work': Icons.work_outline,
-  'Entertainment': Icons.movie_creation_outlined,
-  'Finance': Icons.attach_money,
-  'Education': Icons.school_outlined,
-  'Ecommerce': Icons.shopping_cart_outlined,
-  'Others': Icons.more_horiz
-};
-
-String getPasswordCategoryStr(PasswordCategory passwordCategory) {
-  String label = passwordCategory.toString().substring(17);
-  return label.replaceRange(0, 1, label.substring(0, 1).toUpperCase());
-}
-
-Future<String?> getFavicon(String domain) async {
-  Client _client = Client();
-  Response response = await _client.get(Uri.https(
-    'favicongrabber.com',
-    '/api/grab/$domain',
-  ));
-  if (response.statusCode == 200) {
-    var data = jsonDecode(response.body);
-    print(data);
-    try {
-      for (var icon in data['icons']) {
-        String url = icon['src'];
-        if (!url.endsWith('.svg')) {
-          print(url);
-          return url;
-        }
-      }
-    } on Exception catch (_) {
-      return null;
-    } on Error catch (_) {
-      return null;
-    }
-  } else {
-    return null;
+  @override
+  List<Object?> get props {
+    return [
+      path,
+      siteName,
+      siteUrl,
+      email,
+      password,
+      imageUrl,
+      note,
+      category,
+      favourite,
+      usage,
+      lastUsed,
+      timeAdded,
+    ];
   }
 }

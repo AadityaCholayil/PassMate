@@ -19,21 +19,18 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        // Responsive
-        print('Layout Changed');
-        if (constraints.maxHeight < 1.2 * constraints.maxWidth) {
-          // LandScape
-          return const TempError(pageName: 'Settings Screen');
-        }
-        return _buildSettingsPagePortrait(colors, context);
+    return LayoutBuilder(builder: (context, constraints) {
+      // Responsive
+      print('Layout Changed');
+      if (constraints.maxHeight < 1.2 * constraints.maxWidth) {
+        // LandScape
+        return const TempError(pageName: 'Settings Screen');
       }
-    );
+      return _buildSettingsPagePortrait(colors, context);
+    });
   }
 
-  Widget _buildSettingsPagePortrait(
-      ColorScheme colors, BuildContext context) {
+  Widget _buildSettingsPagePortrait(ColorScheme colors, BuildContext context) {
     return SafeArea(
       child: Scaffold(
         body: Container(

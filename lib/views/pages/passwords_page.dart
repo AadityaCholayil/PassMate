@@ -6,7 +6,7 @@ import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:like_button/like_button.dart';
 import 'package:passmate/bloc/app_bloc/app_bloc_files.dart';
 import 'package:passmate/bloc/database_bloc/database_barrel.dart';
-import 'package:passmate/model/password.dart';
+import 'package:passmate/model/old_password.dart';
 import 'package:passmate/model/sort_methods.dart';
 import 'package:passmate/shared/custom_widgets.dart';
 import 'package:passmate/shared/loading.dart';
@@ -27,8 +27,8 @@ class _PasswordPageState extends State<PasswordPage> {
   SortMethod sortMethod = SortMethod.recentlyAdded;
   String sortLabel = '';
   String? searchLabel;
-  List<Password> completePasswordList = [];
-  List<Password> passwordList = [];
+  List<OldPassword> completePasswordList = [];
+  List<OldPassword> passwordList = [];
   bool favourites = false;
 
   @override
@@ -355,7 +355,7 @@ class PasswordCardList extends StatelessWidget {
     required this.passwordList,
   }) : super(key: key);
 
-  final List<Password> passwordList;
+  final List<OldPassword> passwordList;
 
   @override
   Widget build(BuildContext context) {
@@ -364,7 +364,7 @@ class PasswordCardList extends StatelessWidget {
       shrinkWrap: true,
       itemCount: passwordList.length,
       itemBuilder: (context, index) {
-        Password password = passwordList[index];
+        OldPassword password = passwordList[index];
         return Padding(
           padding: EdgeInsets.symmetric(horizontal: 24.w),
           child: PasswordCard(password: password),
@@ -380,7 +380,7 @@ class PasswordCard extends StatelessWidget {
     required this.password,
   }) : super(key: key);
 
-  final Password password;
+  final OldPassword password;
 
   @override
   Widget build(BuildContext context) {
@@ -480,14 +480,14 @@ class PasswordDetailCard extends StatefulWidget {
     required this.password,
   }) : super(key: key);
 
-  final Password password;
+  final OldPassword password;
 
   @override
   State<PasswordDetailCard> createState() => _PasswordDetailCardState();
 }
 
 class _PasswordDetailCardState extends State<PasswordDetailCard> {
-  late Password password;
+  late OldPassword password;
   bool showPassword = false;
   late String categoryText;
 

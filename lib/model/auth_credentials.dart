@@ -16,8 +16,8 @@ class AuthPassword {
 
   AuthPassword(this.password);
 
-  void updatePassword(String newVal){
-    password=newVal;
+  void updatePassword(String newVal) {
+    password = newVal;
   }
 
   PasswordStrength get passwordStrength {
@@ -25,8 +25,7 @@ class AuthPassword {
   }
 }
 
-class PasswordStrength{
-
+class PasswordStrength {
   List<String> list = [
     'Minimum 8 characters',
     'Atleast one uppercase character',
@@ -38,13 +37,13 @@ class PasswordStrength{
 
   PasswordStrength();
 
-  PasswordStrength.fromPassword(String password){
+  PasswordStrength.fromPassword(String password) {
     bool containsUpper = RegExp(r'(?=.*[A-Z])').hasMatch(password);
     bool containsLower = RegExp(r'(?=.*[a-z])').hasMatch(password);
     bool containsNumber = RegExp(r'(?=.*[0-9])').hasMatch(password);
     bool containsSpecialChar = RegExp(r'(?=.*[!@#\$&*~])').hasMatch(password);
-    bool isLong = password.length>=8;
-    bool isVeryLong = password.length>=11;
+    bool isLong = password.length >= 8;
+    bool isVeryLong = password.length >= 11;
     if (containsUpper) {
       strength++;
       list.remove('Atleast one uppercase character');
@@ -70,4 +69,3 @@ class PasswordStrength{
     }
   }
 }
-

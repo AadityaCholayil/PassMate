@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:passmate/bloc/database_bloc/database_barrel.dart';
 import 'package:passmate/model/folder.dart';
-import 'package:passmate/model/password.dart';
+import 'package:passmate/model/old_password.dart';
 import 'package:passmate/shared/custom_snackbar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:passmate/shared/custom_widgets.dart';
@@ -13,7 +13,7 @@ import 'package:passmate/shared/temp_error.dart';
 import 'package:passmate/theme/theme.dart';
 
 class PasswordFormPage extends StatefulWidget {
-  final Password? password;
+  final OldPassword? password;
 
   const PasswordFormPage({Key? key, this.password}) : super(key: key);
 
@@ -545,7 +545,7 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
         setState(() {
           _formKey.currentState!.save();
         });
-        Password password = Password(
+        OldPassword password = OldPassword(
           id: _id,
           path: _path,
           siteName: _siteName,

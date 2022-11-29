@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:passmate/model/folder.dart';
-import 'package:passmate/model/password.dart';
+import 'package:passmate/model/old_password.dart';
 import 'package:passmate/model/payment_card.dart';
 import 'package:passmate/model/secure_note.dart';
 import 'package:passmate/model/sort_methods.dart';
@@ -13,8 +13,8 @@ class Fetching extends DatabaseState {
 }
 
 class PasswordPageState extends DatabaseState {
-  final List<Password> list;
-  final List<Password> completeList;
+  final List<OldPassword> list;
+  final List<OldPassword> completeList;
   final String? search;
   final PasswordCategory passwordCategory;
   final SortMethod sortMethod;
@@ -70,7 +70,7 @@ class PaymentCardPageState extends DatabaseState {
         sortMethod,
         favourites,
       ];
-  
+
   @override
   String toString() {
     // return '$list, $completeList, $search, $passwordCategory, $sortMethod, $favourites, $pageState';

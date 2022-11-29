@@ -27,9 +27,8 @@ class SomethingWentWrong extends StatelessWidget {
             child: const Text(
               'Try again',
             ),
-            onPressed: (){
+            onPressed: () {
               /// Start App again
-
             },
           ),
         ],
@@ -37,4 +36,3 @@ class SomethingWentWrong extends StatelessWidget {
     );
   }
 }
-

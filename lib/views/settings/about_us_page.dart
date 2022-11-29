@@ -25,8 +25,7 @@ class _AboutUsPageState extends State<AboutUsPage> {
     });
   }
 
-  Widget _buildAboutUsPagePortrait(
-      ColorScheme colors, BuildContext context) {
+  Widget _buildAboutUsPagePortrait(ColorScheme colors, BuildContext context) {
     return SafeArea(
       child: Scaffold(
         body: SingleChildScrollView(
@@ -61,13 +60,17 @@ class _AboutUsPageState extends State<AboutUsPage> {
                 _buildAnswer(colors,
                     'PassMate uses Military-Grade AES256 to encrypt your credentials. Even if you use Tianhe-2 (MilkyWay-2), the fastest supercomputer in the world, it will take millions of years to crack 256-bit AES encryption.'),
                 SizedBox(height: 20.w),
-                _buildQuestion(colors, 'What is the significance of my Master Password?'),
+                _buildQuestion(
+                    colors, 'What is the significance of my Master Password?'),
                 SizedBox(height: 8.w),
-                _buildAnswer(colors, 'The key for the encryption is derived from your Master Password. SCRYPT and SHA256 is used for this. Hence, remembering your Master password and keeping it safe is extremely important.'),
+                _buildAnswer(colors,
+                    'The key for the encryption is derived from your Master Password. SCRYPT and SHA256 is used for this. Hence, remembering your Master password and keeping it safe is extremely important.'),
                 SizedBox(height: 20.w),
-                _buildQuestion(colors, 'What happens if I forget my Master Password?'),
+                _buildQuestion(
+                    colors, 'What happens if I forget my Master Password?'),
                 SizedBox(height: 8.w),
-                _buildAnswer(colors, 'We DO NOT store your Master Password on our end. Hence, we CANNOT recover your account if you forget your master password. '),
+                _buildAnswer(colors,
+                    'We DO NOT store your Master Password on our end. Hence, we CANNOT recover your account if you forget your master password. '),
                 SizedBox(height: 20.w),
               ],
             ),

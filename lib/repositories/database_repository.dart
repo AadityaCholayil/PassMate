@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:passmate/model/folder.dart';
-import 'package:passmate/model/password.dart';
+import 'package:passmate/model/old_password.dart';
 import 'package:passmate/model/payment_card.dart';
 import 'package:passmate/model/secure_note.dart';
 import 'package:passmate/model/user.dart';
@@ -12,6 +12,17 @@ class DatabaseRepository {
   final String uid;
 
   DatabaseRepository({required this.uid});
+
+  final FirebaseFirestore db = FirebaseFirestore.instance;
+
+  final firebase_storage.FirebaseStorage storage =
+      firebase_storage.FirebaseStorage.instance;
+}
+
+class OldDatabaseRepository {
+  final String uid;
+
+  OldDatabaseRepository({required this.uid});
 
   final FirebaseFirestore db = FirebaseFirestore.instance;
 
@@ -88,28 +99,18 @@ class DatabaseRepository {
     }
   }
 
-  DocumentReference<FolderData> get foldersRef => db
-      .collection('users')
-      .doc(uid)
-      .collection('folders')
-      .doc('folderList')
-      .withConverter<FolderData>(
-        fromFirestore: (snapshot, _) => FolderData.fromDB(snapshot.data()!),
-        toFirestore: (folderData, _) => folderData.toJson(),
-      );
-
-  CollectionReference<Password> get passwordsRef => db
+  CollectionReference<OldPassword> get passwordsRef => db
       .collection('users')
       .doc(uid)
       .collection('passwords')
-      .withConverter<Password>(
+      .withConverter<OldPassword>(
         fromFirestore: (snapshot, _) =>
-            Password.fromJson(snapshot.data()!, snapshot.id),
+            OldPassword.fromJson(snapshot.data()!, snapshot.id),
         toFirestore: (password, _) => password.toJson(),
       );
 
-  Future<List<Password>> getPasswords({String path = ''}) async {
-    List<QueryDocumentSnapshot<Password>> list = [];
+  Future<List<OldPassword>> getPasswords({String path = ''}) async {
+    List<QueryDocumentSnapshot<OldPassword>> list = [];
     if (path == '') {
       list = await passwordsRef.get().then((snapshot) => snapshot.docs);
     } else {
@@ -121,7 +122,7 @@ class DatabaseRepository {
     return list.map((e) => e.data()).toList();
   }
 
-  Future<String> addPassword(Password password) async {
+  Future<String> addPassword(OldPassword password) async {
     try {
       await passwordsRef.add(password);
       return 'Success';
@@ -131,7 +132,7 @@ class DatabaseRepository {
     }
   }
 
-  Future<String> updatePassword(Password password, String oldPath) async {
+  Future<String> updatePassword(OldPassword password, String oldPath) async {
     try {
       await passwordsRef.doc(password.id).set(password);
       return 'Success';
@@ -140,7 +141,7 @@ class DatabaseRepository {
     }
   }
 
-  Future<String> deletePassword(Password password) async {
+  Future<String> deletePassword(OldPassword password) async {
     try {
       await passwordsRef.doc(password.id).delete();
       return 'Success';
@@ -251,6 +252,16 @@ class DatabaseRepository {
       return 'Failed';
     }
   }
+
+  DocumentReference<FolderData> get foldersRef => db
+      .collection('users')
+      .doc(uid)
+      .collection('folders')
+      .doc('folderList')
+      .withConverter<FolderData>(
+        fromFirestore: (snapshot, _) => FolderData.fromDB(snapshot.data()!),
+        toFirestore: (folderData, _) => folderData.toJson(),
+      );
 
   Future<FolderData> getFolder() async {
     FolderData data =

@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:passmate/model/password.dart';
+import 'package:passmate/model/old_password.dart';
 import 'package:passmate/model/payment_card.dart';
 import 'package:passmate/model/secure_note.dart';
 import 'package:passmate/model/sort_methods.dart';
@@ -10,7 +10,7 @@ class DatabaseEvents extends Equatable {
 }
 
 class GetPasswords extends DatabaseEvents {
-  final List<Password>? list;
+  final List<OldPassword>? list;
   final PasswordCategory passwordCategory;
   final bool favourites;
   final String? search;
@@ -26,13 +26,13 @@ class GetPasswords extends DatabaseEvents {
 }
 
 class AddPassword extends DatabaseEvents {
-  final Password password;
+  final OldPassword password;
 
   AddPassword(this.password);
 }
 
 class UpdatePassword extends DatabaseEvents {
-  final Password password;
+  final OldPassword password;
   final bool fromForm;
   final String oldPath;
 
@@ -44,7 +44,7 @@ class UpdatePassword extends DatabaseEvents {
 }
 
 class DeletePassword extends DatabaseEvents {
-  final Password password;
+  final OldPassword password;
 
   DeletePassword(this.password);
 }

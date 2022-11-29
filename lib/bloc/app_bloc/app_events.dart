@@ -65,7 +65,7 @@ class SignupUser extends AppEvent {
 class UpdateUserData extends AppEvent {
   final String firstName;
   final String lastName;
-  final File? image ;
+  final File? image;
 
   const UpdateUserData(this.firstName, this.lastName, this.image);
 
@@ -96,5 +96,3 @@ class DeleteUser extends AppEvent {
   @override
   List<Object?> get props => [toString()];
 }
-
-

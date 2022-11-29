@@ -76,7 +76,7 @@ class AuthRepository {
     try {
       User user = getUser()!;
       await user.delete();
-    } on Exception catch (_)  {
+    } on Exception catch (_) {
       throw const SomethingWentWrong();
     }
   }

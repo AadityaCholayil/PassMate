@@ -70,8 +70,10 @@ class DefaultFirebaseOptions {
     messagingSenderId: '389893666974',
     projectId: 'passmate-a5cdd',
     storageBucket: 'passmate-a5cdd.appspot.com',
-    androidClientId: '389893666974-85i2eeq8eo4fb501oq52s2qhuq2m4mf4.apps.googleusercontent.com',
-    iosClientId: '389893666974-c80qi8o4b8pmlrbfi2ir89mtct1ejjtc.apps.googleusercontent.com',
+    androidClientId:
+        '389893666974-85i2eeq8eo4fb501oq52s2qhuq2m4mf4.apps.googleusercontent.com',
+    iosClientId:
+        '389893666974-c80qi8o4b8pmlrbfi2ir89mtct1ejjtc.apps.googleusercontent.com',
     iosBundleId: 'com.mates.passmate',
   );
 }

@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:passmate/bloc/database_bloc/database_barrel.dart';
 import 'package:passmate/model/folder.dart';
-import 'package:passmate/model/password.dart';
+import 'package:passmate/model/old_password.dart';
 import 'package:passmate/model/payment_card.dart';
 import 'package:passmate/model/secure_note.dart';
 import 'package:passmate/repositories/database_repository.dart';
@@ -13,7 +13,7 @@ import 'package:passmate/views/pages/folders_page.dart';
 
 class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState> {
   UserData userData;
-  DatabaseRepository databaseRepository;
+  OldDatabaseRepository databaseRepository;
   EncryptionRepository encryptionRepository;
   List<String>? folderList;
 
@@ -115,8 +115,8 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState> {
           databaseRepository.updateUserData(userData2);
         }
       }
-      List<Password> list = [];
-      List<Password> completeList = [];
+      List<OldPassword> list = [];
+      List<OldPassword> completeList = [];
       if (event.list == null) {
         list = await databaseRepository.getPasswords();
         for (var element in list) {
@@ -188,7 +188,7 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState> {
 
   FutureOr<void> _onUpdatePassword(
       UpdatePassword event, Emitter<DatabaseState> emit) async {
-    Password _password = event.password;
+    OldPassword _password = event.password;
     if (event.fromForm) {
       emit(PasswordFormState.loading);
       String? imageUrl = await getFavicon(_password.siteUrl);
@@ -456,7 +456,7 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState> {
     try {
       FolderData data = await databaseRepository.getFolder();
       List<String> folderList = [];
-      List<Password> passwordList = [];
+      List<OldPassword> passwordList = [];
       List<PaymentCard> paymentCardList = [];
       List<SecureNote> secureNoteList = [];
       String folderName = event.path.split('/').last;

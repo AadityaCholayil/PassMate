@@ -39,7 +39,7 @@ class LoadingSmall extends StatelessWidget {
   final double size;
 
   const LoadingSmall({double? size, Key? key})
-      : size=size ?? 90,
+      : size = size ?? 90,
         super(key: key);
 
   @override
@@ -71,4 +71,3 @@ class FixedLoading extends StatelessWidget {
     );
   }
 }
-

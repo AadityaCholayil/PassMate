@@ -13,7 +13,7 @@ import 'app_bloc_files.dart';
 
 class AppBloc extends Bloc<AppEvent, AppState> {
   final AuthRepository _authRepository;
-  late DatabaseRepository databaseRepository;
+  late OldDatabaseRepository databaseRepository;
   EncryptionRepository encryptionRepository = EncryptionRepository();
   late UserData userData;
   late DatabaseBloc databaseBloc;
@@ -22,7 +22,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
       : _authRepository = authRepository,
         super(Uninitialized(userData: UserData.empty)) {
     userData = _authRepository.getUserData();
-    databaseRepository = DatabaseRepository(uid: userData.uid);
+    databaseRepository = OldDatabaseRepository(uid: userData.uid);
     databaseBloc = DatabaseBloc(
       userData: userData,
       databaseRepository: databaseRepository,
@@ -69,7 +69,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
         userData = _authRepository.getUserData();
         if (userData != UserData.empty) {
           // Update databaseRepo
-          databaseRepository = DatabaseRepository(uid: userData.uid);
+          databaseRepository = OldDatabaseRepository(uid: userData.uid);
           // Fetch user data from db
           UserData completeUserData = await databaseRepository.completeUserData;
           // Get key from secure storage
@@ -104,7 +104,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
       userData = await _authRepository.logInWithCredentials(
           event.email, event.password);
       // Update DatabaseRepository
-      databaseRepository = DatabaseRepository(uid: userData.uid);
+      databaseRepository = OldDatabaseRepository(uid: userData.uid);
       // After login fetch rest of the user details from database
       UserData completeUserData = await databaseRepository.completeUserData;
       if (completeUserData != UserData.empty) {
@@ -168,7 +168,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
       userData = await _authRepository.signUpUsingCredentials(
           event.email, event.password);
       // Update DatabaseRepository
-      databaseRepository = DatabaseRepository(uid: userData.uid);
+      databaseRepository = OldDatabaseRepository(uid: userData.uid);
       // Upload Profile Pic
       String photoUrl = '';
       if (event.image != null) {
@@ -231,7 +231,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
       // Get userData for uid and email
       UserData userDataTemp = _authRepository.getUserData();
       // Update databaseRepository
-      databaseRepository = DatabaseRepository(uid: userDataTemp.uid);
+      databaseRepository = OldDatabaseRepository(uid: userDataTemp.uid);
       String photoUrl = '';
       if (event.image != null) {
         // Upload new image to Firebase storage
@@ -265,7 +265,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
 
   FutureOr<void> _onLoggedOut(LoggedOut event, Emitter<AppState> emit) async {
     userData = UserData.empty;
-    databaseRepository = DatabaseRepository(uid: userData.uid);
+    databaseRepository = OldDatabaseRepository(uid: userData.uid);
     encryptionRepository.updateKey('');
     updateDatabaseBloc();
     await _authRepository.signOut();
@@ -282,7 +282,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
           await databaseRepository.deleteProfilePicFromStorage();
           await _authRepository.deleteUser();
           userData = UserData.empty;
-          databaseRepository = DatabaseRepository(uid: userData.uid);
+          databaseRepository = OldDatabaseRepository(uid: userData.uid);
           encryptionRepository.updateKey('');
           if (!kIsWeb) {
             const storage = FlutterSecureStorage();
