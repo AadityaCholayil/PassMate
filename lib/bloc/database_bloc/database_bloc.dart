@@ -6,7 +6,7 @@ import 'package:passmate/model/folder.dart';
 import 'package:passmate/model/old_password.dart';
 import 'package:passmate/model/old_payment_card.dart';
 import 'package:passmate/model/old_secure_note.dart';
-import 'package:passmate/repositories/database_repository.dart';
+import 'package:passmate/repositories/old_database_repository.dart';
 import 'package:passmate/model/old_user.dart';
 import 'package:passmate/repositories/encryption_repository.dart';
 import 'package:passmate/views/pages/folders_page.dart';
