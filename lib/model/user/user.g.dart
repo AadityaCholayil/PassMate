@@ -14,6 +14,7 @@ _$_User _$$_UserFromJson(Map<String, dynamic> json) => _$_User(
       json['photoUrl'] as String?,
       json['pinSet'] as bool?,
       $enumDecodeNullable(_$SortMethodEnumMap, json['sortMethod']),
+      (json['folderList'] as List<dynamic>?)?.map((e) => e as String).toList(),
     );
 
 Map<String, dynamic> _$$_UserToJson(_$_User instance) => <String, dynamic>{
@@ -24,6 +25,7 @@ Map<String, dynamic> _$$_UserToJson(_$_User instance) => <String, dynamic>{
       'photoUrl': instance.photoUrl,
       'pinSet': instance.pinSet,
       'sortMethod': _$SortMethodEnumMap[instance.sortMethod],
+      'folderList': instance.folderList,
     };
 
 const _$SortMethodEnumMap = {

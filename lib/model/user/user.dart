@@ -17,6 +17,7 @@ class User with _$User {
     final String? photoUrl,
     final bool? pinSet,
     final SortMethod? sortMethod,
+    final List<String>? folderList,
   ) = _User;
 
   factory User.fromDoc(DocumentSnapshot doc) {
@@ -26,7 +27,7 @@ class User with _$User {
 
   Map<String, dynamic> toDoc() {
     Map<String, dynamic> map = toJson();
-    map.remove('id');
+    map.remove('uid');
     return map;
   }
 

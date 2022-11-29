@@ -27,6 +27,7 @@ mixin _$User {
   String? get photoUrl => throw _privateConstructorUsedError;
   bool? get pinSet => throw _privateConstructorUsedError;
   SortMethod? get sortMethod => throw _privateConstructorUsedError;
+  List<String>? get folderList => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -45,7 +46,8 @@ abstract class $UserCopyWith<$Res> {
       String? lastName,
       String? photoUrl,
       bool? pinSet,
-      SortMethod? sortMethod});
+      SortMethod? sortMethod,
+      List<String>? folderList});
 }
 
 /// @nodoc
@@ -68,6 +70,7 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
     Object? photoUrl = freezed,
     Object? pinSet = freezed,
     Object? sortMethod = freezed,
+    Object? folderList = freezed,
   }) {
     return _then(_value.copyWith(
       uid: null == uid
@@ -98,6 +101,10 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
           ? _value.sortMethod
           : sortMethod // ignore: cast_nullable_to_non_nullable
               as SortMethod?,
+      folderList: freezed == folderList
+          ? _value.folderList
+          : folderList // ignore: cast_nullable_to_non_nullable
+              as List<String>?,
     ) as $Val);
   }
 }
@@ -115,7 +122,8 @@ abstract class _$$_UserCopyWith<$Res> implements $UserCopyWith<$Res> {
       String? lastName,
       String? photoUrl,
       bool? pinSet,
-      SortMethod? sortMethod});
+      SortMethod? sortMethod,
+      List<String>? folderList});
 }
 
 /// @nodoc
@@ -134,6 +142,7 @@ class __$$_UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res, _$_User>
     Object? photoUrl = freezed,
     Object? pinSet = freezed,
     Object? sortMethod = freezed,
+    Object? folderList = freezed,
   }) {
     return _then(_$_User(
       null == uid
@@ -164,6 +173,10 @@ class __$$_UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res, _$_User>
           ? _value.sortMethod
           : sortMethod // ignore: cast_nullable_to_non_nullable
               as SortMethod?,
+      freezed == folderList
+          ? _value._folderList
+          : folderList // ignore: cast_nullable_to_non_nullable
+              as List<String>?,
     ));
   }
 }
@@ -171,9 +184,17 @@ class __$$_UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res, _$_User>
 /// @nodoc
 @JsonSerializable()
 class _$_User extends _User {
-  const _$_User(this.uid, this.email, this.firstName, this.lastName,
-      this.photoUrl, this.pinSet, this.sortMethod)
-      : super._();
+  const _$_User(
+      this.uid,
+      this.email,
+      this.firstName,
+      this.lastName,
+      this.photoUrl,
+      this.pinSet,
+      this.sortMethod,
+      final List<String>? folderList)
+      : _folderList = folderList,
+        super._();
 
   factory _$_User.fromJson(Map<String, dynamic> json) => _$$_UserFromJson(json);
 
@@ -191,10 +212,18 @@ class _$_User extends _User {
   final bool? pinSet;
   @override
   final SortMethod? sortMethod;
+  final List<String>? _folderList;
+  @override
+  List<String>? get folderList {
+    final value = _folderList;
+    if (value == null) return null;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
 
   @override
   String toString() {
-    return 'User(uid: $uid, email: $email, firstName: $firstName, lastName: $lastName, photoUrl: $photoUrl, pinSet: $pinSet, sortMethod: $sortMethod)';
+    return 'User(uid: $uid, email: $email, firstName: $firstName, lastName: $lastName, photoUrl: $photoUrl, pinSet: $pinSet, sortMethod: $sortMethod, folderList: $folderList)';
   }
 
   @override
@@ -212,13 +241,23 @@ class _$_User extends _User {
                 other.photoUrl == photoUrl) &&
             (identical(other.pinSet, pinSet) || other.pinSet == pinSet) &&
             (identical(other.sortMethod, sortMethod) ||
-                other.sortMethod == sortMethod));
+                other.sortMethod == sortMethod) &&
+            const DeepCollectionEquality()
+                .equals(other._folderList, _folderList));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, uid, email, firstName, lastName,
-      photoUrl, pinSet, sortMethod);
+  int get hashCode => Object.hash(
+      runtimeType,
+      uid,
+      email,
+      firstName,
+      lastName,
+      photoUrl,
+      pinSet,
+      sortMethod,
+      const DeepCollectionEquality().hash(_folderList));
 
   @JsonKey(ignore: true)
   @override
@@ -242,7 +281,8 @@ abstract class _User extends User {
       final String? lastName,
       final String? photoUrl,
       final bool? pinSet,
-      final SortMethod? sortMethod) = _$_User;
+      final SortMethod? sortMethod,
+      final List<String>? folderList) = _$_User;
   const _User._() : super._();
 
   factory _User.fromJson(Map<String, dynamic> json) = _$_User.fromJson;
@@ -261,6 +301,8 @@ abstract class _User extends User {
   bool? get pinSet;
   @override
   SortMethod? get sortMethod;
+  @override
+  List<String>? get folderList;
   @override
   @JsonKey(ignore: true)
   _$$_UserCopyWith<_$_User> get copyWith => throw _privateConstructorUsedError;
