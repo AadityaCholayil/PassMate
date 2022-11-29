@@ -145,35 +145,35 @@ class __$$_UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res, _$_User>
     Object? folderList = freezed,
   }) {
     return _then(_$_User(
-      null == uid
+      uid: null == uid
           ? _value.uid
           : uid // ignore: cast_nullable_to_non_nullable
               as String,
-      freezed == email
+      email: freezed == email
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
               as String?,
-      freezed == firstName
+      firstName: freezed == firstName
           ? _value.firstName
           : firstName // ignore: cast_nullable_to_non_nullable
               as String?,
-      freezed == lastName
+      lastName: freezed == lastName
           ? _value.lastName
           : lastName // ignore: cast_nullable_to_non_nullable
               as String?,
-      freezed == photoUrl
+      photoUrl: freezed == photoUrl
           ? _value.photoUrl
           : photoUrl // ignore: cast_nullable_to_non_nullable
               as String?,
-      freezed == pinSet
+      pinSet: freezed == pinSet
           ? _value.pinSet
           : pinSet // ignore: cast_nullable_to_non_nullable
               as bool?,
-      freezed == sortMethod
+      sortMethod: freezed == sortMethod
           ? _value.sortMethod
           : sortMethod // ignore: cast_nullable_to_non_nullable
               as SortMethod?,
-      freezed == folderList
+      folderList: freezed == folderList
           ? _value._folderList
           : folderList // ignore: cast_nullable_to_non_nullable
               as List<String>?,
@@ -185,20 +185,21 @@ class __$$_UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res, _$_User>
 @JsonSerializable()
 class _$_User extends _User {
   const _$_User(
-      this.uid,
+      {this.uid = '',
       this.email,
       this.firstName,
       this.lastName,
       this.photoUrl,
       this.pinSet,
       this.sortMethod,
-      final List<String>? folderList)
+      final List<String>? folderList})
       : _folderList = folderList,
         super._();
 
   factory _$_User.fromJson(Map<String, dynamic> json) => _$$_UserFromJson(json);
 
   @override
+  @JsonKey()
   final String uid;
   @override
   final String? email;
@@ -275,14 +276,14 @@ class _$_User extends _User {
 
 abstract class _User extends User {
   const factory _User(
-      final String uid,
+      {final String uid,
       final String? email,
       final String? firstName,
       final String? lastName,
       final String? photoUrl,
       final bool? pinSet,
       final SortMethod? sortMethod,
-      final List<String>? folderList) = _$_User;
+      final List<String>? folderList}) = _$_User;
   const _User._() : super._();
 
   factory _User.fromJson(Map<String, dynamic> json) = _$_User.fromJson;

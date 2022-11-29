@@ -7,14 +7,16 @@ part of 'user.dart';
 // **************************************************************************
 
 _$_User _$$_UserFromJson(Map<String, dynamic> json) => _$_User(
-      json['uid'] as String,
-      json['email'] as String?,
-      json['firstName'] as String?,
-      json['lastName'] as String?,
-      json['photoUrl'] as String?,
-      json['pinSet'] as bool?,
-      $enumDecodeNullable(_$SortMethodEnumMap, json['sortMethod']),
-      (json['folderList'] as List<dynamic>?)?.map((e) => e as String).toList(),
+      uid: json['uid'] as String? ?? '',
+      email: json['email'] as String?,
+      firstName: json['firstName'] as String?,
+      lastName: json['lastName'] as String?,
+      photoUrl: json['photoUrl'] as String?,
+      pinSet: json['pinSet'] as bool?,
+      sortMethod: $enumDecodeNullable(_$SortMethodEnumMap, json['sortMethod']),
+      folderList: (json['folderList'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
     );
 
 Map<String, dynamic> _$$_UserToJson(_$_User instance) => <String, dynamic>{

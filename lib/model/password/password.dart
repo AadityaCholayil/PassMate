@@ -10,21 +10,21 @@ part 'password.g.dart';
 class Password with _$Password {
   const Password._();
 
-  const factory Password(
-    String id,
-    String path,
-    String siteName,
-    String siteUrl,
-    String email,
-    String password,
-    String imageUrl,
-    String note,
-    PasswordCategory category,
-    bool favourite,
-    int usage,
-    @TimestampConverter() DateTime lastUsed,
-    @TimestampConverter() DateTime timeAdded,
-  ) = _Password;
+  const factory Password({
+    String? id,
+    String? path,
+    String? siteName,
+    String? siteUrl,
+    String? email,
+    String? password,
+    String? imageUrl,
+    String? note,
+    PasswordCategory? category,
+    bool? favourite,
+    int? usage,
+    @TimestampConverter() DateTime? lastUsed,
+    @TimestampConverter() DateTime? timeAdded,
+  }) = _Password;
 
   factory Password.fromDoc(DocumentSnapshot doc) {
     Password password =

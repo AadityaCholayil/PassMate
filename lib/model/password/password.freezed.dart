@@ -20,21 +20,21 @@ Password _$PasswordFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Password {
-  String get id => throw _privateConstructorUsedError;
-  String get path => throw _privateConstructorUsedError;
-  String get siteName => throw _privateConstructorUsedError;
-  String get siteUrl => throw _privateConstructorUsedError;
-  String get email => throw _privateConstructorUsedError;
-  String get password => throw _privateConstructorUsedError;
-  String get imageUrl => throw _privateConstructorUsedError;
-  String get note => throw _privateConstructorUsedError;
-  PasswordCategory get category => throw _privateConstructorUsedError;
-  bool get favourite => throw _privateConstructorUsedError;
-  int get usage => throw _privateConstructorUsedError;
+  String? get id => throw _privateConstructorUsedError;
+  String? get path => throw _privateConstructorUsedError;
+  String? get siteName => throw _privateConstructorUsedError;
+  String? get siteUrl => throw _privateConstructorUsedError;
+  String? get email => throw _privateConstructorUsedError;
+  String? get password => throw _privateConstructorUsedError;
+  String? get imageUrl => throw _privateConstructorUsedError;
+  String? get note => throw _privateConstructorUsedError;
+  PasswordCategory? get category => throw _privateConstructorUsedError;
+  bool? get favourite => throw _privateConstructorUsedError;
+  int? get usage => throw _privateConstructorUsedError;
   @TimestampConverter()
-  DateTime get lastUsed => throw _privateConstructorUsedError;
+  DateTime? get lastUsed => throw _privateConstructorUsedError;
   @TimestampConverter()
-  DateTime get timeAdded => throw _privateConstructorUsedError;
+  DateTime? get timeAdded => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -48,19 +48,19 @@ abstract class $PasswordCopyWith<$Res> {
       _$PasswordCopyWithImpl<$Res, Password>;
   @useResult
   $Res call(
-      {String id,
-      String path,
-      String siteName,
-      String siteUrl,
-      String email,
-      String password,
-      String imageUrl,
-      String note,
-      PasswordCategory category,
-      bool favourite,
-      int usage,
-      @TimestampConverter() DateTime lastUsed,
-      @TimestampConverter() DateTime timeAdded});
+      {String? id,
+      String? path,
+      String? siteName,
+      String? siteUrl,
+      String? email,
+      String? password,
+      String? imageUrl,
+      String? note,
+      PasswordCategory? category,
+      bool? favourite,
+      int? usage,
+      @TimestampConverter() DateTime? lastUsed,
+      @TimestampConverter() DateTime? timeAdded});
 }
 
 /// @nodoc
@@ -76,73 +76,73 @@ class _$PasswordCopyWithImpl<$Res, $Val extends Password>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = null,
-    Object? path = null,
-    Object? siteName = null,
-    Object? siteUrl = null,
-    Object? email = null,
-    Object? password = null,
-    Object? imageUrl = null,
-    Object? note = null,
-    Object? category = null,
-    Object? favourite = null,
-    Object? usage = null,
-    Object? lastUsed = null,
-    Object? timeAdded = null,
+    Object? id = freezed,
+    Object? path = freezed,
+    Object? siteName = freezed,
+    Object? siteUrl = freezed,
+    Object? email = freezed,
+    Object? password = freezed,
+    Object? imageUrl = freezed,
+    Object? note = freezed,
+    Object? category = freezed,
+    Object? favourite = freezed,
+    Object? usage = freezed,
+    Object? lastUsed = freezed,
+    Object? timeAdded = freezed,
   }) {
     return _then(_value.copyWith(
-      id: null == id
+      id: freezed == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      path: null == path
+              as String?,
+      path: freezed == path
           ? _value.path
           : path // ignore: cast_nullable_to_non_nullable
-              as String,
-      siteName: null == siteName
+              as String?,
+      siteName: freezed == siteName
           ? _value.siteName
           : siteName // ignore: cast_nullable_to_non_nullable
-              as String,
-      siteUrl: null == siteUrl
+              as String?,
+      siteUrl: freezed == siteUrl
           ? _value.siteUrl
           : siteUrl // ignore: cast_nullable_to_non_nullable
-              as String,
-      email: null == email
+              as String?,
+      email: freezed == email
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
-              as String,
-      password: null == password
+              as String?,
+      password: freezed == password
           ? _value.password
           : password // ignore: cast_nullable_to_non_nullable
-              as String,
-      imageUrl: null == imageUrl
+              as String?,
+      imageUrl: freezed == imageUrl
           ? _value.imageUrl
           : imageUrl // ignore: cast_nullable_to_non_nullable
-              as String,
-      note: null == note
+              as String?,
+      note: freezed == note
           ? _value.note
           : note // ignore: cast_nullable_to_non_nullable
-              as String,
-      category: null == category
+              as String?,
+      category: freezed == category
           ? _value.category
           : category // ignore: cast_nullable_to_non_nullable
-              as PasswordCategory,
-      favourite: null == favourite
+              as PasswordCategory?,
+      favourite: freezed == favourite
           ? _value.favourite
           : favourite // ignore: cast_nullable_to_non_nullable
-              as bool,
-      usage: null == usage
+              as bool?,
+      usage: freezed == usage
           ? _value.usage
           : usage // ignore: cast_nullable_to_non_nullable
-              as int,
-      lastUsed: null == lastUsed
+              as int?,
+      lastUsed: freezed == lastUsed
           ? _value.lastUsed
           : lastUsed // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      timeAdded: null == timeAdded
+              as DateTime?,
+      timeAdded: freezed == timeAdded
           ? _value.timeAdded
           : timeAdded // ignore: cast_nullable_to_non_nullable
-              as DateTime,
+              as DateTime?,
     ) as $Val);
   }
 }
@@ -155,19 +155,19 @@ abstract class _$$_PasswordCopyWith<$Res> implements $PasswordCopyWith<$Res> {
   @override
   @useResult
   $Res call(
-      {String id,
-      String path,
-      String siteName,
-      String siteUrl,
-      String email,
-      String password,
-      String imageUrl,
-      String note,
-      PasswordCategory category,
-      bool favourite,
-      int usage,
-      @TimestampConverter() DateTime lastUsed,
-      @TimestampConverter() DateTime timeAdded});
+      {String? id,
+      String? path,
+      String? siteName,
+      String? siteUrl,
+      String? email,
+      String? password,
+      String? imageUrl,
+      String? note,
+      PasswordCategory? category,
+      bool? favourite,
+      int? usage,
+      @TimestampConverter() DateTime? lastUsed,
+      @TimestampConverter() DateTime? timeAdded});
 }
 
 /// @nodoc
@@ -181,73 +181,73 @@ class __$$_PasswordCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = null,
-    Object? path = null,
-    Object? siteName = null,
-    Object? siteUrl = null,
-    Object? email = null,
-    Object? password = null,
-    Object? imageUrl = null,
-    Object? note = null,
-    Object? category = null,
-    Object? favourite = null,
-    Object? usage = null,
-    Object? lastUsed = null,
-    Object? timeAdded = null,
+    Object? id = freezed,
+    Object? path = freezed,
+    Object? siteName = freezed,
+    Object? siteUrl = freezed,
+    Object? email = freezed,
+    Object? password = freezed,
+    Object? imageUrl = freezed,
+    Object? note = freezed,
+    Object? category = freezed,
+    Object? favourite = freezed,
+    Object? usage = freezed,
+    Object? lastUsed = freezed,
+    Object? timeAdded = freezed,
   }) {
     return _then(_$_Password(
-      null == id
+      id: freezed == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      null == path
+              as String?,
+      path: freezed == path
           ? _value.path
           : path // ignore: cast_nullable_to_non_nullable
-              as String,
-      null == siteName
+              as String?,
+      siteName: freezed == siteName
           ? _value.siteName
           : siteName // ignore: cast_nullable_to_non_nullable
-              as String,
-      null == siteUrl
+              as String?,
+      siteUrl: freezed == siteUrl
           ? _value.siteUrl
           : siteUrl // ignore: cast_nullable_to_non_nullable
-              as String,
-      null == email
+              as String?,
+      email: freezed == email
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
-              as String,
-      null == password
+              as String?,
+      password: freezed == password
           ? _value.password
           : password // ignore: cast_nullable_to_non_nullable
-              as String,
-      null == imageUrl
+              as String?,
+      imageUrl: freezed == imageUrl
           ? _value.imageUrl
           : imageUrl // ignore: cast_nullable_to_non_nullable
-              as String,
-      null == note
+              as String?,
+      note: freezed == note
           ? _value.note
           : note // ignore: cast_nullable_to_non_nullable
-              as String,
-      null == category
+              as String?,
+      category: freezed == category
           ? _value.category
           : category // ignore: cast_nullable_to_non_nullable
-              as PasswordCategory,
-      null == favourite
+              as PasswordCategory?,
+      favourite: freezed == favourite
           ? _value.favourite
           : favourite // ignore: cast_nullable_to_non_nullable
-              as bool,
-      null == usage
+              as bool?,
+      usage: freezed == usage
           ? _value.usage
           : usage // ignore: cast_nullable_to_non_nullable
-              as int,
-      null == lastUsed
+              as int?,
+      lastUsed: freezed == lastUsed
           ? _value.lastUsed
           : lastUsed // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      null == timeAdded
+              as DateTime?,
+      timeAdded: freezed == timeAdded
           ? _value.timeAdded
           : timeAdded // ignore: cast_nullable_to_non_nullable
-              as DateTime,
+              as DateTime?,
     ));
   }
 }
@@ -256,7 +256,7 @@ class __$$_PasswordCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_Password extends _Password {
   const _$_Password(
-      this.id,
+      {this.id,
       this.path,
       this.siteName,
       this.siteUrl,
@@ -268,40 +268,40 @@ class _$_Password extends _Password {
       this.favourite,
       this.usage,
       @TimestampConverter() this.lastUsed,
-      @TimestampConverter() this.timeAdded)
+      @TimestampConverter() this.timeAdded})
       : super._();
 
   factory _$_Password.fromJson(Map<String, dynamic> json) =>
       _$$_PasswordFromJson(json);
 
   @override
-  final String id;
+  final String? id;
   @override
-  final String path;
+  final String? path;
   @override
-  final String siteName;
+  final String? siteName;
   @override
-  final String siteUrl;
+  final String? siteUrl;
   @override
-  final String email;
+  final String? email;
   @override
-  final String password;
+  final String? password;
   @override
-  final String imageUrl;
+  final String? imageUrl;
   @override
-  final String note;
+  final String? note;
   @override
-  final PasswordCategory category;
+  final PasswordCategory? category;
   @override
-  final bool favourite;
+  final bool? favourite;
   @override
-  final int usage;
-  @override
-  @TimestampConverter()
-  final DateTime lastUsed;
+  final int? usage;
   @override
   @TimestampConverter()
-  final DateTime timeAdded;
+  final DateTime? lastUsed;
+  @override
+  @TimestampConverter()
+  final DateTime? timeAdded;
 
   @override
   String toString() {
@@ -369,51 +369,51 @@ class _$_Password extends _Password {
 
 abstract class _Password extends Password {
   const factory _Password(
-      final String id,
-      final String path,
-      final String siteName,
-      final String siteUrl,
-      final String email,
-      final String password,
-      final String imageUrl,
-      final String note,
-      final PasswordCategory category,
-      final bool favourite,
-      final int usage,
-      @TimestampConverter() final DateTime lastUsed,
-      @TimestampConverter() final DateTime timeAdded) = _$_Password;
+      {final String? id,
+      final String? path,
+      final String? siteName,
+      final String? siteUrl,
+      final String? email,
+      final String? password,
+      final String? imageUrl,
+      final String? note,
+      final PasswordCategory? category,
+      final bool? favourite,
+      final int? usage,
+      @TimestampConverter() final DateTime? lastUsed,
+      @TimestampConverter() final DateTime? timeAdded}) = _$_Password;
   const _Password._() : super._();
 
   factory _Password.fromJson(Map<String, dynamic> json) = _$_Password.fromJson;
 
   @override
-  String get id;
+  String? get id;
   @override
-  String get path;
+  String? get path;
   @override
-  String get siteName;
+  String? get siteName;
   @override
-  String get siteUrl;
+  String? get siteUrl;
   @override
-  String get email;
+  String? get email;
   @override
-  String get password;
+  String? get password;
   @override
-  String get imageUrl;
+  String? get imageUrl;
   @override
-  String get note;
+  String? get note;
   @override
-  PasswordCategory get category;
+  PasswordCategory? get category;
   @override
-  bool get favourite;
+  bool? get favourite;
   @override
-  int get usage;
-  @override
-  @TimestampConverter()
-  DateTime get lastUsed;
+  int? get usage;
   @override
   @TimestampConverter()
-  DateTime get timeAdded;
+  DateTime? get lastUsed;
+  @override
+  @TimestampConverter()
+  DateTime? get timeAdded;
   @override
   @JsonKey(ignore: true)
   _$$_PasswordCopyWith<_$_Password> get copyWith =>

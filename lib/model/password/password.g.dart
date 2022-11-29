@@ -7,19 +7,22 @@ part of 'password.dart';
 // **************************************************************************
 
 _$_Password _$$_PasswordFromJson(Map<String, dynamic> json) => _$_Password(
-      json['id'] as String,
-      json['path'] as String,
-      json['siteName'] as String,
-      json['siteUrl'] as String,
-      json['email'] as String,
-      json['password'] as String,
-      json['imageUrl'] as String,
-      json['note'] as String,
-      $enumDecode(_$PasswordCategoryEnumMap, json['category']),
-      json['favourite'] as bool,
-      json['usage'] as int,
-      const TimestampConverter().fromJson(json['lastUsed'] as Timestamp),
-      const TimestampConverter().fromJson(json['timeAdded'] as Timestamp),
+      id: json['id'] as String?,
+      path: json['path'] as String?,
+      siteName: json['siteName'] as String?,
+      siteUrl: json['siteUrl'] as String?,
+      email: json['email'] as String?,
+      password: json['password'] as String?,
+      imageUrl: json['imageUrl'] as String?,
+      note: json['note'] as String?,
+      category:
+          $enumDecodeNullable(_$PasswordCategoryEnumMap, json['category']),
+      favourite: json['favourite'] as bool?,
+      usage: json['usage'] as int?,
+      lastUsed: _$JsonConverterFromJson<Timestamp, DateTime>(
+          json['lastUsed'], const TimestampConverter().fromJson),
+      timeAdded: _$JsonConverterFromJson<Timestamp, DateTime>(
+          json['timeAdded'], const TimestampConverter().fromJson),
     );
 
 Map<String, dynamic> _$$_PasswordToJson(_$_Password instance) =>
@@ -32,11 +35,13 @@ Map<String, dynamic> _$$_PasswordToJson(_$_Password instance) =>
       'password': instance.password,
       'imageUrl': instance.imageUrl,
       'note': instance.note,
-      'category': _$PasswordCategoryEnumMap[instance.category]!,
+      'category': _$PasswordCategoryEnumMap[instance.category],
       'favourite': instance.favourite,
       'usage': instance.usage,
-      'lastUsed': const TimestampConverter().toJson(instance.lastUsed),
-      'timeAdded': const TimestampConverter().toJson(instance.timeAdded),
+      'lastUsed': _$JsonConverterToJson<Timestamp, DateTime>(
+          instance.lastUsed, const TimestampConverter().toJson),
+      'timeAdded': _$JsonConverterToJson<Timestamp, DateTime>(
+          instance.timeAdded, const TimestampConverter().toJson),
     };
 
 const _$PasswordCategoryEnumMap = {
@@ -49,3 +54,15 @@ const _$PasswordCategoryEnumMap = {
   PasswordCategory.ecommerce: 'ecommerce',
   PasswordCategory.others: 'others',
 };
+
+Value? _$JsonConverterFromJson<Json, Value>(
+  Object? json,
+  Value? Function(Json json) fromJson,
+) =>
+    json == null ? null : fromJson(json as Json);
+
+Json? _$JsonConverterToJson<Json, Value>(
+  Value? value,
+  Json? Function(Value value) toJson,
+) =>
+    value == null ? null : toJson(value);
