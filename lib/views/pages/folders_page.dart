@@ -6,7 +6,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:passmate/bloc/database_bloc/database_barrel.dart';
-import 'package:passmate/model/folder.dart';
+import 'package:passmate/model/old_folder.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:passmate/shared/custom_widgets.dart';
 import 'package:passmate/shared/loading.dart';
@@ -27,7 +27,7 @@ class FolderPage extends StatefulWidget {
 
 class _FolderPageState extends State<FolderPage> {
   String _path = '';
-  Folder _folder = Folder.empty();
+  OldFolder _folder = OldFolder.empty();
   List<String> pathList = [];
   final _controller = ScrollController();
 
@@ -312,7 +312,7 @@ class _FolderPageState extends State<FolderPage> {
 }
 
 class FolderList extends StatelessWidget {
-  final Folder folder;
+  final OldFolder folder;
 
   const FolderList({Key? key, required this.folder}) : super(key: key);
 

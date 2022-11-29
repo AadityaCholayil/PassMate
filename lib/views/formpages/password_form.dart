@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:passmate/bloc/database_bloc/database_barrel.dart';
-import 'package:passmate/model/folder.dart';
+import 'package:passmate/model/old_folder.dart';
 import 'package:passmate/model/old_password.dart';
 import 'package:passmate/shared/custom_snackbar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -600,7 +600,7 @@ class SelectFolderDialog extends StatefulWidget {
 
 class _SelectFolderDialogState extends State<SelectFolderDialog> {
   String _path = '';
-  Folder _folder = Folder.empty();
+  OldFolder _folder = OldFolder.empty();
   List<String> pathList = [];
   int selectedIndex = 999;
   String selectedPath = '';
@@ -833,7 +833,7 @@ class _SelectFolderDialogState extends State<SelectFolderDialog> {
     );
   }
 
-  Widget _buildFolderList(Folder folder) {
+  Widget _buildFolderList(OldFolder folder) {
     return ListView.builder(
       padding: EdgeInsets.fromLTRB(20.w, 1.w, 20.w, 10.w),
       primary: false,

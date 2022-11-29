@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:passmate/bloc/database_bloc/database_barrel.dart';
-import 'package:passmate/model/folder.dart';
+import 'package:passmate/model/old_folder.dart';
 import 'package:passmate/model/old_password.dart';
 import 'package:passmate/model/old_payment_card.dart';
 import 'package:passmate/model/old_secure_note.dart';
@@ -452,7 +452,8 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState> {
   FutureOr<void> _onGetFolder(
       GetFolder event, Emitter<DatabaseState> emit) async {
     print('hii');
-    emit(FolderPageState(folder: Folder.empty(), pageState: PageState.loading));
+    emit(FolderPageState(
+        folder: OldFolder.empty(), pageState: PageState.loading));
     try {
       FolderData data = await databaseRepository.getFolder();
       List<String> folderList = [];
@@ -491,7 +492,7 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState> {
       if (folderName == 'root') {
         folderName = 'My Folders';
       }
-      Folder folder = Folder(
+      OldFolder folder = OldFolder(
         folderName: folderName.replaceRange(0, 1, folderName[0].toUpperCase()),
         path: event.path,
         subFolderList: folderList,
@@ -502,7 +503,8 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState> {
       emit(FolderPageState(folder: folder, pageState: PageState.success));
       print('yoo');
     } catch (_) {
-      emit(FolderPageState(folder: Folder.empty(), pageState: PageState.error));
+      emit(FolderPageState(
+          folder: OldFolder.empty(), pageState: PageState.error));
     }
   }
 

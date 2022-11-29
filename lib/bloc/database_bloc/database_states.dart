@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:passmate/model/folder.dart';
+import 'package:passmate/model/old_folder.dart';
 import 'package:passmate/model/old_password.dart';
 import 'package:passmate/model/old_payment_card.dart';
 import 'package:passmate/model/old_secure_note.dart';
@@ -112,7 +112,7 @@ class SecureNotesPageState extends DatabaseState {
 }
 
 class FolderPageState extends DatabaseState {
-  final Folder folder;
+  final OldFolder folder;
   final PageState pageState;
 
   FolderPageState({required this.folder, this.pageState = PageState.init});

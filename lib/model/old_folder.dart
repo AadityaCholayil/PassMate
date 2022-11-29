@@ -2,7 +2,7 @@ import 'package:passmate/model/old_password.dart';
 import 'package:passmate/model/old_payment_card.dart';
 import 'package:passmate/model/old_secure_note.dart';
 
-class Folder {
+class OldFolder {
   String folderName = '';
   String path = '';
   List<String> subFolderList = [];
@@ -10,7 +10,7 @@ class Folder {
   List<OldPaymentCard> paymentCardList = [];
   List<OldSecureNote> secureNotesList = [];
 
-  Folder({
+  OldFolder({
     required this.folderName,
     required this.path,
     required this.subFolderList,
@@ -19,7 +19,7 @@ class Folder {
     required this.secureNotesList,
   });
 
-  Folder.empty()
+  OldFolder.empty()
       : this(
           folderName: '',
           path: '',
