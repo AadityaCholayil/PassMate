@@ -8,7 +8,7 @@ abstract class AppState extends Equatable {
 }
 
 class Uninitialized extends AppState {
-  final UserData userData;
+  final OldUserData userData;
 
   const Uninitialized({required this.userData});
 
@@ -20,7 +20,7 @@ class Uninitialized extends AppState {
 }
 
 class Unauthenticated extends AppState {
-  final UserData userData;
+  final OldUserData userData;
 
   const Unauthenticated({required this.userData});
 
@@ -32,7 +32,7 @@ class Unauthenticated extends AppState {
 }
 
 class Authenticated extends AppState {
-  final UserData userData;
+  final OldUserData userData;
 
   const Authenticated({required this.userData});
 

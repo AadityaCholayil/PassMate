@@ -12,7 +12,7 @@ class AuthRepository {
       : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
         _googleSignIn = googleSignin ?? GoogleSignIn();
 
-  Future<UserData> logInWithGoogle() async {
+  Future<OldUserData> logInWithGoogle() async {
     try {
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
       final GoogleSignInAuthentication googleAuth =
@@ -21,13 +21,14 @@ class AuthRepository {
           accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
       await _firebaseAuth.signInWithCredential(credential);
       User? user = _firebaseAuth.currentUser;
-      return user == null ? UserData.empty : UserData.fromUser(user);
+      return user == null ? OldUserData.empty : OldUserData.fromUser(user);
     } on Exception catch (_) {
       throw SignInWithGoogleFailure();
     }
   }
 
-  Future<UserData> logInWithCredentials(String email, String password) async {
+  Future<OldUserData> logInWithCredentials(
+      String email, String password) async {
     try {
       UserCredential userCredential =
           await _firebaseAuth.signInWithEmailAndPassword(
@@ -35,7 +36,7 @@ class AuthRepository {
         password: password,
       );
       User? user = userCredential.user;
-      return user == null ? UserData.empty : UserData.fromUser(user);
+      return user == null ? OldUserData.empty : OldUserData.fromUser(user);
     } on FirebaseAuthException catch (e) {
       switch (e.code) {
         case 'user-not-found':
@@ -50,7 +51,8 @@ class AuthRepository {
     }
   }
 
-  Future<UserData> signUpUsingCredentials(String email, String password) async {
+  Future<OldUserData> signUpUsingCredentials(
+      String email, String password) async {
     try {
       UserCredential userCredential =
           await _firebaseAuth.createUserWithEmailAndPassword(
@@ -58,7 +60,7 @@ class AuthRepository {
         password: password,
       );
       User? user = userCredential.user;
-      return user == null ? UserData.empty : UserData.fromUser(user);
+      return user == null ? OldUserData.empty : OldUserData.fromUser(user);
     } on FirebaseAuthException catch (e) {
       print(e);
       switch (e.code) {
@@ -95,9 +97,9 @@ class AuthRepository {
     return currentUser != null;
   }
 
-  UserData getUserData() {
+  OldUserData getUserData() {
     User? user = _firebaseAuth.currentUser;
-    return user == null ? UserData.empty : UserData.fromUser(user);
+    return user == null ? OldUserData.empty : OldUserData.fromUser(user);
   }
 
   User? getUser() {
@@ -105,9 +107,9 @@ class AuthRepository {
     return user;
   }
 
-  Stream<UserData> get user {
+  Stream<OldUserData> get user {
     return _firebaseAuth.authStateChanges().map((user) {
-      return user == null ? UserData.empty : UserData.fromUser(user);
+      return user == null ? OldUserData.empty : OldUserData.fromUser(user);
     });
   }
 }

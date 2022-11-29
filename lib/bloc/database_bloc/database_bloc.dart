@@ -12,7 +12,7 @@ import 'package:passmate/repositories/encryption_repository.dart';
 import 'package:passmate/views/pages/folders_page.dart';
 
 class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState> {
-  UserData userData;
+  OldUserData userData;
   OldDatabaseRepository databaseRepository;
   EncryptionRepository encryptionRepository;
   List<String>? folderList;
@@ -22,7 +22,7 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState> {
     required this.databaseRepository,
     required this.encryptionRepository,
   }) : super(Fetching()) {
-    if (userData != UserData.empty) {
+    if (userData != OldUserData.empty) {
       updateFolderList();
     }
     on<GetPasswords>(_onGetPasswords);
@@ -102,7 +102,7 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState> {
       }
       if (event.sortMethod != null) {
         if (event.sortMethod != userData.sortMethod) {
-          UserData userData2 = UserData(
+          OldUserData userData2 = OldUserData(
             uid: userData.uid,
             email: userData.email,
             firstName: userData.firstName,
@@ -232,7 +232,7 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState> {
       }
       if (event.sortMethod != null) {
         if (event.sortMethod != userData.sortMethod) {
-          UserData userData2 = UserData(
+          OldUserData userData2 = OldUserData(
             uid: userData.uid,
             email: userData.email,
             firstName: userData.firstName,
@@ -345,7 +345,7 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState> {
       }
       if (event.sortMethod != null) {
         if (event.sortMethod != userData.sortMethod) {
-          UserData userData2 = UserData(
+          OldUserData userData2 = OldUserData(
             uid: userData.uid,
             email: userData.email,
             firstName: userData.firstName,

@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:passmate/bloc/database_bloc/database_barrel.dart';
 import 'package:passmate/model/custom_exceptions.dart';
-import 'package:passmate/model/sort_methods.dart';
+import 'package:passmate/model/user/sort_methods.dart';
 import 'package:passmate/repositories/authentication_repository.dart';
 import 'package:passmate/model/user.dart';
 import 'package:passmate/repositories/database_repository.dart';
@@ -15,12 +15,12 @@ class AppBloc extends Bloc<AppEvent, AppState> {
   final AuthRepository _authRepository;
   late OldDatabaseRepository databaseRepository;
   EncryptionRepository encryptionRepository = EncryptionRepository();
-  late UserData userData;
+  late OldUserData userData;
   late DatabaseBloc databaseBloc;
 
   AppBloc({required authRepository})
       : _authRepository = authRepository,
-        super(Uninitialized(userData: UserData.empty)) {
+        super(Uninitialized(userData: OldUserData.empty)) {
     userData = _authRepository.getUserData();
     databaseRepository = OldDatabaseRepository(uid: userData.uid);
     databaseBloc = DatabaseBloc(
@@ -52,7 +52,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     );
   }
 
-  AppState get initialState => Uninitialized(userData: UserData.empty);
+  AppState get initialState => Uninitialized(userData: OldUserData.empty);
 
   FutureOr<void> _onAppStarted(AppStarted event, Emitter<AppState> emit) async {
     if (kIsWeb) {
@@ -67,17 +67,18 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     } else {
       try {
         userData = _authRepository.getUserData();
-        if (userData != UserData.empty) {
+        if (userData != OldUserData.empty) {
           // Update databaseRepo
           databaseRepository = OldDatabaseRepository(uid: userData.uid);
           // Fetch user data from db
-          UserData completeUserData = await databaseRepository.completeUserData;
+          OldUserData completeUserData =
+              await databaseRepository.completeUserData;
           // Get key from secure storage
           const storage = FlutterSecureStorage();
           String key = await storage.read(key: 'key') ?? 'KeyNotFound';
           // Update key in encryption repo
           encryptionRepository.updateKey(key);
-          if (completeUserData != UserData.empty) {
+          if (completeUserData != OldUserData.empty) {
             userData = completeUserData;
             // Update Database bloc
             updateDatabaseBloc();
@@ -91,7 +92,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
         }
       } on Exception catch (_) {
         print('error');
-        emit(Unauthenticated(userData: UserData.empty));
+        emit(Unauthenticated(userData: OldUserData.empty));
       }
     }
   }
@@ -106,8 +107,8 @@ class AppBloc extends Bloc<AppEvent, AppState> {
       // Update DatabaseRepository
       databaseRepository = OldDatabaseRepository(uid: userData.uid);
       // After login fetch rest of the user details from database
-      UserData completeUserData = await databaseRepository.completeUserData;
-      if (completeUserData != UserData.empty) {
+      OldUserData completeUserData = await databaseRepository.completeUserData;
+      if (completeUserData != OldUserData.empty) {
         // if db fetch is successful
         userData = completeUserData;
         // Compute Password Hash
@@ -186,7 +187,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
             'https://icon-library.com/images/default-user-icon/default-user-icon-13.jpg';
       }
       // Add User details to db
-      UserData newUserData = UserData(
+      OldUserData newUserData = OldUserData(
         uid: userData.uid,
         email: event.email,
         firstName: event.firstName,
@@ -229,7 +230,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     emit(EditProfilePageState.loading);
     try {
       // Get userData for uid and email
-      UserData userDataTemp = _authRepository.getUserData();
+      OldUserData userDataTemp = _authRepository.getUserData();
       // Update databaseRepository
       databaseRepository = OldDatabaseRepository(uid: userDataTemp.uid);
       String photoUrl = '';
@@ -246,7 +247,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
         photoUrl = userData.photoUrl!;
       }
       // Create new userData object
-      UserData newUserData = UserData(
+      OldUserData newUserData = OldUserData(
           uid: userDataTemp.uid,
           email: userDataTemp.email,
           firstName: event.firstName,
@@ -264,7 +265,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
   }
 
   FutureOr<void> _onLoggedOut(LoggedOut event, Emitter<AppState> emit) async {
-    userData = UserData.empty;
+    userData = OldUserData.empty;
     databaseRepository = OldDatabaseRepository(uid: userData.uid);
     encryptionRepository.updateKey('');
     updateDatabaseBloc();
@@ -281,7 +282,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
           await databaseRepository.deleteUserData();
           await databaseRepository.deleteProfilePicFromStorage();
           await _authRepository.deleteUser();
-          userData = UserData.empty;
+          userData = OldUserData.empty;
           databaseRepository = OldDatabaseRepository(uid: userData.uid);
           encryptionRepository.updateKey('');
           if (!kIsWeb) {

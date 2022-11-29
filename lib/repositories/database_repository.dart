@@ -29,25 +29,26 @@ class OldDatabaseRepository {
   final firebase_storage.FirebaseStorage storage =
       firebase_storage.FirebaseStorage.instance;
 
-  CollectionReference<UserData> get usersRef =>
-      db.collection('users').withConverter<UserData>(
-            fromFirestore: (snapshot, _) => UserData.fromJson(snapshot.data()!),
+  CollectionReference<OldUserData> get usersRef =>
+      db.collection('users').withConverter<OldUserData>(
+            fromFirestore: (snapshot, _) =>
+                OldUserData.fromJson(snapshot.data()!),
             toFirestore: (user, _) => user.toJson(),
           );
 
-  Future<UserData> get completeUserData async {
+  Future<OldUserData> get completeUserData async {
     try {
-      UserData userDataNew = await usersRef
+      OldUserData userDataNew = await usersRef
           .doc(uid)
           .get()
-          .then((value) => value.data() ?? UserData.empty);
+          .then((value) => value.data() ?? OldUserData.empty);
       return userDataNew;
     } on Exception catch (_) {
       throw const SomethingWentWrong();
     }
   }
 
-  Future<void> updateUserData(UserData userData) async {
+  Future<void> updateUserData(OldUserData userData) async {
     try {
       await usersRef.doc(uid).set(userData);
     } on Exception catch (_) {

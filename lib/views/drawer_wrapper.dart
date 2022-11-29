@@ -5,7 +5,7 @@ import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:passmate/bloc/app_bloc/app_bloc_files.dart';
 import 'package:passmate/bloc/database_bloc/database_barrel.dart';
 import 'package:passmate/model/main_screen_provider.dart';
-import 'package:passmate/model/sort_methods.dart';
+import 'package:passmate/model/user/sort_methods.dart';
 import 'package:passmate/model/user.dart';
 import 'package:passmate/theme/theme.dart';
 import 'package:passmate/views/pages/folders_page.dart';
@@ -213,7 +213,7 @@ class _MenuScreenState extends State<MenuScreen> {
   Widget _buildProfile(ColorScheme colorScheme) {
     return BlocBuilder<AppBloc, AppState>(
       builder: (context, state) {
-        UserData userData = context.read<AppBloc>().userData;
+        OldUserData userData = context.read<AppBloc>().userData;
         return Padding(
           padding: EdgeInsets.only(top: 5.w, left: 10.w),
           child: Row(

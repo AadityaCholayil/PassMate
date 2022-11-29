@@ -28,7 +28,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   @override
   void initState() {
     super.initState();
-    UserData userData = context.read<AppBloc>().userData;
+    OldUserData userData = context.read<AppBloc>().userData;
     firstName = userData.firstName ?? '';
     lastName = userData.lastName ?? '';
     photoUrl = userData.photoUrl ?? '';

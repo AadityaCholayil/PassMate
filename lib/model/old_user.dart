@@ -1,8 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:passmate/model/sort_methods.dart';
+import 'package:passmate/model/user/sort_methods.dart';
 
-class UserData extends Equatable {
+class OldUserData extends Equatable {
   final String uid;
   final String? email;
   final String? firstName;
@@ -11,7 +11,7 @@ class UserData extends Equatable {
   final bool? pinSet;
   final SortMethod? sortMethod;
 
-  const UserData(
+  const OldUserData(
       {required this.uid,
       this.email,
       this.firstName,
@@ -20,13 +20,13 @@ class UserData extends Equatable {
       this.pinSet,
       this.sortMethod});
 
-  static UserData fromUser(User user) {
-    return UserData(uid: user.uid, email: user.email);
+  static OldUserData fromUser(User user) {
+    return OldUserData(uid: user.uid, email: user.email);
   }
 
-  static UserData empty = const UserData(uid: '');
+  static OldUserData empty = const OldUserData(uid: '');
 
-  UserData.fromJson(Map<String, Object?> json)
+  OldUserData.fromJson(Map<String, Object?> json)
       : this(
           uid: json['uid']! as String,
           email: json['email']! as String,
@@ -49,9 +49,9 @@ class UserData extends Equatable {
     };
   }
 
-  bool get isEmpty => this == UserData.empty;
+  bool get isEmpty => this == OldUserData.empty;
 
-  bool get isNotEmpty => this != UserData.empty;
+  bool get isNotEmpty => this != OldUserData.empty;
 
   @override
   String toString() {

@@ -7,7 +7,7 @@ import 'package:like_button/like_button.dart';
 import 'package:passmate/bloc/app_bloc/app_bloc_files.dart';
 import 'package:passmate/bloc/database_bloc/database_barrel.dart';
 import 'package:passmate/model/old_password.dart';
-import 'package:passmate/model/sort_methods.dart';
+import 'package:passmate/model/user/sort_methods.dart';
 import 'package:passmate/shared/custom_widgets.dart';
 import 'package:passmate/shared/loading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

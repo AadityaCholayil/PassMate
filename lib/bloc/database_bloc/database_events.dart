@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:passmate/model/old_password.dart';
 import 'package:passmate/model/old_payment_card.dart';
 import 'package:passmate/model/secure_note.dart';
-import 'package:passmate/model/sort_methods.dart';
+import 'package:passmate/model/user/sort_methods.dart';
 
 class DatabaseEvents extends Equatable {
   @override
