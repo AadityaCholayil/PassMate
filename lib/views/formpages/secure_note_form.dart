@@ -2,14 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:passmate/bloc/database_bloc/database_barrel.dart';
-import 'package:passmate/model/secure_note.dart';
+import 'package:passmate/model/old_secure_note.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:passmate/shared/custom_widgets.dart';
 import 'package:passmate/shared/temp_error.dart';
 import 'package:passmate/views/formpages/password_form.dart';
 
 class SecureNoteFormPage extends StatefulWidget {
-  final SecureNote? secureNote;
+  final OldSecureNote? secureNote;
 
   const SecureNoteFormPage({Key? key, this.secureNote}) : super(key: key);
 
@@ -229,7 +229,7 @@ class _SecureNoteFormPageState extends State<SecureNoteFormPage> {
             setState(() {
               _formKey.currentState!.save();
             });
-            SecureNote secureNote = SecureNote(
+            OldSecureNote secureNote = OldSecureNote(
               id: _id,
               path: _path,
               title: _title,

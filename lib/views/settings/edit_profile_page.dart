@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:passmate/bloc/app_bloc/app_bloc_files.dart';
-import 'package:passmate/model/user.dart';
+import 'package:passmate/model/old_user.dart';
 import 'package:passmate/shared/custom_snackbar.dart';
 import 'package:passmate/shared/custom_widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

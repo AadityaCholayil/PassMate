@@ -5,9 +5,9 @@ import 'package:passmate/bloc/database_bloc/database_barrel.dart';
 import 'package:passmate/model/folder.dart';
 import 'package:passmate/model/old_password.dart';
 import 'package:passmate/model/old_payment_card.dart';
-import 'package:passmate/model/secure_note.dart';
+import 'package:passmate/model/old_secure_note.dart';
 import 'package:passmate/repositories/database_repository.dart';
-import 'package:passmate/model/user.dart';
+import 'package:passmate/model/old_user.dart';
 import 'package:passmate/repositories/encryption_repository.dart';
 import 'package:passmate/views/pages/folders_page.dart';
 
@@ -358,8 +358,8 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState> {
           databaseRepository.updateUserData(userData2);
         }
       }
-      List<SecureNote> list = [];
-      List<SecureNote> completeList = [];
+      List<OldSecureNote> list = [];
+      List<OldSecureNote> completeList = [];
       if (event.list == null) {
         list = await databaseRepository.getSecureNotes();
         for (var element in list) {
@@ -458,7 +458,7 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState> {
       List<String> folderList = [];
       List<OldPassword> passwordList = [];
       List<OldPaymentCard> paymentCardList = [];
-      List<SecureNote> secureNoteList = [];
+      List<OldSecureNote> secureNoteList = [];
       String folderName = event.path.split('/').last;
       if (event.path != 'root') {
         passwordList = await databaseRepository.getPasswords(path: event.path);

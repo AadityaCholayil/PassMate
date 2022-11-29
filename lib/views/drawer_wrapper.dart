@@ -6,7 +6,7 @@ import 'package:passmate/bloc/app_bloc/app_bloc_files.dart';
 import 'package:passmate/bloc/database_bloc/database_barrel.dart';
 import 'package:passmate/model/main_screen_provider.dart';
 import 'package:passmate/model/user/sort_methods.dart';
-import 'package:passmate/model/user.dart';
+import 'package:passmate/model/old_user.dart';
 import 'package:passmate/theme/theme.dart';
 import 'package:passmate/views/pages/folders_page.dart';
 import 'package:passmate/views/pages/password_generator.dart';

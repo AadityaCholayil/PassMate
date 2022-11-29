@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:passmate/repositories/encryption_repository.dart';
 
-class SecureNote {
+class OldSecureNote {
   String id;
   String path;
   String title;
@@ -11,7 +11,7 @@ class SecureNote {
   Timestamp? lastUsed;
   Timestamp? timeAdded;
 
-  SecureNote({
+  OldSecureNote({
     this.id = '',
     this.path = '',
     this.title = '',
@@ -22,7 +22,7 @@ class SecureNote {
     this.timeAdded,
   });
 
-  SecureNote.fromJson(Map<String, Object?> json, String id)
+  OldSecureNote.fromJson(Map<String, Object?> json, String id)
       : this(
           id: id,
           path: json['path']! as String,

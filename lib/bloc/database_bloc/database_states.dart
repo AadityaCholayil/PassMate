@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:passmate/model/folder.dart';
 import 'package:passmate/model/old_password.dart';
 import 'package:passmate/model/old_payment_card.dart';
-import 'package:passmate/model/secure_note.dart';
+import 'package:passmate/model/old_secure_note.dart';
 import 'package:passmate/model/user/sort_methods.dart';
 
 abstract class DatabaseState extends Equatable {}
@@ -79,8 +79,8 @@ class PaymentCardPageState extends DatabaseState {
 }
 
 class SecureNotesPageState extends DatabaseState {
-  final List<SecureNote> list;
-  final List<SecureNote> completeList;
+  final List<OldSecureNote> list;
+  final List<OldSecureNote> completeList;
   final String? search;
   final SortMethod sortMethod;
   final bool favourites;

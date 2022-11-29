@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:passmate/model/custom_exceptions.dart';
-import 'package:passmate/model/user.dart';
+import 'package:passmate/model/old_user.dart';
 import 'package:passmate/shared/error_screen.dart';
 
 class AuthRepository {

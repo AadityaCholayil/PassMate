@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
-import 'package:passmate/model/user.dart';
+import 'package:passmate/model/old_user.dart';
 
 @immutable
 abstract class AppState extends Equatable {

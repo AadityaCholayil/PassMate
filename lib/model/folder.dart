@@ -1,6 +1,6 @@
 import 'package:passmate/model/old_password.dart';
 import 'package:passmate/model/old_payment_card.dart';
-import 'package:passmate/model/secure_note.dart';
+import 'package:passmate/model/old_secure_note.dart';
 
 class Folder {
   String folderName = '';
@@ -8,7 +8,7 @@ class Folder {
   List<String> subFolderList = [];
   List<OldPassword> passwordList = [];
   List<OldPaymentCard> paymentCardList = [];
-  List<SecureNote> secureNotesList = [];
+  List<OldSecureNote> secureNotesList = [];
 
   Folder({
     required this.folderName,

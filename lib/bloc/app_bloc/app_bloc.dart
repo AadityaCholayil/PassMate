@@ -6,7 +6,7 @@ import 'package:passmate/bloc/database_bloc/database_barrel.dart';
 import 'package:passmate/model/custom_exceptions.dart';
 import 'package:passmate/model/user/sort_methods.dart';
 import 'package:passmate/repositories/authentication_repository.dart';
-import 'package:passmate/model/user.dart';
+import 'package:passmate/model/old_user.dart';
 import 'package:passmate/repositories/database_repository.dart';
 import 'package:passmate/repositories/encryption_repository.dart';
 import 'app_bloc_files.dart';

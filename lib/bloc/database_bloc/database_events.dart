@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:passmate/model/old_password.dart';
 import 'package:passmate/model/old_payment_card.dart';
-import 'package:passmate/model/secure_note.dart';
+import 'package:passmate/model/old_secure_note.dart';
 import 'package:passmate/model/user/sort_methods.dart';
 
 class DatabaseEvents extends Equatable {
@@ -90,7 +90,7 @@ class DeletePaymentCard extends DatabaseEvents {
 }
 
 class GetSecureNotes extends DatabaseEvents {
-  final List<SecureNote>? list;
+  final List<OldSecureNote>? list;
   final bool favourites;
   final String? search;
   final SortMethod? sortMethod;
@@ -104,13 +104,13 @@ class GetSecureNotes extends DatabaseEvents {
 }
 
 class AddSecureNote extends DatabaseEvents {
-  final SecureNote secureNote;
+  final OldSecureNote secureNote;
 
   AddSecureNote(this.secureNote);
 }
 
 class UpdateSecureNote extends DatabaseEvents {
-  final SecureNote secureNote;
+  final OldSecureNote secureNote;
   final bool fromForm;
   final String oldPath;
 
@@ -122,7 +122,7 @@ class UpdateSecureNote extends DatabaseEvents {
 }
 
 class DeleteSecureNote extends DatabaseEvents {
-  final SecureNote secureNote;
+  final OldSecureNote secureNote;
 
   DeleteSecureNote(this.secureNote);
 }

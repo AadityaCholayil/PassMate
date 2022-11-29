@@ -4,8 +4,8 @@ import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:passmate/model/folder.dart';
 import 'package:passmate/model/old_password.dart';
 import 'package:passmate/model/old_payment_card.dart';
-import 'package:passmate/model/secure_note.dart';
-import 'package:passmate/model/user.dart';
+import 'package:passmate/model/old_secure_note.dart';
+import 'package:passmate/model/old_user.dart';
 import 'package:passmate/shared/error_screen.dart';
 
 class DatabaseRepository {
@@ -203,18 +203,18 @@ class OldDatabaseRepository {
     }
   }
 
-  CollectionReference<SecureNote> get secureNotesRef => db
+  CollectionReference<OldSecureNote> get secureNotesRef => db
       .collection('users')
       .doc(uid)
       .collection('secureNotes')
-      .withConverter<SecureNote>(
+      .withConverter<OldSecureNote>(
         fromFirestore: (snapshot, _) =>
-            SecureNote.fromJson(snapshot.data()!, snapshot.id),
+            OldSecureNote.fromJson(snapshot.data()!, snapshot.id),
         toFirestore: (secureNote, _) => secureNote.toJson(),
       );
 
-  Future<List<SecureNote>> getSecureNotes({String path = ''}) async {
-    List<QueryDocumentSnapshot<SecureNote>> list = [];
+  Future<List<OldSecureNote>> getSecureNotes({String path = ''}) async {
+    List<QueryDocumentSnapshot<OldSecureNote>> list = [];
     if (path == '') {
       list = await secureNotesRef.get().then((snapshot) => snapshot.docs);
     } else {
@@ -226,7 +226,7 @@ class OldDatabaseRepository {
     return list.map((e) => e.data()).toList();
   }
 
-  Future<String> addSecureNote(SecureNote secureNote) async {
+  Future<String> addSecureNote(OldSecureNote secureNote) async {
     try {
       await secureNotesRef.add(secureNote);
       return 'Success';
@@ -236,7 +236,8 @@ class OldDatabaseRepository {
     }
   }
 
-  Future<String> updateSecureNote(SecureNote secureNote, String oldPath) async {
+  Future<String> updateSecureNote(
+      OldSecureNote secureNote, String oldPath) async {
     try {
       await secureNotesRef.doc(secureNote.id).set(secureNote);
       return 'Success';
@@ -245,7 +246,7 @@ class OldDatabaseRepository {
     }
   }
 
-  Future<String> deleteSecureNote(SecureNote secureNote) async {
+  Future<String> deleteSecureNote(OldSecureNote secureNote) async {
     try {
       await secureNotesRef.doc(secureNote.id).delete();
       return 'Success';

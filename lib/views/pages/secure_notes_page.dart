@@ -5,7 +5,7 @@ import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:passmate/bloc/app_bloc/app_bloc_files.dart';
 import 'package:passmate/bloc/database_bloc/database_barrel.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:passmate/model/secure_note.dart';
+import 'package:passmate/model/old_secure_note.dart';
 import 'package:passmate/model/user/sort_methods.dart';
 import 'package:passmate/shared/custom_widgets.dart';
 import 'package:passmate/shared/loading.dart';
@@ -24,8 +24,8 @@ class _SecureNotesPageState extends State<SecureNotesPage> {
   SortMethod sortMethod = SortMethod.recentlyAdded;
   String sortLabel = '';
   String? searchLabel;
-  List<SecureNote> completeSecureNoteList = [];
-  List<SecureNote> secureNoteList = [];
+  List<OldSecureNote> completeSecureNoteList = [];
+  List<OldSecureNote> secureNoteList = [];
   bool favourites = false;
 
   @override
@@ -217,7 +217,7 @@ class SecureNoteCardList extends StatelessWidget {
     required this.secureNoteList,
   }) : super(key: key);
 
-  final List<SecureNote> secureNoteList;
+  final List<OldSecureNote> secureNoteList;
 
   @override
   Widget build(BuildContext context) {
@@ -263,7 +263,7 @@ class SecureNoteCard extends StatelessWidget {
     required this.secureNote,
   }) : super(key: key);
 
-  final SecureNote secureNote;
+  final OldSecureNote secureNote;
 
   @override
   Widget build(BuildContext context) {
