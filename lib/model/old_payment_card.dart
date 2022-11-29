@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:passmate/repositories/encryption_repository.dart';
 
-class PaymentCard {
+class OldPaymentCard {
   String id;
   String path;
   String bankName;
@@ -18,7 +18,7 @@ class PaymentCard {
   Timestamp? lastUsed;
   Timestamp? timeAdded;
 
-  PaymentCard({
+  OldPaymentCard({
     this.id = '',
     this.path = '',
     this.bankName = '',
@@ -35,7 +35,7 @@ class PaymentCard {
     this.timeAdded,
   });
 
-  PaymentCard.fromJson(Map<String, Object?> json, String id)
+  OldPaymentCard.fromJson(Map<String, Object?> json, String id)
       : this(
           id: id,
           path: json['path']! as String,

@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:passmate/model/folder.dart';
 import 'package:passmate/model/old_password.dart';
-import 'package:passmate/model/payment_card.dart';
+import 'package:passmate/model/old_payment_card.dart';
 import 'package:passmate/model/secure_note.dart';
 import 'package:passmate/model/sort_methods.dart';
 
@@ -43,8 +43,8 @@ class PasswordPageState extends DatabaseState {
 }
 
 class PaymentCardPageState extends DatabaseState {
-  final List<PaymentCard> list;
-  final List<PaymentCard> completeList;
+  final List<OldPaymentCard> list;
+  final List<OldPaymentCard> completeList;
   final String? search;
   final PaymentCardType paymentCardType;
   final SortMethod sortMethod;

@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:passmate/bloc/database_bloc/database_barrel.dart';
-import 'package:passmate/model/payment_card.dart';
+import 'package:passmate/model/old_payment_card.dart';
 import 'package:passmate/shared/custom_snackbar.dart';
 import 'package:passmate/shared/custom_widgets.dart';
 import 'package:passmate/shared/temp_error.dart';
@@ -14,7 +14,7 @@ import 'package:passmate/theme/theme.dart';
 import 'package:passmate/views/formpages/password_form.dart';
 
 class PaymentCardFormPage extends StatefulWidget {
-  final PaymentCard? paymentCard;
+  final OldPaymentCard? paymentCard;
 
   const PaymentCardFormPage({Key? key, this.paymentCard}) : super(key: key);
 
@@ -1198,7 +1198,7 @@ class _PaymentCardFormPageState extends State<PaymentCardFormPage> {
         setState(() {
           _formKey.currentState!.save();
         });
-        PaymentCard paymentCard = PaymentCard(
+        OldPaymentCard paymentCard = OldPaymentCard(
           id: _id,
           path: _path,
           bankName: _bankName,

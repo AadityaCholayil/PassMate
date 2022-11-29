@@ -8,7 +8,7 @@ import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:passmate/bloc/app_bloc/app_bloc_files.dart';
 import 'package:passmate/bloc/database_bloc/database_barrel.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:passmate/model/payment_card.dart';
+import 'package:passmate/model/old_payment_card.dart';
 import 'package:passmate/model/sort_methods.dart';
 import 'package:passmate/shared/custom_widgets.dart';
 import 'package:passmate/shared/loading.dart';
@@ -28,8 +28,8 @@ class _PaymentCardPageState extends State<PaymentCardPage> {
   SortMethod sortMethod = SortMethod.recentlyAdded;
   String sortLabel = '';
   String? searchLabel;
-  List<PaymentCard> completePaymentCardList = [];
-  List<PaymentCard> paymentCardList = [];
+  List<OldPaymentCard> completePaymentCardList = [];
+  List<OldPaymentCard> paymentCardList = [];
   bool favourites = false;
 
   @override
@@ -365,7 +365,7 @@ class PaymentCardTileList extends StatelessWidget {
     required this.paymentCardList,
   }) : super(key: key);
 
-  final List<PaymentCard> paymentCardList;
+  final List<OldPaymentCard> paymentCardList;
 
   @override
   Widget build(BuildContext context) {
@@ -374,7 +374,7 @@ class PaymentCardTileList extends StatelessWidget {
       shrinkWrap: true,
       itemCount: paymentCardList.length,
       itemBuilder: (context, index) {
-        PaymentCard paymentCard = paymentCardList[index];
+        OldPaymentCard paymentCard = paymentCardList[index];
         return PaymentCardTile(paymentCard: paymentCard);
       },
     );
@@ -387,7 +387,7 @@ class PaymentCardTile extends StatelessWidget {
     required this.paymentCard,
   }) : super(key: key);
 
-  final PaymentCard paymentCard;
+  final OldPaymentCard paymentCard;
 
   @override
   Widget build(BuildContext context) {
@@ -501,14 +501,14 @@ class PaymentCardDetailCard extends StatefulWidget {
     required this.paymentCard,
   }) : super(key: key);
 
-  final PaymentCard paymentCard;
+  final OldPaymentCard paymentCard;
 
   @override
   State<PaymentCardDetailCard> createState() => _PaymentCardDetailCardState();
 }
 
 class _PaymentCardDetailCardState extends State<PaymentCardDetailCard> {
-  late PaymentCard paymentCard;
+  late OldPaymentCard paymentCard;
   bool showCVV = false;
   late String categoryText;
   late FlipCardController _controller;

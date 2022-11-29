@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:passmate/bloc/database_bloc/database_barrel.dart';
 import 'package:passmate/model/folder.dart';
 import 'package:passmate/model/old_password.dart';
-import 'package:passmate/model/payment_card.dart';
+import 'package:passmate/model/old_payment_card.dart';
 import 'package:passmate/model/secure_note.dart';
 import 'package:passmate/repositories/database_repository.dart';
 import 'package:passmate/model/user.dart';
@@ -245,8 +245,8 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState> {
           databaseRepository.updateUserData(userData2);
         }
       }
-      List<PaymentCard> list = [];
-      List<PaymentCard> completeList = [];
+      List<OldPaymentCard> list = [];
+      List<OldPaymentCard> completeList = [];
       if (event.list == null) {
         list = await databaseRepository.getPaymentCards();
         for (var element in list) {
@@ -457,7 +457,7 @@ class DatabaseBloc extends Bloc<DatabaseEvents, DatabaseState> {
       FolderData data = await databaseRepository.getFolder();
       List<String> folderList = [];
       List<OldPassword> passwordList = [];
-      List<PaymentCard> paymentCardList = [];
+      List<OldPaymentCard> paymentCardList = [];
       List<SecureNote> secureNoteList = [];
       String folderName = event.path.split('/').last;
       if (event.path != 'root') {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_zoom_drawer/config.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:passmate/bloc/app_bloc/app_bloc_files.dart';
 import 'package:passmate/bloc/database_bloc/database_barrel.dart';

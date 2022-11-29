@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:passmate/model/old_password.dart';
-import 'package:passmate/model/payment_card.dart';
+import 'package:passmate/model/old_payment_card.dart';
 import 'package:passmate/model/secure_note.dart';
 import 'package:passmate/model/sort_methods.dart';
 
@@ -50,7 +50,7 @@ class DeletePassword extends DatabaseEvents {
 }
 
 class GetPaymentCards extends DatabaseEvents {
-  final List<PaymentCard>? list;
+  final List<OldPaymentCard>? list;
   final PaymentCardType paymentCardType;
   final bool favourites;
   final String? search;
@@ -66,14 +66,14 @@ class GetPaymentCards extends DatabaseEvents {
 }
 
 class AddPaymentCard extends DatabaseEvents {
-  final PaymentCard paymentCard;
+  final OldPaymentCard paymentCard;
 
   AddPaymentCard(this.paymentCard);
 }
 
 class UpdatePaymentCard extends DatabaseEvents {
   final bool fromForm;
-  final PaymentCard paymentCard;
+  final OldPaymentCard paymentCard;
   final String oldPath;
 
   UpdatePaymentCard(
@@ -84,7 +84,7 @@ class UpdatePaymentCard extends DatabaseEvents {
 }
 
 class DeletePaymentCard extends DatabaseEvents {
-  final PaymentCard paymentCard;
+  final OldPaymentCard paymentCard;
 
   DeletePaymentCard(this.paymentCard);
 }

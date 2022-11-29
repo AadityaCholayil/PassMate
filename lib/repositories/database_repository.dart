@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:passmate/model/folder.dart';
 import 'package:passmate/model/old_password.dart';
-import 'package:passmate/model/payment_card.dart';
+import 'package:passmate/model/old_payment_card.dart';
 import 'package:passmate/model/secure_note.dart';
 import 'package:passmate/model/user.dart';
 import 'package:passmate/shared/error_screen.dart';
@@ -150,18 +150,18 @@ class OldDatabaseRepository {
     }
   }
 
-  CollectionReference<PaymentCard> get paymentCardsRef => db
+  CollectionReference<OldPaymentCard> get paymentCardsRef => db
       .collection('users')
       .doc(uid)
       .collection('paymentCards')
-      .withConverter<PaymentCard>(
+      .withConverter<OldPaymentCard>(
         fromFirestore: (snapshot, _) =>
-            PaymentCard.fromJson(snapshot.data()!, snapshot.id),
+            OldPaymentCard.fromJson(snapshot.data()!, snapshot.id),
         toFirestore: (paymentCard, _) => paymentCard.toJson(),
       );
 
-  Future<List<PaymentCard>> getPaymentCards({String path = ''}) async {
-    List<QueryDocumentSnapshot<PaymentCard>> list = [];
+  Future<List<OldPaymentCard>> getPaymentCards({String path = ''}) async {
+    List<QueryDocumentSnapshot<OldPaymentCard>> list = [];
     if (path == '') {
       list = await paymentCardsRef.get().then((snapshot) => snapshot.docs);
     } else {
@@ -173,7 +173,7 @@ class OldDatabaseRepository {
     return list.map((e) => e.data()).toList();
   }
 
-  Future<String> addPaymentCard(PaymentCard paymentCard) async {
+  Future<String> addPaymentCard(OldPaymentCard paymentCard) async {
     try {
       await paymentCardsRef.add(paymentCard);
       return 'Success';
@@ -184,7 +184,7 @@ class OldDatabaseRepository {
   }
 
   Future<String> updatePaymentCard(
-      PaymentCard paymentCard, String oldPath) async {
+      OldPaymentCard paymentCard, String oldPath) async {
     try {
       await paymentCardsRef.doc(paymentCard.id).set(paymentCard);
       return 'Success';
@@ -193,7 +193,7 @@ class OldDatabaseRepository {
     }
   }
 
-  Future<String> deletePaymentCard(PaymentCard paymentCard) async {
+  Future<String> deletePaymentCard(OldPaymentCard paymentCard) async {
     try {
       await paymentCardsRef.doc(paymentCard.id).delete();
       return 'Success';
