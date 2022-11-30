@@ -12,7 +12,7 @@ import 'package:passmate/repositories/encryption_repository.dart';
 import 'app_bloc_files.dart';
 
 class AppBloc extends Bloc<AppEvent, AppState> {
-  final AuthRepository _authRepository;
+  final OldAuthRepository _authRepository;
   late OldDatabaseRepository databaseRepository;
   EncryptionRepository encryptionRepository = EncryptionRepository();
   late OldUserData userData;

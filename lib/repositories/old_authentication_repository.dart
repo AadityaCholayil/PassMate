@@ -4,11 +4,11 @@ import 'package:passmate/model/custom_exceptions.dart';
 import 'package:passmate/model/old_user.dart';
 import 'package:passmate/shared/error_screen.dart';
 
-class AuthRepository {
+class OldAuthRepository {
   final FirebaseAuth _firebaseAuth;
   final GoogleSignIn _googleSignIn;
 
-  AuthRepository({FirebaseAuth? firebaseAuth, GoogleSignIn? googleSignin})
+  OldAuthRepository({FirebaseAuth? firebaseAuth, GoogleSignIn? googleSignin})
       : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
         _googleSignIn = googleSignin ?? GoogleSignIn();
 

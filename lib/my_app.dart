@@ -13,12 +13,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RepositoryProvider<AuthRepository>(
-      create: (context) => AuthRepository(),
+    return RepositoryProvider<OldAuthRepository>(
+      create: (context) => OldAuthRepository(),
       child: BlocProvider<AppBloc>(
         create: (context) {
           AppBloc appBloc =
-              AppBloc(authRepository: context.read<AuthRepository>());
+              AppBloc(authRepository: context.read<OldAuthRepository>());
           appBloc.add(AppStarted());
           return appBloc;
         },
