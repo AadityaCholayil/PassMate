@@ -29,7 +29,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<AppBloc, AppState>(
+    return BlocConsumer<OldAppBloc, OldAppState>(
       listenWhen: (previous, current) => previous != current,
       buildWhen: (previous, current) => previous != current,
       listener: (context, state) async {
@@ -187,7 +187,7 @@ class _LoginPageState extends State<LoginPage> {
                   _formKey.currentState?.save();
                   ScaffoldMessenger.of(context)
                       .showSnackBar(showCustomSnackBar(context, stateMessage));
-                  BlocProvider.of<AppBloc>(context)
+                  BlocProvider.of<OldAppBloc>(context)
                       .add(LoginUser(email: email, password: password));
                 },
               ),

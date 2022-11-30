@@ -3,11 +3,11 @@ import 'package:meta/meta.dart';
 import 'package:passmate/model/old_user.dart';
 
 @immutable
-abstract class AppState extends Equatable {
-  const AppState([List props = const []]) : super();
+abstract class OldAppState extends Equatable {
+  const OldAppState([List props = const []]) : super();
 }
 
-class Uninitialized extends AppState {
+class Uninitialized extends OldAppState {
   final OldUserData userData;
 
   const Uninitialized({required this.userData});
@@ -19,7 +19,7 @@ class Uninitialized extends AppState {
   List<Object?> get props => [toString()];
 }
 
-class Unauthenticated extends AppState {
+class Unauthenticated extends OldAppState {
   final OldUserData userData;
 
   const Unauthenticated({required this.userData});
@@ -31,7 +31,7 @@ class Unauthenticated extends AppState {
   List<Object?> get props => [toString()];
 }
 
-class Authenticated extends AppState {
+class Authenticated extends OldAppState {
   final OldUserData userData;
 
   const Authenticated({required this.userData});
@@ -43,7 +43,7 @@ class Authenticated extends AppState {
   List<Object?> get props => [toString()];
 }
 
-class LoginPageState extends AppState {
+class LoginPageState extends OldAppState {
   final String message;
 
   const LoginPageState({required this.message});
@@ -63,7 +63,7 @@ class LoginPageState extends AppState {
   List<Object?> get props => [message];
 }
 
-class EmailInputPageState extends AppState {
+class EmailInputPageState extends OldAppState {
   final EmailStatus emailStatus;
 
   const EmailInputPageState({required this.emailStatus});
@@ -78,7 +78,7 @@ enum EmailStatus {
   invalid,
 }
 
-class SignupPageState extends AppState {
+class SignupPageState extends OldAppState {
   final String message;
 
   const SignupPageState({required this.message});
@@ -95,7 +95,7 @@ class SignupPageState extends AppState {
   List<Object?> get props => [message];
 }
 
-class EditProfilePageState extends AppState {
+class EditProfilePageState extends OldAppState {
   final String message;
 
   const EditProfilePageState({required this.message});
@@ -116,7 +116,7 @@ class EditProfilePageState extends AppState {
   List<Object?> get props => [toString()];
 }
 
-class DeleteAccountPageState extends AppState {
+class DeleteAccountPageState extends OldAppState {
   final String message;
 
   const DeleteAccountPageState({required this.message});
@@ -141,7 +141,7 @@ class DeleteAccountPageState extends AppState {
   List<Object?> get props => [toString()];
 }
 
-class ErrorOccurred extends AppState {
+class ErrorOccurred extends OldAppState {
   final String error;
 
   const ErrorOccurred({required this.error});

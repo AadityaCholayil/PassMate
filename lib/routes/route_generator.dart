@@ -6,7 +6,8 @@ import 'package:passmate/routes/routes_name.dart';
 import 'package:passmate/views/wrapper.dart';
 
 class RouteGenerator {
-  static Route<dynamic> generateRoute(RouteSettings settings, AppState state) {
+  static Route<dynamic> generateRoute(
+      RouteSettings settings, OldAppState state) {
     switch (settings.name) {
       case '/':
         return _GeneratePageRoute(

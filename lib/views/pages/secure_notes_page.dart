@@ -31,8 +31,8 @@ class _SecureNotesPageState extends State<SecureNotesPage> {
   @override
   void initState() {
     super.initState();
-    SortMethod sortMethod =
-        context.read<AppBloc>().userData.sortMethod ?? SortMethod.recentlyAdded;
+    SortMethod sortMethod = context.read<OldAppBloc>().userData.sortMethod ??
+        SortMethod.recentlyAdded;
     context.read<DatabaseBloc>().add(GetSecureNotes(sortMethod: sortMethod));
   }
 

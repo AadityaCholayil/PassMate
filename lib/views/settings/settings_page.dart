@@ -91,7 +91,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 colors,
                 label: 'Sign out',
                 onTap: () {
-                  context.read<AppBloc>().add(LoggedOut());
+                  context.read<OldAppBloc>().add(LoggedOut());
                   Navigator.pop(context);
                 },
               ),

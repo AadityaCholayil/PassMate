@@ -40,7 +40,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<AppBloc, AppState>(
+    return BlocConsumer<OldAppBloc, OldAppState>(
       listenWhen: (previous, current) => previous != current,
       buildWhen: (previous, current) => previous != current,
       listener: (context, state) {
@@ -213,7 +213,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     _formKey.currentState?.save();
                     ScaffoldMessenger.of(context).showSnackBar(
                         showCustomSnackBar(context, stateMessage));
-                    BlocProvider.of<AppBloc>(context).add(SignupUser(
+                    BlocProvider.of<OldAppBloc>(context).add(SignupUser(
                       email: widget.email,
                       password: password.password,
                       firstName: widget.firstName,

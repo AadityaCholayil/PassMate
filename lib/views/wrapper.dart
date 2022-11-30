@@ -5,7 +5,7 @@ import 'package:passmate/views/drawer_wrapper.dart';
 import 'package:passmate/shared/loading.dart';
 
 class Wrapper extends StatelessWidget {
-  final AppState state;
+  final OldAppState state;
 
   const Wrapper({Key? key, required this.state}) : super(key: key);
 

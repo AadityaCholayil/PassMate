@@ -28,7 +28,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   @override
   void initState() {
     super.initState();
-    OldUserData userData = context.read<AppBloc>().userData;
+    OldUserData userData = context.read<OldAppBloc>().userData;
     firstName = userData.firstName ?? '';
     lastName = userData.lastName ?? '';
     photoUrl = userData.photoUrl ?? '';
@@ -36,7 +36,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<AppBloc, AppState>(
+    return BlocConsumer<OldAppBloc, OldAppState>(
         listenWhen: (previous, current) => previous != current,
         buildWhen: (previous, current) => previous != current,
         listener: (context, state) async {
@@ -165,7 +165,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         return;
                       }
                       _formKey.currentState?.save();
-                      BlocProvider.of<AppBloc>(context)
+                      BlocProvider.of<OldAppBloc>(context)
                           .add(UpdateUserData(firstName, lastName, _image));
                     },
                   ),

@@ -15,19 +15,19 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return RepositoryProvider<OldAuthRepository>(
       create: (context) => OldAuthRepository(),
-      child: BlocProvider<AppBloc>(
+      child: BlocProvider<OldAppBloc>(
         create: (context) {
-          AppBloc appBloc =
-              AppBloc(authRepository: context.read<OldAuthRepository>());
+          OldAppBloc appBloc =
+              OldAppBloc(authRepository: context.read<OldAuthRepository>());
           appBloc.add(AppStarted());
           return appBloc;
         },
         child: Builder(
           builder: (context) {
-            return BlocBuilder<AppBloc, AppState>(
+            return BlocBuilder<OldAppBloc, OldAppState>(
               builder: (context, state) {
                 return BlocProvider<DatabaseBloc>.value(
-                  value: context.read<AppBloc>().databaseBloc,
+                  value: context.read<OldAppBloc>().databaseBloc,
                   child: ScreenUtilInit(
                     designSize: const Size(414, 896),
                     builder: (context, child) {

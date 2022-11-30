@@ -183,9 +183,10 @@ class _CustomAnimatedAppBarState extends State<CustomAnimatedAppBar> {
                           height: 0.9,
                         ),
                       ),
-                      BlocBuilder<AppBloc, AppState>(builder: (context, state) {
+                      BlocBuilder<OldAppBloc, OldAppState>(
+                          builder: (context, state) {
                         String fName =
-                            context.read<AppBloc>().userData.firstName ?? '';
+                            context.read<OldAppBloc>().userData.firstName ?? '';
                         return Text(
                           fName,
                           style: TextStyle(

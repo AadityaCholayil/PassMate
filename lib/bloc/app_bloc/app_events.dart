@@ -3,11 +3,11 @@ import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
 @immutable
-abstract class AppEvent extends Equatable {
-  const AppEvent([List props = const []]) : super();
+abstract class OldAppEvent extends Equatable {
+  const OldAppEvent([List props = const []]) : super();
 }
 
-class AppStarted extends AppEvent {
+class AppStarted extends OldAppEvent {
   @override
   String toString() => 'AppStarted';
 
@@ -15,7 +15,7 @@ class AppStarted extends AppEvent {
   List<Object?> get props => [toString()];
 }
 
-class LoginUser extends AppEvent {
+class LoginUser extends OldAppEvent {
   final String email;
   final String password;
 
@@ -28,7 +28,7 @@ class LoginUser extends AppEvent {
   List<Object?> get props => [toString()];
 }
 
-class CheckEmailStatus extends AppEvent {
+class CheckEmailStatus extends OldAppEvent {
   final String email;
 
   const CheckEmailStatus({required this.email});
@@ -40,7 +40,7 @@ class CheckEmailStatus extends AppEvent {
   List<Object?> get props => [toString()];
 }
 
-class SignupUser extends AppEvent {
+class SignupUser extends OldAppEvent {
   final String email;
   final String password;
   final String firstName;
@@ -62,7 +62,7 @@ class SignupUser extends AppEvent {
   List<Object?> get props => [toString()];
 }
 
-class UpdateUserData extends AppEvent {
+class UpdateUserData extends OldAppEvent {
   final String firstName;
   final String lastName;
   final File? image;
@@ -76,7 +76,7 @@ class UpdateUserData extends AppEvent {
   List<Object?> get props => [toString()];
 }
 
-class LoggedOut extends AppEvent {
+class LoggedOut extends OldAppEvent {
   @override
   String toString() => 'LoggedOut';
 
@@ -84,7 +84,7 @@ class LoggedOut extends AppEvent {
   List<Object?> get props => [toString()];
 }
 
-class DeleteUser extends AppEvent {
+class DeleteUser extends OldAppEvent {
   final String email;
   final String password;
 

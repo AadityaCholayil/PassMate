@@ -25,7 +25,7 @@ class _DeleteAccountPageState extends State<DeleteAccountPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<AppBloc, AppState>(
+    return BlocConsumer<OldAppBloc, OldAppState>(
       listenWhen: (previous, current) => previous != current,
       buildWhen: (previous, current) => previous != current,
       listener: (context, state) async {
@@ -159,7 +159,7 @@ class _DeleteAccountPageState extends State<DeleteAccountPage> {
                       );
                       if (res == 'confirm') {
                         // print('delete acc');
-                        BlocProvider.of<AppBloc>(context)
+                        BlocProvider.of<OldAppBloc>(context)
                             .add(DeleteUser(email: email, password: password));
                       }
                       // print(stateMessage);

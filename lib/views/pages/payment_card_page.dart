@@ -36,8 +36,8 @@ class _PaymentCardPageState extends State<PaymentCardPage> {
   void initState() {
     super.initState();
     print('initState1');
-    SortMethod sortMethod =
-        context.read<AppBloc>().userData.sortMethod ?? SortMethod.recentlyAdded;
+    SortMethod sortMethod = context.read<OldAppBloc>().userData.sortMethod ??
+        SortMethod.recentlyAdded;
     context.read<DatabaseBloc>().add(GetPaymentCards(sortMethod: sortMethod));
     print('initState2');
   }

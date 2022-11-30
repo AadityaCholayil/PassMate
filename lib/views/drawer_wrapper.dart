@@ -211,9 +211,9 @@ class _MenuScreenState extends State<MenuScreen> {
   }
 
   Widget _buildProfile(ColorScheme colorScheme) {
-    return BlocBuilder<AppBloc, AppState>(
+    return BlocBuilder<OldAppBloc, OldAppState>(
       builder: (context, state) {
-        OldUserData userData = context.read<AppBloc>().userData;
+        OldUserData userData = context.read<OldAppBloc>().userData;
         return Padding(
           padding: EdgeInsets.only(top: 5.w, left: 10.w),
           child: Row(

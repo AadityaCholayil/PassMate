@@ -33,7 +33,7 @@ class _EmailInputPageState extends State<EmailInputPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<AppBloc, AppState>(
+    return BlocConsumer<OldAppBloc, OldAppState>(
         listenWhen: (previous, current) => previous != current,
         buildWhen: (previous, current) => previous != current,
         listener: (context, state) {
@@ -134,7 +134,7 @@ class _EmailInputPageState extends State<EmailInputPage> {
                           });
                           if (value.isNotEmpty && AuthEmail(value).isValid) {
                             context
-                                .read<AppBloc>()
+                                .read<OldAppBloc>()
                                 .add(CheckEmailStatus(email: value));
                           } else {
                             setState(() {

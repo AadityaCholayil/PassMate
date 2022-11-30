@@ -11,14 +11,14 @@ import 'package:passmate/repositories/old_database_repository.dart';
 import 'package:passmate/repositories/encryption_repository.dart';
 import 'app_bloc_files.dart';
 
-class AppBloc extends Bloc<AppEvent, AppState> {
+class OldAppBloc extends Bloc<OldAppEvent, OldAppState> {
   final OldAuthRepository _authRepository;
   late OldDatabaseRepository databaseRepository;
   EncryptionRepository encryptionRepository = EncryptionRepository();
   late OldUserData userData;
   late DatabaseBloc databaseBloc;
 
-  AppBloc({required authRepository})
+  OldAppBloc({required authRepository})
       : _authRepository = authRepository,
         super(Uninitialized(userData: OldUserData.empty)) {
     userData = _authRepository.getUserData();
@@ -52,9 +52,10 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     );
   }
 
-  AppState get initialState => Uninitialized(userData: OldUserData.empty);
+  OldAppState get initialState => Uninitialized(userData: OldUserData.empty);
 
-  FutureOr<void> _onAppStarted(AppStarted event, Emitter<AppState> emit) async {
+  FutureOr<void> _onAppStarted(
+      AppStarted event, Emitter<OldAppState> emit) async {
     if (kIsWeb) {
       // Web Logic
       final isSignedIn = _authRepository.isSignedIn();
@@ -98,7 +99,8 @@ class AppBloc extends Bloc<AppEvent, AppState> {
   }
 
   // When the User Logs in
-  FutureOr<void> _onLoginUser(LoginUser event, Emitter<AppState> emit) async {
+  FutureOr<void> _onLoginUser(
+      LoginUser event, Emitter<OldAppState> emit) async {
     emit(LoginPageState.loading);
     try {
       // Login using email and password
@@ -143,7 +145,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
   }
 
   Future<void> _onCheckEmailStatus(
-      CheckEmailStatus event, Emitter<AppState> emit) async {
+      CheckEmailStatus event, Emitter<OldAppState> emit) async {
     // emit loading
     emit(const EmailInputPageState(emailStatus: EmailStatus.loading));
     try {
@@ -162,7 +164,8 @@ class AppBloc extends Bloc<AppEvent, AppState> {
   }
 
   // When the User Signs up
-  FutureOr<void> _onSignupUser(SignupUser event, Emitter<AppState> emit) async {
+  FutureOr<void> _onSignupUser(
+      SignupUser event, Emitter<OldAppState> emit) async {
     emit(SignupPageState.loading);
     try {
       // Signup using email and password
@@ -226,7 +229,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
   }
 
   FutureOr<void> _onUpdateUserData(
-      UpdateUserData event, Emitter<AppState> emit) async {
+      UpdateUserData event, Emitter<OldAppState> emit) async {
     emit(EditProfilePageState.loading);
     try {
       // Get userData for uid and email
@@ -264,7 +267,8 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     }
   }
 
-  FutureOr<void> _onLoggedOut(LoggedOut event, Emitter<AppState> emit) async {
+  FutureOr<void> _onLoggedOut(
+      LoggedOut event, Emitter<OldAppState> emit) async {
     userData = OldUserData.empty;
     databaseRepository = OldDatabaseRepository(uid: userData.uid);
     encryptionRepository.updateKey('');
@@ -273,7 +277,8 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     emit(Unauthenticated(userData: userData));
   }
 
-  FutureOr<void> _onDeleteUser(DeleteUser event, Emitter<AppState> emit) async {
+  FutureOr<void> _onDeleteUser(
+      DeleteUser event, Emitter<OldAppState> emit) async {
     emit(DeleteAccountPageState.loading);
     if (event.email == userData.email) {
       try {
