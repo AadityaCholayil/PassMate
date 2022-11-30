@@ -38,7 +38,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
         // Update UserRepository
         userRepository = UserRepository(user: currentUser);
         // Get User from Database
-        User? completeUser = await userRepository.completeUserData;
+        User? completeUser = await userRepository.completeUser;
         if (completeUser != null) {
           // Update user in Bloc
           user = completeUser;

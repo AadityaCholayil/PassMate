@@ -11,17 +11,17 @@ class UserRepository extends DatabaseRepository {
             toFirestore: (user, _) => user.toJson(),
           );
 
-  Future<User?> get completeUserData async {
+  Future<User?> get completeUser async {
     User? userDataNew =
         await usersRef.doc(uid).get().then((value) => value.data());
     return userDataNew;
   }
 
-  Future<void> updateUserData(User userData) async {
+  Future<void> updateUser(User userData) async {
     await usersRef.doc(uid).set(userData);
   }
 
-  Future<void> deleteUserData() async {
+  Future<void> deleteUser() async {
     await usersRef.doc(uid).delete();
   }
 }

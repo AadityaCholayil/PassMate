@@ -32,6 +32,26 @@ class AuthRepository {
     return user == null ? null : User.fromUser(user);
   }
 
+  Future<bool?> checkEmail(String email) async {
+    try {
+      // Try to login with the email provided with null as password
+      // This will throw an exception
+      await _firebaseAuth.signInWithEmailAndPassword(
+        email: email,
+        password: 'null',
+      );
+      return false;
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (_) {
+      return null;
+    }
+  }
+
   Future<User?> signUpUsingCredentials(String email, String password) async {
     UserCredential userCredential =
         await _firebaseAuth.createUserWithEmailAndPassword(
