@@ -8,20 +8,24 @@ part of 'payment_card.dart';
 
 _$_PaymentCard _$$_PaymentCardFromJson(Map<String, dynamic> json) =>
     _$_PaymentCard(
-      json['id'] as String,
-      json['path'] as String,
-      json['bankName'] as String,
-      json['cardNo'] as String,
-      json['holderName'] as String,
-      json['expiryDate'] as String,
-      json['cvv'] as String,
-      json['note'] as String,
-      json['color'] as String,
-      json['favourite'] as bool,
-      json['usage'] as int,
-      $enumDecode(_$PaymentCardTypeEnumMap, json['cardType']),
-      const TimestampConverter().fromJson(json['lastUsed'] as Timestamp),
-      const TimestampConverter().fromJson(json['timeAdded'] as Timestamp),
+      id: json['id'] as String? ?? '',
+      path: json['path'] as String? ?? '',
+      bankName: json['bankName'] as String? ?? '',
+      cardNo: json['cardNo'] as String? ?? '',
+      holderName: json['holderName'] as String? ?? '',
+      expiryDate: json['expiryDate'] as String? ?? '',
+      cvv: json['cvv'] as String? ?? '',
+      note: json['note'] as String? ?? '',
+      color: json['color'] as String? ?? '',
+      favourite: json['favourite'] as bool? ?? false,
+      usage: json['usage'] as int? ?? 0,
+      cardType:
+          $enumDecodeNullable(_$PaymentCardTypeEnumMap, json['cardType']) ??
+              PaymentCardType.others,
+      lastUsed: _$JsonConverterFromJson<Timestamp, DateTime>(
+          json['lastUsed'], const TimestampConverter().fromJson),
+      timeAdded: _$JsonConverterFromJson<Timestamp, DateTime>(
+          json['timeAdded'], const TimestampConverter().fromJson),
     );
 
 Map<String, dynamic> _$$_PaymentCardToJson(_$_PaymentCard instance) =>
@@ -38,8 +42,10 @@ Map<String, dynamic> _$$_PaymentCardToJson(_$_PaymentCard instance) =>
       'favourite': instance.favourite,
       'usage': instance.usage,
       'cardType': _$PaymentCardTypeEnumMap[instance.cardType]!,
-      'lastUsed': const TimestampConverter().toJson(instance.lastUsed),
-      'timeAdded': const TimestampConverter().toJson(instance.timeAdded),
+      'lastUsed': _$JsonConverterToJson<Timestamp, DateTime>(
+          instance.lastUsed, const TimestampConverter().toJson),
+      'timeAdded': _$JsonConverterToJson<Timestamp, DateTime>(
+          instance.timeAdded, const TimestampConverter().toJson),
     };
 
 const _$PaymentCardTypeEnumMap = {
@@ -48,3 +54,15 @@ const _$PaymentCardTypeEnumMap = {
   PaymentCardType.debitCard: 'debitCard',
   PaymentCardType.others: 'others',
 };
+
+Value? _$JsonConverterFromJson<Json, Value>(
+  Object? json,
+  Value? Function(Json json) fromJson,
+) =>
+    json == null ? null : fromJson(json as Json);
+
+Json? _$JsonConverterToJson<Json, Value>(
+  Value? value,
+  Json? Function(Value value) toJson,
+) =>
+    value == null ? null : toJson(value);

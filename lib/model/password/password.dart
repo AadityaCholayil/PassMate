@@ -21,9 +21,9 @@ class Password with _$Password {
     @Default('') String password,
     @Default('') String imageUrl,
     @Default('') String note,
-    PasswordCategory? category,
-    bool? favourite,
-    int? usage,
+    @Default(PasswordCategory.others) PasswordCategory category,
+    @Default(false) bool favourite,
+    @Default(0) int usage,
     @TimestampConverter() DateTime? lastUsed,
     @TimestampConverter() DateTime? timeAdded,
   }) = _Password;

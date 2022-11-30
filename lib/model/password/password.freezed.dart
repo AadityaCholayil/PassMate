@@ -28,9 +28,9 @@ mixin _$Password {
   String get password => throw _privateConstructorUsedError;
   String get imageUrl => throw _privateConstructorUsedError;
   String get note => throw _privateConstructorUsedError;
-  PasswordCategory? get category => throw _privateConstructorUsedError;
-  bool? get favourite => throw _privateConstructorUsedError;
-  int? get usage => throw _privateConstructorUsedError;
+  PasswordCategory get category => throw _privateConstructorUsedError;
+  bool get favourite => throw _privateConstructorUsedError;
+  int get usage => throw _privateConstructorUsedError;
   @TimestampConverter()
   DateTime? get lastUsed => throw _privateConstructorUsedError;
   @TimestampConverter()
@@ -56,9 +56,9 @@ abstract class $PasswordCopyWith<$Res> {
       String password,
       String imageUrl,
       String note,
-      PasswordCategory? category,
-      bool? favourite,
-      int? usage,
+      PasswordCategory category,
+      bool favourite,
+      int usage,
       @TimestampConverter() DateTime? lastUsed,
       @TimestampConverter() DateTime? timeAdded});
 }
@@ -84,9 +84,9 @@ class _$PasswordCopyWithImpl<$Res, $Val extends Password>
     Object? password = null,
     Object? imageUrl = null,
     Object? note = null,
-    Object? category = freezed,
-    Object? favourite = freezed,
-    Object? usage = freezed,
+    Object? category = null,
+    Object? favourite = null,
+    Object? usage = null,
     Object? lastUsed = freezed,
     Object? timeAdded = freezed,
   }) {
@@ -123,18 +123,18 @@ class _$PasswordCopyWithImpl<$Res, $Val extends Password>
           ? _value.note
           : note // ignore: cast_nullable_to_non_nullable
               as String,
-      category: freezed == category
+      category: null == category
           ? _value.category
           : category // ignore: cast_nullable_to_non_nullable
-              as PasswordCategory?,
-      favourite: freezed == favourite
+              as PasswordCategory,
+      favourite: null == favourite
           ? _value.favourite
           : favourite // ignore: cast_nullable_to_non_nullable
-              as bool?,
-      usage: freezed == usage
+              as bool,
+      usage: null == usage
           ? _value.usage
           : usage // ignore: cast_nullable_to_non_nullable
-              as int?,
+              as int,
       lastUsed: freezed == lastUsed
           ? _value.lastUsed
           : lastUsed // ignore: cast_nullable_to_non_nullable
@@ -163,9 +163,9 @@ abstract class _$$_PasswordCopyWith<$Res> implements $PasswordCopyWith<$Res> {
       String password,
       String imageUrl,
       String note,
-      PasswordCategory? category,
-      bool? favourite,
-      int? usage,
+      PasswordCategory category,
+      bool favourite,
+      int usage,
       @TimestampConverter() DateTime? lastUsed,
       @TimestampConverter() DateTime? timeAdded});
 }
@@ -189,9 +189,9 @@ class __$$_PasswordCopyWithImpl<$Res>
     Object? password = null,
     Object? imageUrl = null,
     Object? note = null,
-    Object? category = freezed,
-    Object? favourite = freezed,
-    Object? usage = freezed,
+    Object? category = null,
+    Object? favourite = null,
+    Object? usage = null,
     Object? lastUsed = freezed,
     Object? timeAdded = freezed,
   }) {
@@ -228,18 +228,18 @@ class __$$_PasswordCopyWithImpl<$Res>
           ? _value.note
           : note // ignore: cast_nullable_to_non_nullable
               as String,
-      category: freezed == category
+      category: null == category
           ? _value.category
           : category // ignore: cast_nullable_to_non_nullable
-              as PasswordCategory?,
-      favourite: freezed == favourite
+              as PasswordCategory,
+      favourite: null == favourite
           ? _value.favourite
           : favourite // ignore: cast_nullable_to_non_nullable
-              as bool?,
-      usage: freezed == usage
+              as bool,
+      usage: null == usage
           ? _value.usage
           : usage // ignore: cast_nullable_to_non_nullable
-              as int?,
+              as int,
       lastUsed: freezed == lastUsed
           ? _value.lastUsed
           : lastUsed // ignore: cast_nullable_to_non_nullable
@@ -264,9 +264,9 @@ class _$_Password extends _Password {
       this.password = '',
       this.imageUrl = '',
       this.note = '',
-      this.category,
-      this.favourite,
-      this.usage,
+      this.category = PasswordCategory.others,
+      this.favourite = false,
+      this.usage = 0,
       @TimestampConverter() this.lastUsed,
       @TimestampConverter() this.timeAdded})
       : super._();
@@ -299,11 +299,14 @@ class _$_Password extends _Password {
   @JsonKey()
   final String note;
   @override
-  final PasswordCategory? category;
+  @JsonKey()
+  final PasswordCategory category;
   @override
-  final bool? favourite;
+  @JsonKey()
+  final bool favourite;
   @override
-  final int? usage;
+  @JsonKey()
+  final int usage;
   @override
   @TimestampConverter()
   final DateTime? lastUsed;
@@ -385,9 +388,9 @@ abstract class _Password extends Password {
       final String password,
       final String imageUrl,
       final String note,
-      final PasswordCategory? category,
-      final bool? favourite,
-      final int? usage,
+      final PasswordCategory category,
+      final bool favourite,
+      final int usage,
       @TimestampConverter() final DateTime? lastUsed,
       @TimestampConverter() final DateTime? timeAdded}) = _$_Password;
   const _Password._() : super._();
@@ -411,11 +414,11 @@ abstract class _Password extends Password {
   @override
   String get note;
   @override
-  PasswordCategory? get category;
+  PasswordCategory get category;
   @override
-  bool? get favourite;
+  bool get favourite;
   @override
-  int? get usage;
+  int get usage;
   @override
   @TimestampConverter()
   DateTime? get lastUsed;

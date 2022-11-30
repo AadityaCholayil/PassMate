@@ -16,9 +16,10 @@ _$_Password _$$_PasswordFromJson(Map<String, dynamic> json) => _$_Password(
       imageUrl: json['imageUrl'] as String? ?? '',
       note: json['note'] as String? ?? '',
       category:
-          $enumDecodeNullable(_$PasswordCategoryEnumMap, json['category']),
-      favourite: json['favourite'] as bool?,
-      usage: json['usage'] as int?,
+          $enumDecodeNullable(_$PasswordCategoryEnumMap, json['category']) ??
+              PasswordCategory.others,
+      favourite: json['favourite'] as bool? ?? false,
+      usage: json['usage'] as int? ?? 0,
       lastUsed: _$JsonConverterFromJson<Timestamp, DateTime>(
           json['lastUsed'], const TimestampConverter().fromJson),
       timeAdded: _$JsonConverterFromJson<Timestamp, DateTime>(
@@ -35,7 +36,7 @@ Map<String, dynamic> _$$_PasswordToJson(_$_Password instance) =>
       'password': instance.password,
       'imageUrl': instance.imageUrl,
       'note': instance.note,
-      'category': _$PasswordCategoryEnumMap[instance.category],
+      'category': _$PasswordCategoryEnumMap[instance.category]!,
       'favourite': instance.favourite,
       'usage': instance.usage,
       'lastUsed': _$JsonConverterToJson<Timestamp, DateTime>(

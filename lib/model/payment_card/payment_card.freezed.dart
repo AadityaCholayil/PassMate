@@ -33,9 +33,9 @@ mixin _$PaymentCard {
   int get usage => throw _privateConstructorUsedError;
   PaymentCardType get cardType => throw _privateConstructorUsedError;
   @TimestampConverter()
-  DateTime get lastUsed => throw _privateConstructorUsedError;
+  DateTime? get lastUsed => throw _privateConstructorUsedError;
   @TimestampConverter()
-  DateTime get timeAdded => throw _privateConstructorUsedError;
+  DateTime? get timeAdded => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -62,8 +62,8 @@ abstract class $PaymentCardCopyWith<$Res> {
       bool favourite,
       int usage,
       PaymentCardType cardType,
-      @TimestampConverter() DateTime lastUsed,
-      @TimestampConverter() DateTime timeAdded});
+      @TimestampConverter() DateTime? lastUsed,
+      @TimestampConverter() DateTime? timeAdded});
 }
 
 /// @nodoc
@@ -91,8 +91,8 @@ class _$PaymentCardCopyWithImpl<$Res, $Val extends PaymentCard>
     Object? favourite = null,
     Object? usage = null,
     Object? cardType = null,
-    Object? lastUsed = null,
-    Object? timeAdded = null,
+    Object? lastUsed = freezed,
+    Object? timeAdded = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -143,14 +143,14 @@ class _$PaymentCardCopyWithImpl<$Res, $Val extends PaymentCard>
           ? _value.cardType
           : cardType // ignore: cast_nullable_to_non_nullable
               as PaymentCardType,
-      lastUsed: null == lastUsed
+      lastUsed: freezed == lastUsed
           ? _value.lastUsed
           : lastUsed // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      timeAdded: null == timeAdded
+              as DateTime?,
+      timeAdded: freezed == timeAdded
           ? _value.timeAdded
           : timeAdded // ignore: cast_nullable_to_non_nullable
-              as DateTime,
+              as DateTime?,
     ) as $Val);
   }
 }
@@ -176,8 +176,8 @@ abstract class _$$_PaymentCardCopyWith<$Res>
       bool favourite,
       int usage,
       PaymentCardType cardType,
-      @TimestampConverter() DateTime lastUsed,
-      @TimestampConverter() DateTime timeAdded});
+      @TimestampConverter() DateTime? lastUsed,
+      @TimestampConverter() DateTime? timeAdded});
 }
 
 /// @nodoc
@@ -203,66 +203,66 @@ class __$$_PaymentCardCopyWithImpl<$Res>
     Object? favourite = null,
     Object? usage = null,
     Object? cardType = null,
-    Object? lastUsed = null,
-    Object? timeAdded = null,
+    Object? lastUsed = freezed,
+    Object? timeAdded = freezed,
   }) {
     return _then(_$_PaymentCard(
-      null == id
+      id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
-      null == path
+      path: null == path
           ? _value.path
           : path // ignore: cast_nullable_to_non_nullable
               as String,
-      null == bankName
+      bankName: null == bankName
           ? _value.bankName
           : bankName // ignore: cast_nullable_to_non_nullable
               as String,
-      null == cardNo
+      cardNo: null == cardNo
           ? _value.cardNo
           : cardNo // ignore: cast_nullable_to_non_nullable
               as String,
-      null == holderName
+      holderName: null == holderName
           ? _value.holderName
           : holderName // ignore: cast_nullable_to_non_nullable
               as String,
-      null == expiryDate
+      expiryDate: null == expiryDate
           ? _value.expiryDate
           : expiryDate // ignore: cast_nullable_to_non_nullable
               as String,
-      null == cvv
+      cvv: null == cvv
           ? _value.cvv
           : cvv // ignore: cast_nullable_to_non_nullable
               as String,
-      null == note
+      note: null == note
           ? _value.note
           : note // ignore: cast_nullable_to_non_nullable
               as String,
-      null == color
+      color: null == color
           ? _value.color
           : color // ignore: cast_nullable_to_non_nullable
               as String,
-      null == favourite
+      favourite: null == favourite
           ? _value.favourite
           : favourite // ignore: cast_nullable_to_non_nullable
               as bool,
-      null == usage
+      usage: null == usage
           ? _value.usage
           : usage // ignore: cast_nullable_to_non_nullable
               as int,
-      null == cardType
+      cardType: null == cardType
           ? _value.cardType
           : cardType // ignore: cast_nullable_to_non_nullable
               as PaymentCardType,
-      null == lastUsed
+      lastUsed: freezed == lastUsed
           ? _value.lastUsed
           : lastUsed // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      null == timeAdded
+              as DateTime?,
+      timeAdded: freezed == timeAdded
           ? _value.timeAdded
           : timeAdded // ignore: cast_nullable_to_non_nullable
-              as DateTime,
+              as DateTime?,
     ));
   }
 }
@@ -271,55 +271,67 @@ class __$$_PaymentCardCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_PaymentCard extends _PaymentCard {
   const _$_PaymentCard(
-      this.id,
-      this.path,
-      this.bankName,
-      this.cardNo,
-      this.holderName,
-      this.expiryDate,
-      this.cvv,
-      this.note,
-      this.color,
-      this.favourite,
-      this.usage,
-      this.cardType,
+      {this.id = '',
+      this.path = '',
+      this.bankName = '',
+      this.cardNo = '',
+      this.holderName = '',
+      this.expiryDate = '',
+      this.cvv = '',
+      this.note = '',
+      this.color = '',
+      this.favourite = false,
+      this.usage = 0,
+      this.cardType = PaymentCardType.others,
       @TimestampConverter() this.lastUsed,
-      @TimestampConverter() this.timeAdded)
+      @TimestampConverter() this.timeAdded})
       : super._();
 
   factory _$_PaymentCard.fromJson(Map<String, dynamic> json) =>
       _$$_PaymentCardFromJson(json);
 
   @override
+  @JsonKey()
   final String id;
   @override
+  @JsonKey()
   final String path;
   @override
+  @JsonKey()
   final String bankName;
   @override
+  @JsonKey()
   final String cardNo;
   @override
+  @JsonKey()
   final String holderName;
   @override
+  @JsonKey()
   final String expiryDate;
   @override
+  @JsonKey()
   final String cvv;
   @override
+  @JsonKey()
   final String note;
   @override
+  @JsonKey()
   final String color;
   @override
+  @JsonKey()
   final bool favourite;
   @override
+  @JsonKey()
   final int usage;
   @override
+  @JsonKey()
   final PaymentCardType cardType;
   @override
   @TimestampConverter()
-  final DateTime lastUsed;
+  final DateTime? lastUsed;
   @override
   @TimestampConverter()
-  final DateTime timeAdded;
+  final DateTime? timeAdded;
 
   @override
   String toString() {
@@ -389,7 +401,7 @@ class _$_PaymentCard extends _PaymentCard {
 
 abstract class _PaymentCard extends PaymentCard {
   const factory _PaymentCard(
-      final String id,
+      {final String id,
       final String path,
       final String bankName,
       final String cardNo,
@@ -401,8 +413,8 @@ abstract class _PaymentCard extends PaymentCard {
       final bool favourite,
       final int usage,
       final PaymentCardType cardType,
-      @TimestampConverter() final DateTime lastUsed,
-      @TimestampConverter() final DateTime timeAdded) = _$_PaymentCard;
+      @TimestampConverter() final DateTime? lastUsed,
+      @TimestampConverter() final DateTime? timeAdded}) = _$_PaymentCard;
   const _PaymentCard._() : super._();
 
   factory _PaymentCard.fromJson(Map<String, dynamic> json) =
@@ -434,10 +446,10 @@ abstract class _PaymentCard extends PaymentCard {
   PaymentCardType get cardType;
   @override
   @TimestampConverter()
-  DateTime get lastUsed;
+  DateTime? get lastUsed;
   @override
   @TimestampConverter()
-  DateTime get timeAdded;
+  DateTime? get timeAdded;
   @override
   @JsonKey(ignore: true)
   _$$_PaymentCardCopyWith<_$_PaymentCard> get copyWith =>
