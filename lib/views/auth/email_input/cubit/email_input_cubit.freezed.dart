@@ -104,7 +104,7 @@ class __$$_EmailInputStateCopyWithImpl<$Res>
 
 class _$_EmailInputState implements _EmailInputState {
   const _$_EmailInputState(
-      {this.emailValid = true, this.pageState = PageState.init});
+      {this.emailValid = true, this.pageState = PageState.loading});
 
   @override
   @JsonKey()

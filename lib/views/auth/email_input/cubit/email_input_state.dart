@@ -4,6 +4,6 @@ part of 'email_input_cubit.dart';
 class EmailInputState with _$EmailInputState {
   const factory EmailInputState({
     @Default(true) bool emailValid,
-    @Default(PageState.init) PageState pageState,
+    @Default(PageState.loading) PageState pageState,
   }) = _EmailInputState;
 }
