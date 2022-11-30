@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:passmate/shared/custom_widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:passmate/views/auth/email_input_page.dart';
-import 'package:passmate/views/auth/login_page.dart';
+import 'package:passmate/shared/my_default_assets.dart';
+import 'package:passmate/views/auth/email_input/email_input_page.dart';
+import 'package:passmate/views/auth/login/login_page.dart';
 import 'package:passmate/shared/temp_error.dart';
 
 class DetailsPage extends StatefulWidget {
@@ -200,7 +201,7 @@ class _DetailsPageState extends State<DetailsPage> {
                               height: 110.w,
                               width: 110.w,
                               child: Image.network(
-                                'https://icon-library.com/images/default-user-icon/default-user-icon-13.jpg',
+                                MyDefaultAssets.profileUrl,
                                 fit: BoxFit.cover,
                               ),
                             ),
