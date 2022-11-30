@@ -7,14 +7,14 @@ part of 'password.dart';
 // **************************************************************************
 
 _$_Password _$$_PasswordFromJson(Map<String, dynamic> json) => _$_Password(
-      id: json['id'] as String?,
-      path: json['path'] as String?,
-      siteName: json['siteName'] as String?,
-      siteUrl: json['siteUrl'] as String?,
-      email: json['email'] as String?,
-      password: json['password'] as String?,
-      imageUrl: json['imageUrl'] as String?,
-      note: json['note'] as String?,
+      id: json['id'] as String? ?? '',
+      path: json['path'] as String? ?? '',
+      siteName: json['siteName'] as String? ?? '',
+      siteUrl: json['siteUrl'] as String? ?? '',
+      email: json['email'] as String? ?? '',
+      password: json['password'] as String? ?? '',
+      imageUrl: json['imageUrl'] as String? ?? '',
+      note: json['note'] as String? ?? '',
       category:
           $enumDecodeNullable(_$PasswordCategoryEnumMap, json['category']),
       favourite: json['favourite'] as bool?,

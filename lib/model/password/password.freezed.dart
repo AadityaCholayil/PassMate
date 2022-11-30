@@ -20,14 +20,14 @@ Password _$PasswordFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Password {
-  String? get id => throw _privateConstructorUsedError;
-  String? get path => throw _privateConstructorUsedError;
-  String? get siteName => throw _privateConstructorUsedError;
-  String? get siteUrl => throw _privateConstructorUsedError;
-  String? get email => throw _privateConstructorUsedError;
-  String? get password => throw _privateConstructorUsedError;
-  String? get imageUrl => throw _privateConstructorUsedError;
-  String? get note => throw _privateConstructorUsedError;
+  String get id => throw _privateConstructorUsedError;
+  String get path => throw _privateConstructorUsedError;
+  String get siteName => throw _privateConstructorUsedError;
+  String get siteUrl => throw _privateConstructorUsedError;
+  String get email => throw _privateConstructorUsedError;
+  String get password => throw _privateConstructorUsedError;
+  String get imageUrl => throw _privateConstructorUsedError;
+  String get note => throw _privateConstructorUsedError;
   PasswordCategory? get category => throw _privateConstructorUsedError;
   bool? get favourite => throw _privateConstructorUsedError;
   int? get usage => throw _privateConstructorUsedError;
@@ -48,14 +48,14 @@ abstract class $PasswordCopyWith<$Res> {
       _$PasswordCopyWithImpl<$Res, Password>;
   @useResult
   $Res call(
-      {String? id,
-      String? path,
-      String? siteName,
-      String? siteUrl,
-      String? email,
-      String? password,
-      String? imageUrl,
-      String? note,
+      {String id,
+      String path,
+      String siteName,
+      String siteUrl,
+      String email,
+      String password,
+      String imageUrl,
+      String note,
       PasswordCategory? category,
       bool? favourite,
       int? usage,
@@ -76,14 +76,14 @@ class _$PasswordCopyWithImpl<$Res, $Val extends Password>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = freezed,
-    Object? path = freezed,
-    Object? siteName = freezed,
-    Object? siteUrl = freezed,
-    Object? email = freezed,
-    Object? password = freezed,
-    Object? imageUrl = freezed,
-    Object? note = freezed,
+    Object? id = null,
+    Object? path = null,
+    Object? siteName = null,
+    Object? siteUrl = null,
+    Object? email = null,
+    Object? password = null,
+    Object? imageUrl = null,
+    Object? note = null,
     Object? category = freezed,
     Object? favourite = freezed,
     Object? usage = freezed,
@@ -91,38 +91,38 @@ class _$PasswordCopyWithImpl<$Res, $Val extends Password>
     Object? timeAdded = freezed,
   }) {
     return _then(_value.copyWith(
-      id: freezed == id
+      id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as String?,
-      path: freezed == path
+              as String,
+      path: null == path
           ? _value.path
           : path // ignore: cast_nullable_to_non_nullable
-              as String?,
-      siteName: freezed == siteName
+              as String,
+      siteName: null == siteName
           ? _value.siteName
           : siteName // ignore: cast_nullable_to_non_nullable
-              as String?,
-      siteUrl: freezed == siteUrl
+              as String,
+      siteUrl: null == siteUrl
           ? _value.siteUrl
           : siteUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-      email: freezed == email
+              as String,
+      email: null == email
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
-              as String?,
-      password: freezed == password
+              as String,
+      password: null == password
           ? _value.password
           : password // ignore: cast_nullable_to_non_nullable
-              as String?,
-      imageUrl: freezed == imageUrl
+              as String,
+      imageUrl: null == imageUrl
           ? _value.imageUrl
           : imageUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-      note: freezed == note
+              as String,
+      note: null == note
           ? _value.note
           : note // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as String,
       category: freezed == category
           ? _value.category
           : category // ignore: cast_nullable_to_non_nullable
@@ -155,14 +155,14 @@ abstract class _$$_PasswordCopyWith<$Res> implements $PasswordCopyWith<$Res> {
   @override
   @useResult
   $Res call(
-      {String? id,
-      String? path,
-      String? siteName,
-      String? siteUrl,
-      String? email,
-      String? password,
-      String? imageUrl,
-      String? note,
+      {String id,
+      String path,
+      String siteName,
+      String siteUrl,
+      String email,
+      String password,
+      String imageUrl,
+      String note,
       PasswordCategory? category,
       bool? favourite,
       int? usage,
@@ -181,14 +181,14 @@ class __$$_PasswordCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = freezed,
-    Object? path = freezed,
-    Object? siteName = freezed,
-    Object? siteUrl = freezed,
-    Object? email = freezed,
-    Object? password = freezed,
-    Object? imageUrl = freezed,
-    Object? note = freezed,
+    Object? id = null,
+    Object? path = null,
+    Object? siteName = null,
+    Object? siteUrl = null,
+    Object? email = null,
+    Object? password = null,
+    Object? imageUrl = null,
+    Object? note = null,
     Object? category = freezed,
     Object? favourite = freezed,
     Object? usage = freezed,
@@ -196,38 +196,38 @@ class __$$_PasswordCopyWithImpl<$Res>
     Object? timeAdded = freezed,
   }) {
     return _then(_$_Password(
-      id: freezed == id
+      id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as String?,
-      path: freezed == path
+              as String,
+      path: null == path
           ? _value.path
           : path // ignore: cast_nullable_to_non_nullable
-              as String?,
-      siteName: freezed == siteName
+              as String,
+      siteName: null == siteName
           ? _value.siteName
           : siteName // ignore: cast_nullable_to_non_nullable
-              as String?,
-      siteUrl: freezed == siteUrl
+              as String,
+      siteUrl: null == siteUrl
           ? _value.siteUrl
           : siteUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-      email: freezed == email
+              as String,
+      email: null == email
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
-              as String?,
-      password: freezed == password
+              as String,
+      password: null == password
           ? _value.password
           : password // ignore: cast_nullable_to_non_nullable
-              as String?,
-      imageUrl: freezed == imageUrl
+              as String,
+      imageUrl: null == imageUrl
           ? _value.imageUrl
           : imageUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-      note: freezed == note
+              as String,
+      note: null == note
           ? _value.note
           : note // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as String,
       category: freezed == category
           ? _value.category
           : category // ignore: cast_nullable_to_non_nullable
@@ -256,14 +256,14 @@ class __$$_PasswordCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_Password extends _Password {
   const _$_Password(
-      {this.id,
-      this.path,
-      this.siteName,
-      this.siteUrl,
-      this.email,
-      this.password,
-      this.imageUrl,
-      this.note,
+      {this.id = '',
+      this.path = '',
+      this.siteName = '',
+      this.siteUrl = '',
+      this.email = '',
+      this.password = '',
+      this.imageUrl = '',
+      this.note = '',
       this.category,
       this.favourite,
       this.usage,
@@ -275,21 +275,29 @@ class _$_Password extends _Password {
       _$$_PasswordFromJson(json);
 
   @override
-  final String? id;
+  @JsonKey()
+  final String id;
   @override
-  final String? path;
+  @JsonKey()
+  final String path;
   @override
-  final String? siteName;
+  @JsonKey()
+  final String siteName;
   @override
-  final String? siteUrl;
+  @JsonKey()
+  final String siteUrl;
   @override
-  final String? email;
+  @JsonKey()
+  final String email;
   @override
-  final String? password;
+  @JsonKey()
+  final String password;
   @override
-  final String? imageUrl;
+  @JsonKey()
+  final String imageUrl;
   @override
-  final String? note;
+  @JsonKey()
+  final String note;
   @override
   final PasswordCategory? category;
   @override
@@ -369,14 +377,14 @@ class _$_Password extends _Password {
 
 abstract class _Password extends Password {
   const factory _Password(
-      {final String? id,
-      final String? path,
-      final String? siteName,
-      final String? siteUrl,
-      final String? email,
-      final String? password,
-      final String? imageUrl,
-      final String? note,
+      {final String id,
+      final String path,
+      final String siteName,
+      final String siteUrl,
+      final String email,
+      final String password,
+      final String imageUrl,
+      final String note,
       final PasswordCategory? category,
       final bool? favourite,
       final int? usage,
@@ -387,21 +395,21 @@ abstract class _Password extends Password {
   factory _Password.fromJson(Map<String, dynamic> json) = _$_Password.fromJson;
 
   @override
-  String? get id;
+  String get id;
   @override
-  String? get path;
+  String get path;
   @override
-  String? get siteName;
+  String get siteName;
   @override
-  String? get siteUrl;
+  String get siteUrl;
   @override
-  String? get email;
+  String get email;
   @override
-  String? get password;
+  String get password;
   @override
-  String? get imageUrl;
+  String get imageUrl;
   @override
-  String? get note;
+  String get note;
   @override
   PasswordCategory? get category;
   @override
